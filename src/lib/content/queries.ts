@@ -1,4 +1,6 @@
+import { plural } from '@/lib/format';
 import type { SectionSlug } from '@/lib/schema';
+import { SECTION_ROUTES } from './routes';
 import type { Content, RecentItem } from './types';
 
 /** The count shown on a track's category-bar pill and section block. */
@@ -17,10 +19,6 @@ export function sectionCount(content: Content, section: SectionSlug, track: stri
     case 'resources':
       return content.resources.find((r) => r.track === track)?.links.length ?? 0;
   }
-}
-
-function plural(n: number, one: string, many = `${one}s`): string {
-  return `${n} ${n === 1 ? one : many}`;
 }
 
 /** e.g. "2 courses, 1 roadmap" or "Coming soon". */
@@ -138,4 +136,42 @@ export function pagePaths(
   for (const m of content.mindMaps) paths.add(m.href);
   for (const s of content.cheatSheets) paths.add(s.href);
   return paths;
+}
+
+export interface SectionItem {
+  title: string;
+  href: string;
+}
+
+/** A track's items in one section, in display order (track hubs show the first few). */
+export function sectionItems(content: Content, section: SectionSlug, track: string): SectionItem[] {
+  const page = `${SECTION_ROUTES[section]}/${track}`;
+  switch (section) {
+    case 'learning-notes':
+      return content.courses
+        .filter((c) => c.track === track)
+        .map((c) => ({ title: c.title, href: c.href }));
+    case 'roadmaps':
+      return (content.roadmaps.find((r) => r.track === track)?.steps ?? []).map((s, i) => ({
+        title: s.title,
+        href: `${page}#step-${i + 1}`,
+      }));
+    case 'mind-maps':
+      return content.mindMaps
+        .filter((m) => m.track === track)
+        .map((m) => ({ title: m.title, href: m.href }));
+    case 'interview-questions':
+      return content.questions
+        .filter((q) => q.track === track)
+        .map((q) => ({ title: q.title, href: q.href }));
+    case 'cheat-sheets':
+      return content.cheatSheets
+        .filter((s) => s.track === track)
+        .map((s) => ({ title: s.title, href: s.href }));
+    case 'resources':
+      return (content.resources.find((r) => r.track === track)?.links ?? []).map((l) => ({
+        title: l.title,
+        href: page,
+      }));
+  }
 }

@@ -8,16 +8,20 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "tsx scripts/copy-assets.ts && next dev",
+    "build": "tsx scripts/copy-assets.ts && next build",
+    "build:artifacts": "tsx scripts/build-artifacts.ts",
+    "start": "tsx scripts/serve.ts out 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "e2e": "tsx scripts/e2e.ts",
     "validate": "tsx scripts/validate-content.ts",
     "check-links": "tsx scripts/check-links.ts",
-    "gen:shiki-css": "tsx scripts/gen-shiki-css.ts"
+    "check-budgets": "tsx scripts/check-budgets.ts",
+    "gen:shiki-css": "tsx scripts/gen-shiki-css.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "gray-matter": "4.0.3",
@@ -38,6 +42,7 @@
     "zod": "4.6.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "^22.20.5",
     "@types/react": "19.3.0",

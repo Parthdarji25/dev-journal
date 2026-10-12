@@ -51,7 +51,7 @@
   --color-surface: var(--surface);
   --color-panel: var(--panel);
   --color-border: var(--border);
-  --color-dashed: var(--dashed);
+  --color-dash: var(--dashed);
   --color-text: var(--text);
   --color-soft: var(--soft);
   --color-muted: var(--muted);
@@ -107,4 +107,227 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* ------------------------------------------------------------------ motion */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer utilities {
+  .animate-page {
+    animation: fade-in 180ms ease-out both;
+  }
+  .animate-menu {
+    animation: fade-in 140ms ease-out both;
+  }
+}
+
+/* ------------------------------------------------------------------ track scopes */
+
+/* --tc and --tt come from the generated /tracks.css; neutral fallbacks here. */
+:root {
+  --tc: var(--muted);
+  --tt: var(--panel);
+}
+
+/* ------------------------------------------------------------------ rendered markdown */
+
+.prose-content {
+  color: var(--soft);
+  overflow-wrap: break-word;
+}
+.prose-content > * + * {
+  margin-top: 1rem;
+}
+.prose-content h2,
+.prose-content h3,
+.prose-content h4 {
+  color: var(--text);
+  scroll-margin-top: 5rem;
+}
+.prose-content h2 {
+  margin-top: 2.5rem;
+  font-size: 1.5rem;
+}
+.prose-content h3 {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+.prose-content h4 {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+}
+.prose-content a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--dashed);
+}
+.prose-content a:hover {
+  text-decoration-color: currentColor;
+}
+.prose-content .heading-anchor {
+  margin-left: 0.4em;
+  color: var(--muted);
+  text-decoration: none;
+  opacity: 0;
+}
+.prose-content :is(h2, h3, h4):hover .heading-anchor,
+.prose-content .heading-anchor:focus-visible {
+  opacity: 1;
+}
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.prose-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.prose-content li + li {
+  margin-top: 0.25rem;
+}
+.prose-content strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.prose-content hr {
+  border-color: var(--border);
+  margin: 2rem 0;
+}
+.prose-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.prose-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+}
+.prose-content blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1rem;
+  color: var(--muted);
+}
+.prose-content table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+.prose-content th,
+.prose-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-content th {
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Code blocks: Shiki colours come from shiki.css classes. */
+.code-block {
+  position: relative;
+}
+.prose-content pre,
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+}
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--soft);
+  opacity: 0;
+  transition: opacity 120ms;
+}
+.code-block:hover .copy-button,
+.copy-button:focus-visible,
+.copy-button[data-copied] {
+  opacity: 1;
+}
+@media (hover: none) {
+  .copy-button {
+    opacity: 1;
+  }
+}
+.copy-button:hover {
+  color: var(--text);
+  background: var(--nav-active);
+}
+
+/* Callouts: > [!TIP] / [!NOTE] / [!WARNING]. */
+.callout {
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+}
+.callout > * + * {
+  margin-top: 0.5rem;
+}
+.callout-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.callout-tip {
+  border-left-color: var(--status-added);
+}
+.callout-tip .callout-title {
+  color: var(--status-added);
+}
+.callout-note {
+  border-left-color: var(--status-renamed);
+}
+.callout-note .callout-title {
+  color: var(--status-renamed);
+}
+.callout-warning {
+  border-left-color: var(--status-modified);
+}
+.callout-warning .callout-title {
+  color: var(--status-modified);
+}
+
+/* Artifact frames fill the screen in "Full size". */
+.artifact-frame:fullscreen {
+  background: var(--bg);
+}
+.artifact-frame:fullscreen iframe {
+  height: 100% !important;
 }

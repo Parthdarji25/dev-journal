@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { siteName, siteUrl } from '@/lib/site';
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: siteName, template: `%s | ${siteName}` },
   description: "A notebook for everything I'm learning.",
+  openGraph: { siteName, type: 'website' },
 };
 
 export const viewport: Viewport = {
@@ -26,7 +28,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
       className={`${displayFont.variable} ${bodyFont.variable} ${codeFont.variable}`}
     >
-      <body>
+      <head>
+        {/* Track colours, generated from content/_meta/tracks.json by app/tracks.css/route.ts. */}
+        {/* eslint-disable-next-line @next/next/no-css-tags -- generated stylesheet, not a source file */}
+        <link rel="stylesheet" href="/tracks.css" precedence="default" />
+      </head>
+      <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
           <a
             href="#main"
@@ -35,9 +42,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             Skip to content
           </a>
           <Header />
-          <main id="main" className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+          <main id="main" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
