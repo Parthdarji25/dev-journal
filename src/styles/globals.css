@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './shiki.css';
 
 /* Dark mode is driven by the `dark` class that next-themes puts on <html>. */
 @custom-variant dark (&:where(.dark, .dark *));

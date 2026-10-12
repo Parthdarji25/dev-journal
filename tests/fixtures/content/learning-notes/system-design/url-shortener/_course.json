@@ -1,0 +1,6 @@
+{
+  "title": "URL Shortener",
+  "description": "Fixture course with a case-study chapter.",
+  "order": ["design-walkthrough.md"],
+  "html": {}
+}

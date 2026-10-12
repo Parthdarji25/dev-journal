@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "frontend-development",
+    "name": "Frontend Development",
+    "shortName": "Frontend",
+    "description": "What runs in the browser: UI, styling and interactivity.",
+    "order": 1,
+    "color": { "light": "#C2410C", "dark": "#FDBA74" },
+    "tint": { "light": "#FFF7F0", "dark": "#1A1510" }
+  },
+  {
+    "slug": "backend-development",
+    "name": "Backend Development",
+    "shortName": "Backend",
+    "description": "Servers, APIs, databases and the code behind them.",
+    "order": 2,
+    "color": { "light": "#0369A1", "dark": "#7DD3FC" },
+    "tint": { "light": "#F0F8FD", "dark": "#101A21" }
+  },
+  {
+    "slug": "gen-ai-engineer",
+    "name": "Gen AI Engineer",
+    "shortName": "Gen AI",
+    "description": "Building applications with generative AI models.",
+    "order": 3,
+    "color": { "light": "#6D28D9", "dark": "#C4B5FD" },
+    "tint": { "light": "#F7F4FE", "dark": "#16142A" }
+  },
+  {
+    "slug": "dsa-python",
+    "name": "DSA with Python",
+    "shortName": "DSA",
+    "description": "Data structures, algorithms and problem patterns in Python.",
+    "order": 4,
+    "color": { "light": "#047857", "dark": "#6EE7B7" },
+    "tint": { "light": "#EFFAF5", "dark": "#0F1D18" }
+  },
+  {
+    "slug": "system-design",
+    "name": "System Design",
+    "shortName": "System Design",
+    "description": "Designing systems that scale: concepts and case studies.",
+    "order": 5,
+    "color": { "light": "#BE185D", "dark": "#F9A8D4" },
+    "tint": { "light": "#FDF2F7", "dark": "#1F131A" }
+  }
+]

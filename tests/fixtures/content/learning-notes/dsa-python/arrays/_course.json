@@ -1,0 +1,6 @@
+{
+  "title": "Arrays",
+  "description": "Fixture course with a problem chapter.",
+  "order": ["two-sum.md"],
+  "html": {}
+}

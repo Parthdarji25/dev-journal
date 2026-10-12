@@ -7,3 +7,4 @@ pnpm-lock.yaml
 BUILD_SPEC.md
 content/**/*.md
 content/**/*.html
+src/styles/shiki.css
