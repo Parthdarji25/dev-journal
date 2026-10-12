@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+artifacts-out
+coverage
+pnpm-lock.yaml
+BUILD_SPEC.md
+content/**/*.md
+content/**/*.html

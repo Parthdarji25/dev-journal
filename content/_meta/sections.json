@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "learning-notes",
+    "name": "Learning Notes",
+    "description": "Courses and chapters written while learning.",
+    "group": "learn",
+    "order": 1
+  },
+  {
+    "slug": "roadmaps",
+    "name": "Roadmap",
+    "description": "The steps to follow, in order, for each track.",
+    "group": "learn",
+    "order": 2
+  },
+  {
+    "slug": "mind-maps",
+    "name": "Mind Maps",
+    "description": "Topics laid out as branching maps.",
+    "group": "learn",
+    "order": 3
+  },
+  {
+    "slug": "interview-questions",
+    "name": "Interview Questions",
+    "description": "Questions with answers, filterable by company and difficulty.",
+    "group": "practice",
+    "order": 4
+  },
+  {
+    "slug": "cheat-sheets",
+    "name": "Cheat Sheets",
+    "description": "Code snippets and what each one does.",
+    "group": "practice",
+    "order": 5
+  },
+  {
+    "slug": "resources",
+    "name": "Resources",
+    "description": "Docs, courses, videos and books worth keeping.",
+    "group": "learn",
+    "order": 6
+  }
+]

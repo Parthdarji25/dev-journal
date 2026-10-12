@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+/* Dark mode is driven by the `dark` class that next-themes puts on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Colour tokens. Every colour in the UI comes from one of these variables.
+ * Track colours are data (content/_meta/tracks.json) and are applied as inline
+ * CSS variables at render time, so they are not listed here.
+ */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --panel: #eef1f5;
+  --border: #dde2e8;
+  --dashed: #b8c0cb;
+  --text: #14171c;
+  --soft: #353b45;
+  --muted: #5b6370;
+  --nav-active: #e2e7ee;
+  --ring: #1d4ed8;
+
+  /* Change status: AA contrast on bg, surface and panel. */
+  --status-added: #166534;
+  --status-modified: #92400e;
+  --status-renamed: #1d4ed8;
+  --status-deleted: #b91c1c;
+}
+
+.dark {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --panel: #1b1e26;
+  --border: #262a33;
+  --dashed: #3a3f4b;
+  --text: #e6e8ec;
+  --soft: #c9cdd4;
+  --muted: #9aa1ad;
+  --nav-active: #232733;
+  --ring: #93c5fd;
+
+  --status-added: #4ade80;
+  --status-modified: #fbbf24;
+  --status-renamed: #60a5fa;
+  --status-deleted: #f87171;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-border: var(--border);
+  --color-dashed: var(--dashed);
+  --color-text: var(--text);
+  --color-soft: var(--soft);
+  --color-muted: var(--muted);
+  --color-nav-active: var(--nav-active);
+  --color-ring: var(--ring);
+  --color-added: var(--status-added);
+  --color-modified: var(--status-modified);
+  --color-renamed: var(--status-renamed);
+  --color-deleted: var(--status-deleted);
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--text);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg font-sans text-base text-text antialiased md:text-[17px];
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading font-semibold tracking-tight;
+    line-height: 1.2;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
