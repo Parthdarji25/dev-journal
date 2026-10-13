@@ -2,7 +2,8 @@
   "title": "Python Mastery: From Fundamentals to Advanced",
   "description": "",
   "order": [
-    "01hello-python-setup-and-first-programs.md"
+    "01hello-python-setup-and-first-programs.md",
+    "02building-blocks-variables-and-data-types.md"
   ],
   "html": {}
 }
