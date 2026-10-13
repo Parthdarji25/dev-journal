@@ -7,9 +7,17 @@
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 
+/** A `has` / `missing` condition; only `host` is used in this project. */
+export interface HostCondition {
+  type: 'host';
+  value: string;
+}
+
 export interface HeaderRule {
   source: string;
   headers: { key: string; value: string }[];
+  has?: HostCondition[];
+  missing?: HostCondition[];
 }
 
 /** The header rules of a vercel.json (none when the file is missing). */
@@ -43,14 +51,29 @@ export function sourceToRegExp(source: string): RegExp {
   return new RegExp(`^${pattern}$`);
 }
 
-/** The headers sent for `pathname`; for the same header, a later rule wins. */
-export function headersFor(rules: HeaderRule[], pathname: string): Record<string, string> {
+/**
+ * The headers sent for `pathname` on `host` (without a port); for the same
+ * header, a later rule wins. Rules with `has` apply only on those hosts, and
+ * rules with `missing` everywhere else.
+ */
+export function headersFor(
+  rules: HeaderRule[],
+  pathname: string,
+  host = '',
+): Record<string, string> {
   const headers: Record<string, string> = {};
   for (const rule of rules) {
     if (!sourceToRegExp(rule.source).test(pathname)) continue;
+    if (rule.has && !rule.has.every((c) => c.value === host)) continue;
+    if (rule.missing?.some((c) => c.value === host)) continue;
     for (const { key, value } of rule.headers) headers[key.toLowerCase()] = value;
   }
   return headers;
+}
+
+/** The hosts that get their own rules (the artifacts site, when it shares this vercel.json). */
+export function scopedHosts(rules: HeaderRule[]): string[] {
+  return [...new Set(rules.flatMap((r) => (r.has ?? []).map((c) => c.value)))];
 }
 
 /** The sources one directive of a policy allows. */

@@ -42,8 +42,8 @@ const TYPES: Record<string, string> = {
 export function createStaticServer(dirArg: string, options: ServerOptions = {}): http.Server {
   const dir = path.resolve(dirArg);
 
-  function hostHeaders(pathname: string): Record<string, string> {
-    const headers = headersFor(options.headers ?? [], pathname);
+  function hostHeaders(pathname: string, host: string): Record<string, string> {
+    const headers = headersFor(options.headers ?? [], pathname, host);
     const csp = headers['content-security-policy'];
     if (csp && options.frameSrc) {
       headers['content-security-policy'] = withDirective(csp, 'frame-src', [options.frameSrc]);
@@ -79,7 +79,7 @@ export function createStaticServer(dirArg: string, options: ServerOptions = {}):
       'content-type': TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
       'cache-control': 'no-store',
       vary: 'accept-encoding',
-      ...hostHeaders(url.pathname),
+      ...hostHeaders(url.pathname, String(req.headers.host ?? '').replace(/:\d+$/, '')),
       ...(gzip ? { 'content-encoding': 'gzip' } : {}),
     });
     if (req.method === 'HEAD') res.end();

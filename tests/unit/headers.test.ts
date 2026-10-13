@@ -6,6 +6,7 @@ import {
   directive,
   headersFor,
   readHeaderRules,
+  scopedHosts,
   scriptHash,
   sourceToRegExp,
   withDirective,
@@ -57,14 +58,35 @@ describe('vercel.json (main site)', () => {
 });
 
 describe('vercel.json (artifacts site)', () => {
-  it('sandboxes every artifact, even when opened directly, and never caches it', () => {
-    const headers = headersFor(artifacts, '/learning-notes/dsa-python/arrays/viz.html');
+  const artifactHeaders = (headers: Record<string, string>) => {
     expect(headers['content-security-policy']).toBe('sandbox allow-scripts');
     expect(headers['x-content-type-options']).toBe('nosniff');
     expect(headers['referrer-policy']).toBe('no-referrer');
     expect(headers['cache-control']).toBe('public, max-age=0, must-revalidate');
     // The main site must be able to frame it.
     expect(headers['x-frame-options']).toBeUndefined();
+  };
+
+  it('sandboxes every artifact, even when opened directly, and never caches it', () => {
+    artifactHeaders(headersFor(artifacts, '/learning-notes/dsa-python/arrays/viz.html'));
+  });
+
+  it('gives the artifacts host the same headers when it builds from the repository root', () => {
+    // The artifacts project can share the root vercel.json: its host must never get
+    // the site's CSP, whose frame-ancestors 'none' would stop every frame.
+    const frameSrc = directive(
+      headersFor(site, '/')['content-security-policy'] ?? '',
+      'frame-src',
+    )[0] as string;
+    const host = new URL(frameSrc).host;
+    expect(scopedHosts(site)).toEqual([host]);
+    // cleanUrls serves /a/b.html at /a/b, so both addresses are covered.
+    for (const path of ['/learning-notes/t/c/viz.html', '/learning-notes/t/c/viz'])
+      artifactHeaders(headersFor(site, path, host));
+    // Every other host gets the site's own headers.
+    expect(
+      headersFor(site, '/', 'dev-journal-theta.vercel.app')['content-security-policy'],
+    ).toContain("frame-ancestors 'none'");
   });
 
   it('builds into a folder of its own inside the project root', () => {
