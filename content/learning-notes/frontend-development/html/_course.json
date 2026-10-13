@@ -1,0 +1,20 @@
+{
+  "title": "HTML",
+  "description": "",
+  "order": [
+    "how-the-web-works.html"
+  ],
+  "html": {
+    "how-the-web-works.html": {
+      "title": "How the Web Works",
+      "description": "What happens between typing a URL and seeing a page: clients, servers, DNS, HTTP and how the browser renders a page",
+      "tags": [
+        "web",
+        "http",
+        "browser",
+        "basics"
+      ],
+      "updated": "2026-10-13"
+    }
+  }
+}
