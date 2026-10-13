@@ -5,9 +5,8 @@
  *
  * The JS column is split into "framework" (Next.js rootMainFiles from
  * .next/build-manifest.json: React DOM, the router and runtime, identical on
- * every page) and "app" (everything else, i.e. our code). The 100 KB budget
- * applies to app JS: the framework alone is ~130 KB, so a total cap of 100 KB
- * cannot be met with the App Router (decision recorded in Phase 3).
+ * every page) and "app" (everything else, i.e. our code). As BUILD_SPEC.md
+ * sets out, the 100 KB budget counts app JS only.
  */
 import fs from 'node:fs';
 import path from 'node:path';

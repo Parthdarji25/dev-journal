@@ -4,6 +4,7 @@ import { ChevronDown, Menu, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { prefetchSearch } from '@/components/search/search-launcher';
 import { isCurrent, trackClass, type NavGroup, type NavItem } from '@/lib/nav';
 import { ThemeToggle } from './theme-toggle';
 
@@ -13,6 +14,8 @@ type GroupId = NavGroup['id'];
 function openSearch() {
   window.dispatchEvent(new Event('open-search'));
 }
+
+const searchPrefetch = { onMouseEnter: prefetchSearch, onFocus: prefetchSearch };
 
 function ItemMark({ item, className = 'mt-1.5' }: { item: NavItem; className?: string }) {
   return item.track ? (
@@ -170,6 +173,7 @@ export function SiteHeader({ nav, siteName }: { nav: NavGroup[]; siteName: strin
           <button
             type="button"
             onClick={openSearch}
+            {...searchPrefetch}
             className="hidden min-h-11 w-64 items-center gap-2 rounded-md border border-border bg-surface px-3 text-sm text-muted transition-colors hover:bg-nav-active hover:text-text md:inline-flex lg:w-80"
           >
             <Search aria-hidden className="size-4" />
@@ -182,6 +186,7 @@ export function SiteHeader({ nav, siteName }: { nav: NavGroup[]; siteName: strin
             type="button"
             aria-label="Search everything"
             onClick={openSearch}
+            {...searchPrefetch}
             className="inline-flex size-11 items-center justify-center rounded-md text-soft hover:bg-nav-active hover:text-text md:hidden"
           >
             <Search aria-hidden className="size-5" />

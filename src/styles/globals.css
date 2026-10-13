@@ -331,3 +331,35 @@
 .artifact-frame:fullscreen iframe {
   height: 100% !important;
 }
+
+/* Markmap: its global CSS, themed with our tokens (embedGlobalCSS is off so no inline <style>). */
+.markmap {
+  --markmap-max-width: 260px;
+  --markmap-text-color: var(--text);
+  --markmap-circle-open-bg: var(--surface);
+  --markmap-code-bg: var(--panel);
+  --markmap-code-color: var(--text);
+  font:
+    400 15px/20px var(--font-body),
+    sans-serif;
+  color: var(--text);
+}
+.markmap-link {
+  fill: none;
+}
+.markmap-node > circle {
+  cursor: pointer;
+}
+.markmap-foreign {
+  display: inline-block;
+}
+.markmap-foreign p {
+  margin: 0;
+}
+.markmap-foreign > div {
+  width: var(--markmap-max-width);
+  text-align: left;
+}
+.markmap-foreign > div > div {
+  display: inline-block;
+}

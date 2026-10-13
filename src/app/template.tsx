@@ -1,6 +1,19 @@
-import type { ReactNode } from 'react';
+'use client';
 
-/** Remounts on every navigation, so each page fades in (disabled under reduced motion). */
+import { useEffect, useState, type ReactNode } from 'react';
+
+/** Becomes true once the first page has hydrated; later templates belong to client navigations. */
+let hydrated = false;
+
+/**
+ * Remounts on every navigation, so pages after the first fade in (disabled
+ * under reduced motion). The first page load is not animated: content that
+ * starts at opacity 0 would not count as the Largest Contentful Paint.
+ */
 export default function Template({ children }: { children: ReactNode }) {
-  return <div className="animate-page">{children}</div>;
+  const [animate] = useState(() => hydrated);
+  useEffect(() => {
+    hydrated = true;
+  }, []);
+  return <div className={animate ? 'animate-page' : undefined}>{children}</div>;
 }

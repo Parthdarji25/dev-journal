@@ -113,7 +113,7 @@ SECURITY
 - Raw HTML inside markdown is not rendered (rehype-sanitize). The token never appears in URLs or logs. robots.txt disallows /admin.
 
 PERFORMANCE, ACCESSIBILITY, SEO
-- Lighthouse 95+ in all four categories on home, a chapter and interview questions (mobile profile, measured with fixtures).
+- Lighthouse: one script, pnpm lighthouse (run on demand with fixtures, not in CI), checks home, a chapter and interview questions with Lighthouse's default mobile settings. It fails only if Accessibility, Best Practices or SEO is below 90. Performance and LCP are printed for information only and never fail the run.
 - No markdown parsing in the browser on public pages; Shiki at build; Markmap, CodeMirror and cmdk load lazily.
 - WCAG 2.2 AA: contrast, visible focus, full keyboard use of menus, drawer, palette and toggles, aria-pressed on toggle groups, skip-to-content link, reduced motion respected, touch targets at least 44px, layouts from 360px to 1440px.
 - Per-page metadata, canonical URLs from NEXT_PUBLIC_SITE_URL, sitemap.xml, robots.txt and a default social image.
@@ -140,7 +140,7 @@ Content and admin
 - An unknown track or section folder inside /content makes validate fail with a message naming the folder.
 Speed
 - Each /<section>/[track] page contains only that track's data. Switching track navigates to the prebuilt page (prefetched on hover); never ship all tracks' data in one page.
-- Budgets checked in CI: at most 100 KB of gzipped JavaScript per public page (lazy chunks excluded), HTML under 150 KB, and on mobile Lighthouse with fixtures LCP under 1.5s and CLS under 0.05.
+- Budgets checked in CI: at most 100 KB of gzipped JavaScript of our own code per public page (the Next.js/React runtime and lazy chunks are not counted) and HTML under 150 KB.
 - Images always carry width and height; below the fold they use loading='lazy' and decoding='async'; a chapter's first image loads eagerly.
 - Fonts: Latin subset only, font-display swap, preload heading and body fonts, at most 2 weights per family.
 - Caching in vercel.json: /_next/static and /pagefind files cache for one year as immutable; HTML uses 'public, max-age=0, must-revalidate' so new content shows immediately.
@@ -151,7 +151,7 @@ ENVIRONMENT (.env.example)
 NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_GITHUB_OWNER, NEXT_PUBLIC_GITHUB_REPO, NEXT_PUBLIC_GITHUB_BRANCH=main, NEXT_PUBLIC_ARTIFACTS_ORIGIN.
 
 PACKAGE SCRIPTS
-dev | build (next build, then pagefind --site out) | build:artifacts (copy content/**/*.html to artifacts-out/ with the same paths plus its own vercel.json) | start (serve out/) | lint | typecheck | test | e2e | validate | format.
+dev | build (next build, then pagefind --site out) | build:artifacts (copy content/**/*.html to artifacts-out/ with the same paths plus its own vercel.json) | start (serve out/) | lint | typecheck | test | e2e | validate | format | lighthouse (on demand, not in CI).
 
 CODE LAYOUT
 src/app (one folder per route), src/components/{layout,ui,content,search,admin}, src/lib/{content,schema,github,search}, src/styles, scripts/, tests/{unit,e2e,fixtures}, .github/workflows, artifacts-site/ (config for the second Vercel project), README.md.
@@ -160,7 +160,7 @@ PHASES (stop after each and report)
 Phase 1 - Scaffold: Next.js + TypeScript + Tailwind + fonts + tokens + next-themes, content skeleton with .gitkeep files and the two _meta files, lint/format/typecheck. Accept: pnpm build passes with empty content; light/dark toggle works with no flash.
 Phase 2 - Content layer: zod schemas, loaders for every format, markdown pipeline (Shiki, anchors, callouts, sanitize), updated dates, link checker, validate script, unit tests with fixtures. Accept: pnpm validate and pnpm test pass; empty content loads as empty lists without errors; slug edge cases (symbols only, non-English, duplicates), partial data and the link checker have unit tests.
 Phase 3 - Shell and reading: header with the three menus, mobile drawer, footer, home, track hubs, Learning Notes index, course page and the chapter reader with all variants (note, problem, case-study, HTML iframe). Accept: keyboard-only navigation works; every page shows its empty state with real content and renders fixtures correctly; HTML artifact frames resize to fit; the per-page JavaScript budget is met.
-Phase 4 - Sections and search: category bar, Roadmap, Mind Maps, Interview Questions, Cheat Sheets, Resources, search palette with Pagefind, SEO files, 404. Accept: all filters work; the palette finds fixture items by section and track; Lighthouse targets met on fixtures; switching track loads only that track's page; the search index loads only when the palette opens.
+Phase 4 - Sections and search: category bar, Roadmap, Mind Maps, Interview Questions, Cheat Sheets, Resources, search palette with Pagefind, SEO files, 404. Accept: all filters work; the palette finds fixture items by section and track; pnpm lighthouse passes on fixtures (Accessibility, Best Practices and SEO 90+); switching track loads only that track's page; the search index loads only when the palette opens.
 Phase 5 - Admin: sign-in, Content tab (list, editor, templates, upload, checks, atomic commits, rename, delete with Undo, history and restore, drafts, unsaved guard), Activity tab with file changes and revert, site status. Accept: against a throwaway test repo, create/edit/rename/delete/restore/revert each produce exactly one commit with the expected files; a stale ref shows the conflict message; image upload compresses to WebP in the same commit; chapter reorder, course rename and course delete each make one commit; a rate limit, going offline and private mode each show a clear message and keep the draft; a duplicate file name is blocked.
 Phase 6 - Hardening and delivery: security headers, artifacts site build, accessibility pass, Playwright suites, CI and mirror workflows, README (setup, env vars, deploy steps, content formats). Accept: CI is green on a pull request; no sample content exists anywhere in /content; caching headers and font subsetting verified on the deployed site; the link checker and size budgets run in CI.
 

@@ -1,11 +1,16 @@
 /**
  * Static file server for the exported site, used by scripts/serve.ts
  * (pnpm start) and by the e2e global setup. Clean URLs: /a/b serves a/b.html
- * or a/b/index.html; misses serve 404.html with status 404.
+ * or a/b/index.html; misses serve 404.html with status 404. Text responses are
+ * gzipped, as on the real host. HEAD requests (used by the Next.js router
+ * before prefetching) get headers only.
  */
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
+import zlib from 'node:zlib';
+
+const COMPRESSIBLE = /\.(html|js|css|json|txt|svg|xml|wasm)$/i;
 
 const TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -50,11 +55,17 @@ export function createStaticServer(dirArg: string): http.Server {
       res.writeHead(404).end('Not found');
       return;
     }
+    const gzip =
+      COMPRESSIBLE.test(file) && String(req.headers['accept-encoding'] ?? '').includes('gzip');
     res.writeHead(status, {
       'content-type': TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
       'cache-control': 'no-store',
+      vary: 'accept-encoding',
+      ...(gzip ? { 'content-encoding': 'gzip' } : {}),
     });
-    fs.createReadStream(file).pipe(res);
+    if (req.method === 'HEAD') res.end();
+    else if (gzip) fs.createReadStream(file).pipe(zlib.createGzip()).pipe(res);
+    else fs.createReadStream(file).pipe(res);
   });
 }
 

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DIFFICULTIES } from './constants';
 
 /** lowercase-kebab-case, ASCII letters and digits only. */
 export const KEBAB_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -19,7 +20,7 @@ export const dateSchema = z.preprocess(
   z.iso.date('must be a date in the form YYYY-MM-DD'),
 );
 
-export const difficultySchema = z.enum(['easy', 'medium', 'hard']);
+export const difficultySchema = z.enum(DIFFICULTIES);
 export type Difficulty = z.infer<typeof difficultySchema>;
 
 export const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'must be a #RRGGBB colour');

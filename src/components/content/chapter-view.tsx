@@ -16,6 +16,7 @@ import { CaseStudySteps } from './case-study-steps';
 import { CodeCopy } from './code-copy';
 import { chapterTypeLabel } from './labels';
 import { Reveal } from './reveal';
+import { SearchFilters, searchBody } from './section-page';
 import { Toc, type TocEntry } from './toc';
 
 const BODY_ID = 'chapter-body';
@@ -138,7 +139,16 @@ function htmlBody({ chapter }: { chapter: Chapter }) {
   return {
     body: (
       <>
-        {chapter.description && <p className="mb-6 text-lg text-soft">{chapter.description}</p>}
+        {chapter.description && <p className="mb-4 text-lg text-soft">{chapter.description}</p>}
+        {chapter.tags.length > 0 && (
+          <ul aria-label="Tags" className="mb-6 flex flex-wrap gap-2">
+            {chapter.tags.map((t) => (
+              <li key={t}>
+                <Chip>{t}</Chip>
+              </li>
+            ))}
+          </ul>
+        )}
         <ArtifactFrame src={artifactUrl(chapter.file)} title={chapter.title} />
       </>
     ),
@@ -267,7 +277,12 @@ export async function ChapterView({
           </nav>
         </aside>
 
-        <article id={BODY_ID} className="min-w-0" data-pagefind-body>
+        <article
+          id={BODY_ID}
+          className="min-w-0"
+          {...searchBody(`${chapter.title} · ${course.title}`)}
+        >
+          <SearchFilters section="learning-notes" track={track.slug} />
           <p className="text-sm text-muted">{meta.join(' · ')}</p>
           <h1 className="mt-2 mb-8 text-3xl font-bold sm:text-4xl">{chapter.title}</h1>
           {body}

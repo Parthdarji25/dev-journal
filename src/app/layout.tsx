@@ -3,6 +3,9 @@ import type { ReactNode } from 'react';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { ThemeProvider } from '@/components/layout/theme-provider';
+import { SearchLauncher } from '@/components/search/search-launcher';
+import { getContent } from '@/lib/content';
+import { OG_IMAGE } from '@/lib/metadata';
 import { siteName, siteUrl } from '@/lib/site';
 import { bodyFont, codeFont, displayFont } from '@/styles/fonts';
 import '@/styles/globals.css';
@@ -11,7 +14,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: siteName, template: `%s | ${siteName}` },
   description: "A notebook for everything I'm learning.",
-  openGraph: { siteName, type: 'website' },
+  openGraph: { siteName, type: 'website', images: [OG_IMAGE] },
+  twitter: { card: 'summary_large_image', images: [OG_IMAGE.url] },
 };
 
 export const viewport: Viewport = {
@@ -22,6 +26,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const { sections, tracks } = getContent();
   return (
     <html
       lang="en"
@@ -46,6 +51,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {children}
           </main>
           <Footer />
+          <SearchLauncher
+            sections={sections.map((s) => ({ slug: s.slug, name: s.name }))}
+            tracks={tracks.map((t) => ({ slug: t.slug, name: t.name }))}
+          />
         </ThemeProvider>
       </body>
     </html>
