@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="600" fill="#0f172a"/>
+  <text x="500" y="50" text-anchor="middle" font-size="28" font-weight="700" fill="#f8fafc">Backend Engineering Roadmap</text>
+  <text x="500" y="80" text-anchor="middle" font-size="15" fill="#94a3b8">From a single request to production-grade systems</text>
+
+  <!-- Stage headers -->
+  <g font-size="15" font-weight="700" fill="#fff" text-anchor="middle">
+    <rect x="25" y="105" width="180" height="56" rx="10" fill="#3b82f6"/>
+    <text x="115" y="128">STAGE 1</text><text x="115" y="148" font-weight="500" font-size="13">Handling a request</text>
+    <rect x="220" y="105" width="180" height="56" rx="10" fill="#10b981"/>
+    <text x="310" y="128">STAGE 2</text><text x="310" y="148" font-weight="500" font-size="13">APIs and data</text>
+    <rect x="415" y="105" width="180" height="56" rx="10" fill="#f59e0b"/>
+    <text x="505" y="128">STAGE 3</text><text x="505" y="148" font-weight="500" font-size="13">Async and real-time</text>
+    <rect x="610" y="105" width="180" height="56" rx="10" fill="#f97316"/>
+    <text x="700" y="128">STAGE 4</text><text x="700" y="148" font-weight="500" font-size="13">Production readiness</text>
+    <rect x="805" y="105" width="180" height="56" rx="10" fill="#ef4444"/>
+    <text x="895" y="128">STAGE 5</text><text x="895" y="148" font-weight="500" font-size="13">Security, scale, ops</text>
+  </g>
+
+  <!-- Arrows between stages -->
+  <g stroke="#64748b" stroke-width="2" marker-end="url(#arr)">
+    <line x1="205" y1="133" x2="218" y2="133"/>
+    <line x1="400" y1="133" x2="413" y2="133"/>
+    <line x1="595" y1="133" x2="608" y2="133"/>
+    <line x1="790" y1="133" x2="803" y2="133"/>
+  </g>
+
+  <!-- Stage 1 items -->
+  <g font-size="13" fill="#e2e8f0" text-anchor="middle">
+    <g fill="#1e3a8a" stroke="#3b82f6">
+      <rect x="25" y="180" width="180" height="34" rx="7"/><rect x="25" y="222" width="180" height="34" rx="7"/>
+      <rect x="25" y="264" width="180" height="34" rx="7"/><rect x="25" y="306" width="180" height="34" rx="7"/>
+      <rect x="25" y="348" width="180" height="34" rx="7"/><rect x="25" y="390" width="180" height="34" rx="7"/>
+      <rect x="25" y="432" width="180" height="34" rx="7"/><rect x="25" y="474" width="180" height="34" rx="7"/>
+    </g>
+    <text x="115" y="202">HTTP</text><text x="115" y="244">Routing</text>
+    <text x="115" y="286">Serialization</text><text x="115" y="328">Auth</text>
+    <text x="115" y="370">Validation</text><text x="115" y="412">Middleware</text>
+    <text x="115" y="454">Request context</text><text x="115" y="496">Controllers &amp; services</text>
+
+    <!-- Stage 2 -->
+    <g fill="#064e3b" stroke="#10b981">
+      <rect x="220" y="180" width="180" height="34" rx="7"/><rect x="220" y="222" width="180" height="34" rx="7"/>
+      <rect x="220" y="264" width="180" height="34" rx="7"/><rect x="220" y="306" width="180" height="34" rx="7"/>
+      <rect x="220" y="348" width="180" height="34" rx="7"/>
+    </g>
+    <text x="310" y="202">REST API design</text><text x="310" y="244">Databases</text>
+    <text x="310" y="286">Caching</text><text x="310" y="328">Full-text search</text>
+    <text x="310" y="370">Object storage</text>
+
+    <!-- Stage 3 -->
+    <g fill="#78350f" stroke="#f59e0b">
+      <rect x="415" y="180" width="180" height="34" rx="7"/><rect x="415" y="222" width="180" height="34" rx="7"/>
+      <rect x="415" y="264" width="180" height="34" rx="7"/><rect x="415" y="306" width="180" height="34" rx="7"/>
+    </g>
+    <text x="505" y="202">Task queues</text><text x="505" y="244">Concurrency</text>
+    <text x="505" y="286">Real-time</text><text x="505" y="328">Webhooks</text>
+
+    <!-- Stage 4 -->
+    <g fill="#7c2d12" stroke="#f97316">
+      <rect x="610" y="180" width="180" height="34" rx="7"/><rect x="610" y="222" width="180" height="34" rx="7"/>
+      <rect x="610" y="264" width="180" height="34" rx="7"/><rect x="610" y="306" width="180" height="34" rx="7"/>
+      <rect x="610" y="348" width="180" height="34" rx="7"/><rect x="610" y="390" width="180" height="34" rx="7"/>
+    </g>
+    <text x="700" y="202">Error handling</text><text x="700" y="244">Configuration</text>
+    <text x="700" y="286">Observability</text><text x="700" y="328">Graceful shutdown</text>
+    <text x="700" y="370">Testing</text><text x="700" y="412">OpenAPI</text>
+
+    <!-- Stage 5 -->
+    <g fill="#7f1d1d" stroke="#ef4444">
+      <rect x="805" y="180" width="180" height="34" rx="7"/><rect x="805" y="222" width="180" height="34" rx="7"/>
+      <rect x="805" y="264" width="180" height="34" rx="7"/>
+    </g>
+    <text x="895" y="202">Security</text><text x="895" y="244">Scaling</text>
+    <text x="895" y="286">DevOps</text>
+  </g>
+
+  <text x="500" y="560" text-anchor="middle" font-size="14" fill="#94a3b8">Learn the concepts once, apply them in any language or framework</text>
+</svg>
