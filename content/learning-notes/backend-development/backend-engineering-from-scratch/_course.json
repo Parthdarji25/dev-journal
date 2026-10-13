@@ -3,7 +3,8 @@
   "description": "",
   "order": [
     "01the-backend-engineering-roadmap.md",
-    "02the-mindset-of-a-backend-engineer.md"
+    "02the-mindset-of-a-backend-engineer.md",
+    "03what-is-a-backend-and-why-do-we-need-one.md"
   ],
   "html": {}
 }
