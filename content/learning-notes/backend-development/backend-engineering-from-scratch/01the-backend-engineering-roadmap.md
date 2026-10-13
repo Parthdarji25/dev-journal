@@ -122,9 +122,7 @@ Protect against common attacks: SQL injection, XSS, CSRF and broken authenticati
 Unit tests check small pieces; integration tests check pieces working together. TDD means writing tests first. CI/CD pipelines run tests automatically, and linters keep code style consistent.
 
 ### 23. OpenAPI
-A standard file that **describes yo![ChatGPT Image Sep 7, 2026, 03 33 07 PM](assets/chatgpt-image-sep-7-2026-03-33-07-pm.webp "1071x1468")
-![Roadmap overview](assets/roadmap-overview.svg "1000x600")
-ur API**: its endpoints, inputs, outputs and auth. It powers auto-generated docs (Swagger UI) and lets teams agree on an API before building it (API-first).
+A standard file that **describes your API**: its endpoints, inputs, outputs and auth. It powers auto-generated docs (Swagger UI) and lets teams agree on an API before building it (API-first).
 
 ### 24. Webhooks
 Instead of a client repeatedly asking "anything new?" (polling), the server **calls the client's URL** when something happens. Used by Stripe for payments and GitHub for repo events. Always verify webhook signatures.
