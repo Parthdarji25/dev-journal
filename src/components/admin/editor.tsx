@@ -73,6 +73,15 @@ export interface EditorProps {
   onDiscard(): void;
 }
 
+const IMAGE_TYPES: Record<string, string> = {
+  svg: 'image/svg+xml',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  gif: 'image/gif',
+  webp: 'image/webp',
+};
+
 /** Sections whose pages render markdown images (the others parse lists and tables). */
 const IMAGE_SECTIONS: readonly SectionSlug[] = ['learning-notes', 'interview-questions'];
 
@@ -104,7 +113,6 @@ function Preview({
   const [html, setHtml] = useState<string | null>(null);
   useEffect(() => {
     let cancelled = false;
-    const urls: string[] = [];
     void (async () => {
       let body = text;
       try {
@@ -122,13 +130,9 @@ function Preview({
         const existing = folder ? snapshot.files.get(`${folder}/${src}`) : undefined;
         if (!bytes && existing) bytes = await client.readBlob(existing.sha).catch(() => undefined);
         if (!bytes) continue;
-        const url = URL.createObjectURL(
-          new Blob([bytes as BlobPart], {
-            type: name.endsWith('.svg') ? 'image/svg+xml' : 'image/webp',
-          }),
-        );
-        urls.push(url);
-        sources.set(src, url);
+        // A data: URL, as the site's CSP allows images from 'self', data: and https: only.
+        const ext = name.slice(name.lastIndexOf('.') + 1).toLowerCase();
+        sources.set(src, `data:${IMAGE_TYPES[ext] ?? 'image/webp'};base64,${bytesToBase64(bytes)}`);
       }
       // The same pipeline as the site; raw HTML in markdown is dropped by it.
       const { renderMarkdown } = await import('@/lib/content/markdown/render');
@@ -139,7 +143,6 @@ function Preview({
     })();
     return () => {
       cancelled = true;
-      urls.forEach((u) => URL.revokeObjectURL(u));
     };
   }, [text, images, folder, snapshot.files, client]);
   if (html === null) return <p className="p-4 text-sm text-muted">Rendering the preview...</p>;

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "tsx scripts/copy-assets.ts && next dev",
-    "build": "tsx scripts/copy-assets.ts && next build && tsx scripts/fix-segment-files.ts && tsx scripts/search-index.ts",
+    "build": "tsx scripts/copy-assets.ts && next build && tsx scripts/fix-segment-files.ts && tsx scripts/search-index.ts && tsx scripts/csp-hashes.ts",
     "build:artifacts": "tsx scripts/build-artifacts.ts",
     "start": "tsx scripts/serve.ts out 3000",
     "lint": "eslint .",

@@ -75,6 +75,9 @@ describe('findBrokenLinks', () => {
     expect(pages.has('/interview-questions/system-design')).toBe(true);
     expect(pages.has('/tracks/gen-ai-engineer')).toBe(true);
     expect(pages.has('/roadmaps')).toBe(false);
+    // Learning Notes pages are the index, courses and chapters, never a bare track.
+    expect(pages.has('/learning-notes')).toBe(true);
+    expect(pages.has('/learning-notes/gen-ai-engineer')).toBe(false);
   });
 });
 

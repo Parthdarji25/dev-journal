@@ -124,8 +124,10 @@ export function pagePaths(
   sectionRoutes: Record<SectionSlug, string>,
 ): Set<string> {
   const paths = new Set<string>(['/']);
-  for (const route of Object.values(sectionRoutes)) {
+  for (const [section, route] of Object.entries(sectionRoutes)) {
     paths.add(route);
+    // Learning Notes has no page per track: its index filters the tracks in place.
+    if (section === 'learning-notes') continue;
     for (const t of content.tracks) paths.add(`${route}/${t.slug}`);
   }
   for (const t of content.tracks) paths.add(`/tracks/${t.slug}`);

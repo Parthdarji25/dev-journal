@@ -36,12 +36,38 @@ for (const file of htmlFiles(site)) {
   pages++;
 }
 
-const written = await index.writeFiles({ outputPath: path.join(site, 'pagefind') });
+const output = path.join(site, 'pagefind');
+const written = await index.writeFiles({ outputPath: output });
 if (written.errors.length) {
   throw new Error(`Pagefind could not write the index: ${written.errors.join('; ')}`);
 }
+// writeFiles can resolve while the backend is still flushing files, and close()
+// kills the backend: on a busy machine that left empty files and broke search.
+await waitForFiles(output);
+await close();
+JSON.parse(fs.readFileSync(path.join(output, 'pagefind-entry.json'), 'utf8'));
 
 console.log(
   `Search index: ${pages} page(s) indexed into ${path.relative(process.cwd(), site)}/pagefind.`,
 );
-await close();
+
+/** Every file under `dir` with its size. */
+function fileSizes(dir: string): [string, number][] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    const full = path.join(dir, e.name);
+    return e.isDirectory() ? fileSizes(full) : [[full, fs.statSync(full).size] as [string, number]];
+  });
+}
+
+/** Waits until no file is empty and the sizes hold still. */
+async function waitForFiles(dir: string, timeoutMs = 30_000) {
+  let previous = '';
+  for (const start = Date.now(); Date.now() - start < timeoutMs;) {
+    const sizes = fileSizes(dir);
+    const snapshot = JSON.stringify(sizes);
+    if (sizes.length > 0 && sizes.every(([, size]) => size > 0) && snapshot === previous) return;
+    previous = snapshot;
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+  throw new Error(`Pagefind did not finish writing ${dir}`);
+}

@@ -10,6 +10,7 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { readHeaderRules } from './headers';
 import { close, createStaticServer, listen } from './static-server';
 
 const PORT = 4400;
@@ -46,8 +47,13 @@ function lighthouse(args: string[]): Promise<void> {
   });
 }
 
-const site = createStaticServer('out');
-const artifacts = createStaticServer('artifacts-out');
+const site = createStaticServer('out', {
+  headers: readHeaderRules('vercel.json'),
+  frameSrc: `http://127.0.0.1:${PORT + 1}`,
+});
+const artifacts = createStaticServer('artifacts-out', {
+  headers: readHeaderRules('artifacts-out/vercel.json'),
+});
 await listen(site, PORT);
 await listen(artifacts, PORT + 1);
 

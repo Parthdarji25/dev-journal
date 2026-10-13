@@ -3,12 +3,21 @@
  * (pnpm start) and by the e2e global setup. Clean URLs: /a/b serves a/b.html
  * or a/b/index.html; misses serve 404.html with status 404. Text responses are
  * gzipped, as on the real host. HEAD requests (used by the Next.js router
- * before prefetching) get headers only.
+ * before prefetching) get headers only. With vercel.json header rules it
+ * sends the production headers too.
  */
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { headersFor, withDirective, type HeaderRule } from './headers';
+
+export interface ServerOptions {
+  /** vercel.json header rules, sent as the host would send them. */
+  headers?: HeaderRule[];
+  /** Replaces frame-src in the CSP (a local artifacts server instead of the production one). */
+  frameSrc?: string;
+}
 
 const COMPRESSIBLE = /\.(html|js|css|json|txt|svg|xml|wasm)$/i;
 
@@ -30,8 +39,17 @@ const TYPES: Record<string, string> = {
   '.wasm': 'application/wasm',
 };
 
-export function createStaticServer(dirArg: string): http.Server {
+export function createStaticServer(dirArg: string, options: ServerOptions = {}): http.Server {
   const dir = path.resolve(dirArg);
+
+  function hostHeaders(pathname: string): Record<string, string> {
+    const headers = headersFor(options.headers ?? [], pathname);
+    const csp = headers['content-security-policy'];
+    if (csp && options.frameSrc) {
+      headers['content-security-policy'] = withDirective(csp, 'frame-src', [options.frameSrc]);
+    }
+    return headers;
+  }
 
   function resolveFile(urlPath: string): string | null {
     const clean = path.normalize(decodeURIComponent(urlPath)).replace(/^([/\\])+/, '');
@@ -61,6 +79,7 @@ export function createStaticServer(dirArg: string): http.Server {
       'content-type': TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
       'cache-control': 'no-store',
       vary: 'accept-encoding',
+      ...hostHeaders(url.pathname),
       ...(gzip ? { 'content-encoding': 'gzip' } : {}),
     });
     if (req.method === 'HEAD') res.end();

@@ -113,7 +113,10 @@ const MAX_RESULTS = 20;
 
 async function indexIsEmpty(): Promise<boolean> {
   try {
-    const entry = (await (await fetch('/pagefind/pagefind-entry.json')).json()) as {
+    // /pagefind files are cached for a year; the entry changes with every content deploy.
+    const entry = (await (
+      await fetch('/pagefind/pagefind-entry.json', { cache: 'no-cache' })
+    ).json()) as {
       languages?: Record<string, unknown>;
     };
     return Object.keys(entry.languages ?? {}).length === 0;

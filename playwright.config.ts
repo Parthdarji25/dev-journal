@@ -14,6 +14,10 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
+  // Generous limits: admin commits make several faked GitHub calls through page.route, and
+  // keyboard-heavy tests slow down a lot on a busy machine running two workers.
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
   use: {
     baseURL: 'http://127.0.0.1:4400',
     channel,

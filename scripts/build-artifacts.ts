@@ -30,8 +30,18 @@ for (const file of files) {
   fs.writeFileSync(target, injectResizeScript(fs.readFileSync(file, 'utf8')));
 }
 
+// Its own vercel.json (headers only), so artifacts-out/ also deploys as a plain static folder.
 const config = path.resolve('artifacts-site/vercel.json');
-if (fs.existsSync(config)) fs.copyFileSync(config, path.join(out, 'vercel.json'));
+if (fs.existsSync(config)) {
+  const { $schema, headers } = JSON.parse(fs.readFileSync(config, 'utf8')) as {
+    $schema?: string;
+    headers?: unknown[];
+  };
+  fs.writeFileSync(
+    path.join(out, 'vercel.json'),
+    `${JSON.stringify({ $schema, headers: headers ?? [] }, null, 2)}\n`,
+  );
+}
 // A root page so the artifacts origin has something at "/".
 fs.writeFileSync(
   path.join(out, 'index.html'),
