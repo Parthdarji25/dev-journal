@@ -9,7 +9,7 @@ import { renderCaseStudy, renderProblem } from '@/lib/content/markdown/sections'
 import { formatDate } from '@/lib/format';
 import { trackClass } from '@/lib/nav';
 import type { Track } from '@/lib/schema';
-import { artifactUrl } from '@/lib/site';
+import { versionedArtifactUrl } from '@/lib/content/artifact-url';
 import { ArtifactFrame } from './artifact-frame';
 import { Breadcrumb } from './breadcrumb';
 import { CaseStudySteps } from './case-study-steps';
@@ -149,7 +149,7 @@ function htmlBody({ chapter }: { chapter: Chapter }) {
             ))}
           </ul>
         )}
-        <ArtifactFrame src={artifactUrl(chapter.file)} title={chapter.title} />
+        <ArtifactFrame src={versionedArtifactUrl(chapter.file)} title={chapter.title} />
       </>
     ),
     toc: [] as TocEntry[],
@@ -259,7 +259,12 @@ export async function ChapterView({
         />
       </div>
 
-      <div className="mt-4 grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">
+      {/* The right column only when there is a table of contents (HTML chapters have none). */}
+      <div
+        className={`mt-4 grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] ${
+          toc.length > 0 ? 'xl:grid-cols-[15rem_minmax(0,1fr)_13rem]' : ''
+        }`}
+      >
         <aside className="print:hidden">
           <details className="rounded-lg border border-border bg-surface p-2 lg:hidden">
             <summary className="flex min-h-11 cursor-pointer items-center px-2 font-semibold">

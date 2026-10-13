@@ -367,9 +367,6 @@
 .artifact-frame:fullscreen {
   background: var(--bg);
 }
-.artifact-frame:fullscreen iframe {
-  height: 100% !important;
-}
 
 /* Markmap: its global CSS, themed with our tokens (embedGlobalCSS is off so no inline <style>). */
 .markmap {

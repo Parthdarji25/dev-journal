@@ -184,9 +184,10 @@ test.describe('HTML chapter', () => {
     await expect(frame).toHaveAttribute('sandbox', 'allow-scripts');
     await expect(frame).toHaveAttribute('referrerpolicy', 'no-referrer');
     await expect(frame).toHaveAttribute('loading', 'lazy');
+    // Versioned by content, so browsers never reuse a stale copy (or its headers).
     await expect(frame).toHaveAttribute(
       'src',
-      'http://127.0.0.1:4401/learning-notes/frontend-development/css-layout/grid-playground.html',
+      /^http:\/\/127\.0\.0\.1:4401\/learning-notes\/frontend-development\/css-layout\/grid-playground\.html\?v=[0-9a-f]{12}$/,
     );
     await expect(page.getByText('Sandboxed')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Reload' })).toBeVisible();
@@ -199,6 +200,50 @@ test.describe('HTML chapter', () => {
       .getByRole('heading', { name: 'Grid playground fixture' });
     await expect(inner).toBeVisible();
     await expect(page.getByText('This artifact could not be loaded')).toHaveCount(0);
+  });
+
+  for (const [name, viewport] of [
+    ['desktop', { width: 1280, height: 800 }],
+    ['mobile', { width: 375, height: 740 }],
+  ] as const) {
+    test(`Full size fills the screen and Exit full size returns (${name})`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(HTML_CHAPTER);
+      const frame = page.locator('iframe');
+      await expect.poll(async () => (await frame.boundingBox())?.height ?? 0).toBeLessThan(400);
+
+      await page.getByRole('button', { name: 'Full size' }).click();
+      const exit = page.getByRole('button', { name: 'Exit full size' });
+      await expect(exit).toBeVisible();
+      // The frame takes everything below the toolbar, however short its content is.
+      await expect
+        .poll(async () => (await frame.boundingBox())?.height ?? 0)
+        .toBeGreaterThan(viewport.height - 120);
+      expect((await frame.boundingBox())?.width).toBe(viewport.width);
+      await expect(
+        page.frameLocator('iframe').getByRole('heading', { name: 'Grid playground fixture' }),
+      ).toBeVisible();
+
+      await exit.click();
+      await expect(page.getByRole('button', { name: 'Full size' })).toBeVisible();
+      await expect.poll(async () => (await frame.boundingBox())?.height ?? 0).toBeLessThan(400);
+    });
+  }
+
+  test('Esc closes Full size', async ({ page }) => {
+    await page.goto(HTML_CHAPTER);
+    await page.getByRole('button', { name: 'Full size' }).click();
+    await expect(page.getByRole('button', { name: 'Exit full size' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Full size' })).toBeVisible();
+  });
+
+  test('uses the full content width when there is no table of contents', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(HTML_CHAPTER);
+    const article = await page.locator('article').boundingBox();
+    // 1440px wide: the article spans what would otherwise be two columns.
+    expect(article?.width).toBeGreaterThan(800);
   });
 
   test('shows an error with Reload when the artifact does not load in 10s', async ({ page }) => {

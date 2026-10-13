@@ -1,6 +1,6 @@
 'use client';
 
-import { Maximize2, RotateCw, ShieldCheck } from 'lucide-react';
+import { Maximize2, Minimize2, RotateCw, ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 const MAX_HEIGHT = 4000;
@@ -18,8 +18,37 @@ type State = 'loading' | 'ready' | 'failed';
 export function ArtifactFrame({ src, title }: { src: string; title: string }) {
   const [state, setState] = useState<State>(src ? 'loading' : 'failed');
   const [attempt, setAttempt] = useState(0);
+  const [fullSize, setFullSize] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  /** Leaves Full size, and the browser's fullscreen with it. */
+  function closeFullSize() {
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    setFullSize(false);
+  }
+
+  // Full size fills the screen with the frame. Esc, or leaving the browser's
+  // fullscreen (back gesture, browser UI), closes it; the page stays put behind.
+  useEffect(() => {
+    if (!fullSize) return;
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement) setFullSize(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeFullSize();
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('keydown', onKey);
+    const root = document.documentElement;
+    const overflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('keydown', onKey);
+      root.style.overflow = overflow;
+    };
+  }, [fullSize]);
 
   useEffect(() => {
     if (!src) return;
@@ -57,10 +86,15 @@ export function ArtifactFrame({ src, title }: { src: string; title: string }) {
     setAttempt((n) => n + 1);
   }
 
-  function fullSize() {
-    const el = wrapperRef.current;
-    if (el?.requestFullscreen) void el.requestFullscreen();
-    else if (src) window.open(src, '_blank', 'noopener,noreferrer');
+  function toggleFullSize() {
+    if (fullSize) {
+      closeFullSize();
+      return;
+    }
+    setFullSize(true);
+    // The browser's own fullscreen where it allows it (not on iPhone); the
+    // fixed layout fills the screen either way.
+    wrapperRef.current?.requestFullscreen?.().catch(() => {});
   }
 
   const toolButton =
@@ -69,7 +103,9 @@ export function ArtifactFrame({ src, title }: { src: string; title: string }) {
   return (
     <div
       ref={wrapperRef}
-      className="artifact-frame overflow-hidden rounded-xl border border-border bg-surface"
+      className={`artifact-frame overflow-hidden bg-surface ${
+        fullSize ? 'fixed inset-0 z-60 flex flex-col' : 'rounded-xl border border-border'
+      }`}
     >
       <div className="flex flex-wrap items-center gap-1 border-b border-border bg-panel px-2">
         <span className="inline-flex items-center gap-1.5 px-2 text-xs font-semibold text-muted">
@@ -81,12 +117,16 @@ export function ArtifactFrame({ src, title }: { src: string; title: string }) {
           <RotateCw aria-hidden className="size-4" />
           Reload
         </button>
-        <button type="button" onClick={fullSize} className={toolButton} disabled={!src}>
-          <Maximize2 aria-hidden className="size-4" />
-          Full size
+        <button type="button" onClick={toggleFullSize} className={toolButton} disabled={!src}>
+          {fullSize ? (
+            <Minimize2 aria-hidden className="size-4" />
+          ) : (
+            <Maximize2 aria-hidden className="size-4" />
+          )}
+          {fullSize ? 'Exit full size' : 'Full size'}
         </button>
       </div>
-      <div className="relative">
+      <div className={fullSize ? 'relative min-h-0 flex-1' : 'relative'}>
         {src && (
           <iframe
             key={attempt}
@@ -96,7 +136,10 @@ export function ArtifactFrame({ src, title }: { src: string; title: string }) {
             sandbox="allow-scripts"
             referrerPolicy="no-referrer"
             loading="lazy"
-            className={`block h-[480px] w-full border-0 bg-white ${state === 'failed' ? 'invisible' : ''}`}
+            // Full size: fill the space below the toolbar, whatever height the content reported.
+            className={`block w-full border-0 bg-white ${
+              fullSize ? 'absolute inset-0 h-full!' : 'h-120'
+            } ${state === 'failed' ? 'invisible' : ''}`}
           />
         )}
         {state === 'failed' && (

@@ -1,5 +1,5 @@
 import type { CheatSheet } from '@/lib/content';
-import { artifactUrl } from '@/lib/site';
+import { versionedArtifactUrl } from '@/lib/content/artifact-url';
 import { ArtifactFrame } from './artifact-frame';
 import { CheatSheetBrowser } from './cheat-sheet-browser';
 import { ItemPills } from './item-pills';
@@ -24,7 +24,7 @@ export function CheatSheetsView({
         {selected.description && <p className="mt-1 text-soft">{selected.description}</p>}
         <div className="mt-6">
           {selected.format === 'html' ? (
-            <ArtifactFrame src={artifactUrl(selected.file)} title={selected.title} />
+            <ArtifactFrame src={versionedArtifactUrl(selected.file)} title={selected.title} />
           ) : (
             <CheatSheetBrowser groups={selected.groups} />
           )}

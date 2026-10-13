@@ -1,6 +1,6 @@
 import type { MindMap } from '@/lib/content';
 import type { MindNode } from '@/lib/content/markdown/parse';
-import { artifactUrl } from '@/lib/site';
+import { versionedArtifactUrl } from '@/lib/content/artifact-url';
 import { ArtifactFrame } from './artifact-frame';
 import { ItemPills } from './item-pills';
 import { MindMapCanvas } from './mind-map-canvas';
@@ -36,7 +36,7 @@ export function MindMapsView({
         {indexed && <SearchFilters section="mind-maps" track={selected.track} />}
         <h3 className="mb-4 text-xl">{selected.title}</h3>
         {selected.format === 'html' || !selected.root ? (
-          <ArtifactFrame src={artifactUrl(selected.file)} title={selected.title} />
+          <ArtifactFrame src={versionedArtifactUrl(selected.file)} title={selected.title} />
         ) : (
           <>
             <MindMapCanvas root={selected.root} title={selected.title} />
