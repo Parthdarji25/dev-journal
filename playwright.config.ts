@@ -20,7 +20,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [
-    { name: 'empty', testMatch: /(empty|shared)[\\/].*\.spec\.ts/ },
+    // The admin suite mocks GitHub entirely, so it runs once, with the real (empty) content.
+    { name: 'empty', testMatch: /(empty|shared|admin)[\\/].*\.spec\.ts/ },
     { name: 'fixtures', testMatch: /(fixtures|shared)[\\/].*\.spec\.ts/ },
   ],
   globalSetup: './tests/e2e/global-setup.ts',

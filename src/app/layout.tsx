@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
 import { ThemeProvider } from '@/components/layout/theme-provider';
-import { SearchLauncher } from '@/components/search/search-launcher';
-import { getContent } from '@/lib/content';
 import { OG_IMAGE } from '@/lib/metadata';
 import { siteName, siteUrl } from '@/lib/site';
 import { bodyFont, codeFont, displayFont } from '@/styles/fonts';
@@ -25,8 +21,11 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * Shared by the public site, the 404 page and the admin. The public chrome
+ * (header, footer, search) lives in app/(site)/layout.tsx; the admin has its own.
+ */
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const { sections, tracks } = getContent();
   return (
     <html
       lang="en"
@@ -46,15 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           >
             Skip to content
           </a>
-          <Header />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            {children}
-          </main>
-          <Footer />
-          <SearchLauncher
-            sections={sections.map((s) => ({ slug: s.slug, name: s.name }))}
-            tracks={tracks.map((t) => ({ slug: t.slug, name: t.name }))}
-          />
+          {children}
         </ThemeProvider>
       </body>
     </html>
