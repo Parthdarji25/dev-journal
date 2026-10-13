@@ -9,7 +9,7 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO || '';
 export const repoUrl = owner && repo ? `https://github.com/${owner}/${repo}` : '';
 
 /** Origin of the separate artifacts site that serves uploaded HTML ('' when not configured). */
-export const artifactsOrigin = (process.env.NEXT_PUBLIC_ARTIFACTS_ORIGIN || '').replace(/\/+$/, '');
+const artifactsOrigin = (process.env.NEXT_PUBLIC_ARTIFACTS_ORIGIN || '').replace(/\/+$/, '');
 
 export function artifactUrl(file: string): string {
   return artifactsOrigin

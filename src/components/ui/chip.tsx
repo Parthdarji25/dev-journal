@@ -11,11 +11,6 @@ export function Chip({ children, className = '' }: { children: ReactNode; classN
   );
 }
 
-/** Chip in the colour of the enclosing track scope (.t-<slug>). */
-export function TrackChip({ children }: { children: ReactNode }) {
-  return <span className={`${base} border-(--tc) bg-(--tt) text-(--tc)`}>{children}</span>;
-}
-
 const DIFFICULTY_CLASS: Record<Difficulty, string> = {
   easy: 'text-added',
   medium: 'text-modified',

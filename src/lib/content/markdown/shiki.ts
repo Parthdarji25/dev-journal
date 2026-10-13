@@ -1,11 +1,11 @@
 import { bundledLanguages, createHighlighter, type BundledLanguage, type Highlighter } from 'shiki';
 import { classList, isElement, toText, walk, type HastElement, type UnistNode } from './tree';
 
-export const SHIKI_THEMES = { light: 'github-light-default', dark: 'github-dark-default' } as const;
+const SHIKI_THEMES = { light: 'github-light-default', dark: 'github-dark-default' } as const;
 
 let highlighterPromise: Promise<Highlighter> | undefined;
 
-export function getHighlighter(): Promise<Highlighter> {
+function getHighlighter(): Promise<Highlighter> {
   highlighterPromise ??= createHighlighter({
     themes: [SHIKI_THEMES.light, SHIKI_THEMES.dark],
     langs: [],

@@ -2,14 +2,13 @@ import { z } from 'zod';
 import { dateSchema, difficultySchema, stringListSchema } from './common';
 import { RESOURCE_TYPES } from './constants';
 
-export { RESOURCE_TYPES, type ResourceType } from './constants';
+export { RESOURCE_TYPES } from './constants';
 
 /** Front-matter shared by roadmaps, mind maps and resources: one title plus the admin date. */
-export const titledFrontmatterSchema = z.object({
+const titledFrontmatterSchema = z.object({
   title: z.string().trim().min(1),
   updated: dateSchema.optional(),
 });
-export type TitledFrontmatter = z.infer<typeof titledFrontmatterSchema>;
 
 export const roadmapFrontmatterSchema = titledFrontmatterSchema;
 export const mindMapFrontmatterSchema = titledFrontmatterSchema;
@@ -18,7 +17,6 @@ export const resourcesFrontmatterSchema = titledFrontmatterSchema;
 export const cheatSheetFrontmatterSchema = titledFrontmatterSchema.extend({
   description: z.string().trim().optional(),
 });
-export type CheatSheetFrontmatter = z.infer<typeof cheatSheetFrontmatterSchema>;
 
 export const questionFrontmatterSchema = z.object({
   question: z.string().trim().min(1),
@@ -27,7 +25,6 @@ export const questionFrontmatterSchema = z.object({
   tags: stringListSchema,
   updated: dateSchema.optional(),
 });
-export type QuestionFrontmatter = z.infer<typeof questionFrontmatterSchema>;
 
 export const resourceLinkSchema = z.object({
   title: z.string().trim().min(1),

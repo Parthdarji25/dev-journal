@@ -108,7 +108,7 @@ export function slugify(input: string): string {
   return slug;
 }
 
-export function randomSuffix(length = 4): string {
+function randomSuffix(length = 4): string {
   const bytes = new Uint8Array(length);
   globalThis.crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => (b % 36).toString(36)).join('');

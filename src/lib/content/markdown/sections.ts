@@ -59,7 +59,7 @@ export function parseComplexity(markdown: string): ComplexityInfo {
   return info;
 }
 
-export interface RenderedSection extends Rendered {
+interface RenderedSection extends Rendered {
   title: string;
   id: string;
 }

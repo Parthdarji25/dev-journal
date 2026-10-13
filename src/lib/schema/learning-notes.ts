@@ -1,13 +1,12 @@
 import { z } from 'zod';
 import { dateSchema, difficultySchema, stringListSchema } from './common';
 
-export const htmlChapterMetaSchema = z.object({
+const htmlChapterMetaSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().default(''),
   tags: stringListSchema,
   updated: dateSchema.optional(),
 });
-export type HtmlChapterMeta = z.infer<typeof htmlChapterMetaSchema>;
 
 export const courseSchema = z
   .object({
@@ -43,9 +42,8 @@ export const courseSchema = z
       }
     }
   });
-export type CourseConfig = z.infer<typeof courseSchema>;
 
-export const CHAPTER_TYPES = ['note', 'problem', 'case-study'] as const;
+const CHAPTER_TYPES = ['note', 'problem', 'case-study'] as const;
 export type ChapterType = (typeof CHAPTER_TYPES)[number];
 
 export const chapterFrontmatterSchema = z
@@ -68,4 +66,3 @@ export const chapterFrontmatterSchema = z
       });
     }
   });
-export type ChapterFrontmatter = z.infer<typeof chapterFrontmatterSchema>;

@@ -3,7 +3,7 @@ import { hexColorSchema, slugSchema } from './common';
 
 const themePair = z.object({ light: hexColorSchema, dark: hexColorSchema });
 
-export const trackSchema = z.object({
+const trackSchema = z.object({
   slug: slugSchema,
   name: z.string().trim().min(1),
   shortName: z.string().trim().min(1),
@@ -37,7 +37,7 @@ export const SECTION_SLUGS = [
 ] as const;
 export type SectionSlug = (typeof SECTION_SLUGS)[number];
 
-export const sectionSchema = z.object({
+const sectionSchema = z.object({
   slug: z.enum(SECTION_SLUGS),
   name: z.string().trim().min(1),
   description: z.string().trim().min(1),

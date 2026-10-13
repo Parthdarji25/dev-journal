@@ -85,7 +85,7 @@ function checkItemFolder(
  * Folder layout rules: known sections and tracks only, kebab-case names,
  * allowed extensions. Returns one issue per problem, naming the path.
  */
-export function checkStructure(root: string, trackSlugs: string[]): ContentIssue[] {
+function checkStructure(root: string, trackSlugs: string[]): ContentIssue[] {
   const issues: ContentIssue[] = [];
   const tracks = new Set(trackSlugs);
 

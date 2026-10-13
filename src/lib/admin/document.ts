@@ -13,7 +13,7 @@ export interface EditorDoc {
 }
 
 /** Interview questions keep their title in `question`, everything else in `title`. */
-export function titleKey(section: SectionSlug): 'title' | 'question' {
+function titleKey(section: SectionSlug): 'title' | 'question' {
   return section === 'interview-questions' ? 'question' : 'title';
 }
 
@@ -30,7 +30,7 @@ function frontMatterText(data: Record<string, unknown>): string {
 }
 
 /** YAML front-matter (when `data` has keys) followed by the body. */
-export function composeFile(data: Record<string, unknown>, body: string): string {
+function composeFile(data: Record<string, unknown>, body: string): string {
   const content = `${body.replace(/^\s*\n/, '').trimEnd()}\n`;
   return Object.keys(data).length ? `${frontMatterText(data)}${content}` : content;
 }

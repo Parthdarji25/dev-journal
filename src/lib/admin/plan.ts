@@ -309,7 +309,7 @@ function itemRowFirst(rows: ChangeRow[], path: string) {
 
 // ---------------------------------------------------------------- save markdown (create or edit)
 
-export interface NewAsset {
+interface NewAsset {
   /** File name inside the item's assets/ folder. */
   name: string;
   bytes: Uint8Array;
@@ -637,12 +637,7 @@ export interface RenameCourseInput {
 }
 
 /** The course's pages moved to the folder `newName` slugifies to. */
-export function courseMoves(
-  view: RepoView,
-  track: string,
-  course: string,
-  newName: string,
-): PageMove[] {
+function courseMoves(view: RepoView, track: string, course: string, newName: string): PageMove[] {
   const from = courseFolder(track, course);
   const to = courseFolder(track, slugify(newName));
   return coursePages(view, track, course).map((m) => ({

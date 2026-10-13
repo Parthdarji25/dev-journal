@@ -7,7 +7,6 @@ export * from './load';
 export * from './queries';
 export * from './routes';
 export * from './types';
-export { contentDir } from './fs';
 
 const cache = new Map<string, Content>();
 

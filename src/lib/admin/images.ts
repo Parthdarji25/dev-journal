@@ -5,8 +5,8 @@
 import { checkFileName, slugify } from '@/lib/content/slug';
 import { textToBytes } from '@/lib/github/encoding';
 
-export const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'];
-export const MAX_WIDTH = 1600;
+const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'];
+const MAX_WIDTH = 1600;
 
 export interface PreparedImage {
   /** File name inside assets/ (slugified, .webp or .svg). */

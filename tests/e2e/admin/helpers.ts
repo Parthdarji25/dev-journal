@@ -28,7 +28,7 @@ export function withCourse(files: Record<string, string>): Record<string, string
   return all;
 }
 
-export const CORS = {
+const CORS = {
   'access-control-allow-origin': '*',
   'access-control-allow-headers': '*',
   'access-control-allow-methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',

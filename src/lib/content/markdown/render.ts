@@ -9,7 +9,7 @@ import { unified } from 'unified';
 import { rehypeShiki } from './shiki';
 import { isElement, toText, walk, type HastElement, type UnistNode } from './tree';
 
-export interface Heading {
+interface Heading {
   depth: 2 | 3;
   id: string;
   text: string;

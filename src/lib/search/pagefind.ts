@@ -3,7 +3,7 @@
  * the built site (written by `pagefind --site out`), outside the JS bundle.
  */
 
-export interface PagefindSubResult {
+interface PagefindSubResult {
   title: string;
   url: string;
   excerpt: string;

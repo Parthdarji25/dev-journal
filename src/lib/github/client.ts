@@ -3,7 +3,7 @@ import { bytesToBase64, base64ToBytes, bytesToText, textToBytes } from './encodi
 import { GitHubError, toGitHubError } from './errors';
 import { createGitHubFetch, type FetchLike } from './fetch';
 
-export interface RepoRef {
+interface RepoRef {
   owner: string;
   repo: string;
   branch: string;
@@ -66,7 +66,7 @@ export interface CommitPage {
 export type FileStatus =
   'added' | 'modified' | 'removed' | 'renamed' | 'copied' | 'changed' | 'unchanged';
 
-export interface CommitFile {
+interface CommitFile {
   path: string;
   status: FileStatus;
   /** Path before a rename. */

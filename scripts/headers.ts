@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 
 /** A `has` / `missing` condition; only `host` is used in this project. */
-export interface HostCondition {
+interface HostCondition {
   type: 'host';
   value: string;
 }

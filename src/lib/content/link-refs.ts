@@ -36,7 +36,7 @@ function hashOf(url: string): string {
  * Whether `url` points at `target`. A target with a "#anchor" (an interview
  * question) matches only that anchor; otherwise any anchor on the page matches.
  */
-export function linksTo(url: string, target: string): boolean {
+function linksTo(url: string, target: string): boolean {
   if (!url.startsWith('/') || url.startsWith('//')) return false;
   if (normalizePath(url) !== normalizePath(target)) return false;
   return !target.includes('#') || hashOf(url) === hashOf(target);

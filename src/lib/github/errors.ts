@@ -72,7 +72,7 @@ export function isRateLimited(
   return status === 403 && (get('x-ratelimit-remaining') === '0' || get('retry-after') != null);
 }
 
-export function rateLimitReset(headers: Record<string, string | undefined>): Date | undefined {
+function rateLimitReset(headers: Record<string, string | undefined>): Date | undefined {
   const reset = Number(headers['x-ratelimit-reset']);
   if (Number.isFinite(reset) && reset > 0) return new Date(reset * 1000);
   const retryAfter = Number(headers['retry-after']);

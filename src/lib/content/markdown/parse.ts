@@ -111,7 +111,7 @@ export function parseMindMap(markdown: string, fallbackTitle: string): MindNode 
 
 // ---------------------------------------------------------------- cheat sheets
 
-export interface CheatRow {
+interface CheatRow {
   code: string;
   description: string;
 }

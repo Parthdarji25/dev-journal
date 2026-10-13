@@ -1,7 +1,7 @@
 import type { ChapterType, Difficulty, Section, SectionSlug, Track } from '@/lib/schema';
 import type { CheatGroup, MindNode, ParsedResource, RoadmapStep } from './markdown/parse';
 
-export type Format = 'md' | 'html';
+type Format = 'md' | 'html';
 
 interface ItemBase {
   track: string;

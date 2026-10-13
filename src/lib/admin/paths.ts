@@ -8,7 +8,7 @@ import type { SectionSlug } from '@/lib/schema/meta';
 export const CONTENT = 'content';
 
 /** Sections stored as one <track>.md file instead of a folder per track. */
-export const PER_TRACK_FILE: readonly SectionSlug[] = ['roadmaps', 'resources'];
+const PER_TRACK_FILE: readonly SectionSlug[] = ['roadmaps', 'resources'];
 
 /** Sections whose items may be uploaded HTML artifacts. */
 export const HTML_SECTIONS: readonly SectionSlug[] = [
