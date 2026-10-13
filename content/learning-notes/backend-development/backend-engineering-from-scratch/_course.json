@@ -2,7 +2,8 @@
   "title": "Backend Engineering from Scratch",
   "description": "",
   "order": [
-    "01the-backend-engineering-roadmap.md"
+    "01the-backend-engineering-roadmap.md",
+    "02the-mindset-of-a-backend-engineer.md"
   ],
   "html": {}
 }
