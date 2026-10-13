@@ -2,7 +2,8 @@
   "title": "Generative AI for Professionals: Beginner to Pro",
   "description": "",
   "order": [
-    "01the-complete-generative-ai-roadmap-beginner-to-expert.md"
+    "01the-complete-generative-ai-roadmap-beginner-to-expert.md",
+    "02understanding-the-ai-landscape-ai-vs-ml-vs-deep-learning-vs-generative-ai.md"
   ],
   "html": {}
 }
