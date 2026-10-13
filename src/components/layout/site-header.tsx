@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { prefetchSearch } from '@/components/search/search-launcher';
-import { isCurrent, trackClass, type NavGroup, type NavItem } from '@/lib/nav';
+import { isCurrent, sectionClass, trackClass, type NavGroup, type NavItem } from '@/lib/nav';
 import { ThemeToggle } from './theme-toggle';
 
 type GroupId = NavGroup['id'];
@@ -17,18 +17,12 @@ function openSearch() {
 
 const searchPrefetch = { onMouseEnter: prefetchSearch, onFocus: prefetchSearch };
 
+/** The colour mark of a menu item: the track's colour, or the section's. */
 function ItemMark({ item, className = 'mt-1.5' }: { item: NavItem; className?: string }) {
-  return item.track ? (
-    <span
-      aria-hidden
-      className={`${trackClass(item.track)} ${className} size-3 shrink-0 rounded-[3px] bg-(--tc)`}
-    />
-  ) : (
-    <span
-      aria-hidden
-      className={`${className} size-3 shrink-0 rounded-[3px] border-2 border-dash`}
-    />
-  );
+  const scope = item.track
+    ? `${trackClass(item.track)} bg-(--tc)`
+    : `${item.section ? sectionClass(item.section) : ''} bg-(--sc)`;
+  return <span aria-hidden className={`${scope} ${className} size-3 shrink-0 rounded-[3px]`} />;
 }
 
 function MenuItem({

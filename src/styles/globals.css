@@ -137,6 +137,45 @@
 :root {
   --tc: var(--muted);
   --tt: var(--panel);
+  --sc: var(--muted);
+}
+
+/* Section colour marks in the LEARN / PRACTICE menus (700 in light, 300 in dark, like tracks). */
+.s-learning-notes {
+  --sc: #4338ca;
+}
+.s-roadmaps {
+  --sc: #b45309;
+}
+.s-mind-maps {
+  --sc: #0f766e;
+}
+.s-resources {
+  --sc: #475569;
+}
+.s-interview-questions {
+  --sc: #b91c1c;
+}
+.s-cheat-sheets {
+  --sc: #0e7490;
+}
+.dark .s-learning-notes {
+  --sc: #a5b4fc;
+}
+.dark .s-roadmaps {
+  --sc: #fcd34d;
+}
+.dark .s-mind-maps {
+  --sc: #5eead4;
+}
+.dark .s-resources {
+  --sc: #cbd5e1;
+}
+.dark .s-interview-questions {
+  --sc: #fca5a5;
+}
+.dark .s-cheat-sheets {
+  --sc: #67e8f9;
 }
 
 /* ------------------------------------------------------------------ rendered markdown */
