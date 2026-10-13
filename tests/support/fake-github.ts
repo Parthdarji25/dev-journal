@@ -12,6 +12,8 @@ interface CommitObject {
   tree: string;
   parents: string[];
   message: string;
+  /** ISO date-time (set when stored). */
+  date?: string;
 }
 
 export interface FakeGitHubOptions {
@@ -55,6 +57,12 @@ export class FakeGitHub {
   beforeRefUpdate?: () => void;
   /** Return a Response to short-circuit a request (e.g. 401, rate limit, server error). */
   intercept?: (method: string, path: string) => Response | undefined;
+  /**
+   * Replica lag: after each ref update, this many reads of the ref still
+   * return the previous head, as GitHub can for a moment after a push.
+   */
+  staleRefReads = 0;
+  private stale: { sha: string; reads: number } | null = null;
 
   constructor(options: FakeGitHubOptions = {}) {
     this.owner = options.owner ?? 'owner';
@@ -86,10 +94,58 @@ export class FakeGitHub {
   }
 
   private storeCommit(commit: CommitObject): string {
-    const sha = sha1(`commit ${JSON.stringify(commit)} ${this.counter++}`);
-    this.commits.set(sha, commit);
+    const n = this.counter++;
+    const sha = sha1(`commit ${JSON.stringify(commit)} ${n}`);
+    // Increasing dates, one minute apart, so ordering by date is stable.
+    this.commits.set(sha, { ...commit, date: new Date(Date.UTC(2026, 9, 1, 8, n)).toISOString() });
     return sha;
   }
+
+  /** Files a commit changed compared with its first parent, as the commits API reports them. */
+  private diff(
+    sha: string,
+  ): { filename: string; status: string; sha: string | null; previous_filename?: string }[] {
+    const commit = this.commits.get(sha) as CommitObject;
+    const after = this.trees.get(commit.tree) as Map<string, string>;
+    const parent = commit.parents[0]
+      ? (this.commits.get(commit.parents[0]) as CommitObject)
+      : undefined;
+    const before = parent
+      ? (this.trees.get(parent.tree) as Map<string, string>)
+      : new Map<string, string>();
+    const added = [...after.keys()].filter((p) => !before.has(p));
+    const removed = [...before.keys()].filter((p) => !after.has(p));
+    const out: {
+      filename: string;
+      status: string;
+      sha: string | null;
+      previous_filename?: string;
+    }[] = [];
+    const renamedFrom = new Set<string>();
+    for (const p of added) {
+      const from = removed.find((r) => !renamedFrom.has(r) && before.get(r) === after.get(p));
+      if (from) {
+        renamedFrom.add(from);
+        out.push({
+          filename: p,
+          status: 'renamed',
+          sha: after.get(p) as string,
+          previous_filename: from,
+        });
+      } else out.push({ filename: p, status: 'added', sha: after.get(p) as string });
+    }
+    for (const p of removed)
+      if (!renamedFrom.has(p))
+        out.push({ filename: p, status: 'removed', sha: before.get(p) as string });
+    for (const [p, blob] of after)
+      if (before.has(p) && before.get(p) !== blob)
+        out.push({ filename: p, status: 'modified', sha: blob });
+    return out.sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  /** Deploy signals tests can set per commit sha. */
+  readonly commitStatuses = new Map<string, 'pending' | 'success' | 'failure'>();
+  readonly deployments = new Map<string, 'in_progress' | 'success' | 'failure'>();
 
   // ---------------------------------------------------------------- inspection
 
@@ -112,6 +168,12 @@ export class FakeGitHub {
   blobShaOf(path: string): string | undefined {
     const commit = this.commits.get(this.headSha) as CommitObject;
     return this.trees.get(commit.tree)?.get(path);
+  }
+
+  /** Raw bytes of a file at the branch head (for binary files such as images). */
+  bytesOf(path: string): Uint8Array | undefined {
+    const sha = this.blobShaOf(path);
+    return sha ? this.blobs.get(sha) : undefined;
   }
 
   /** Commits added to the branch after the initial one, newest first. */
@@ -204,7 +266,11 @@ export class FakeGitHub {
 
     let m: RegExpExecArray | null;
     if (method === 'GET' && (m = /^\/git\/ref\/heads\/(.+)$/.exec(rest))) {
-      const sha = this.refs.get(m[1] as string);
+      let sha = this.refs.get(m[1] as string);
+      if (this.stale && this.stale.reads > 0) {
+        this.stale.reads--;
+        sha = this.stale.sha;
+      }
       return sha
         ? this.json(200, { ref: `refs/heads/${m[1]}`, object: { sha, type: 'commit' } })
         : this.notFound();
@@ -258,6 +324,79 @@ export class FakeGitHub {
         content: Buffer.from(bytes).toString('base64'),
       });
     }
+    if (method === 'GET' && rest === '/commits') {
+      // History of the branch (first parents), filtered to commits touching `path`.
+      const filter = url.searchParams.get('path');
+      const perPage = Number(url.searchParams.get('per_page') ?? 30);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const list: string[] = [];
+      let cursor: string | undefined = this.refs.get(url.searchParams.get('sha') ?? this.branch);
+      while (cursor) {
+        const touches =
+          !filter ||
+          this.diff(cursor).some(
+            (f) =>
+              f.filename === filter ||
+              f.filename.startsWith(`${filter}/`) ||
+              f.previous_filename === filter ||
+              f.previous_filename?.startsWith(`${filter}/`),
+          );
+        if (touches) list.push(cursor);
+        cursor = (this.commits.get(cursor) as CommitObject).parents[0];
+      }
+      const pages = Math.max(1, Math.ceil(list.length / perPage));
+      const slice = list.slice((page - 1) * perPage, page * perPage);
+      const base = `https://api.github.com${prefix}/commits?per_page=${perPage}`;
+      const links = [
+        page < pages ? `<${base}&page=${page + 1}>; rel="next"` : '',
+        list.length > perPage ? `<${base}&page=${pages}>; rel="last"` : '',
+      ].filter(Boolean);
+      return this.json(
+        200,
+        slice.map((sha) => {
+          const c = this.commits.get(sha) as CommitObject;
+          return {
+            sha,
+            commit: { message: c.message, author: { name: 'Admin', date: c.date } },
+            author: { login: 'admin' },
+            parents: c.parents.map((p) => ({ sha: p })),
+          };
+        }),
+        links.length ? { link: links.join(', ') } : {},
+      );
+    }
+    if (method === 'GET' && (m = /^\/commits\/([0-9a-f]+)\/status$/.exec(rest))) {
+      const state = this.commitStatuses.get(m[1] as string);
+      return this.json(200, {
+        state: state ?? 'pending',
+        total_count: state ? 1 : 0,
+        statuses: [],
+      });
+    }
+    if (method === 'GET' && (m = /^\/commits\/([0-9a-f]+)\/check-runs$/.exec(rest))) {
+      return this.json(403, { message: 'Resource not accessible by personal access token' });
+    }
+    if (method === 'GET' && (m = /^\/commits\/([0-9a-f]+)$/.exec(rest))) {
+      const sha = m[1] as string;
+      const c = this.commits.get(sha);
+      if (!c) return this.notFound();
+      return this.json(200, {
+        sha,
+        commit: { message: c.message, author: { name: 'Admin', date: c.date } },
+        author: { login: 'admin' },
+        parents: c.parents.map((p) => ({ sha: p })),
+        files: this.diff(sha),
+      });
+    }
+    if (method === 'GET' && rest === '/deployments') {
+      const sha = url.searchParams.get('sha') ?? '';
+      const state = this.deployments.get(sha);
+      return this.json(200, state ? [{ id: 1, sha, ref: this.branch }] : []);
+    }
+    if (method === 'GET' && rest === '/deployments/1/statuses') {
+      const state = [...this.deployments.values()].at(-1);
+      return this.json(200, state ? [{ state }] : []);
+    }
     if (!this.canPush && method !== 'GET') {
       return this.json(403, { message: 'Resource not accessible by personal access token' });
     }
@@ -310,6 +449,7 @@ export class FakeGitHub {
         return this.json(422, { message: 'Update is not a fast forward' });
       }
       this.refs.set(branch, next);
+      if (this.staleRefReads > 0) this.stale = { sha: current, reads: this.staleRefReads };
       return this.json(200, { ref: `refs/heads/${branch}`, object: { sha: next, type: 'commit' } });
     }
     return this.notFound();

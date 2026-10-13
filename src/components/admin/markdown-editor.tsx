@@ -1,7 +1,17 @@
 'use client';
 
 import type { EditorView } from '@codemirror/view';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
+
+/** Lets the editor screen insert text (an image line) at the cursor or where a file was dropped. */
+export interface MarkdownEditorApi {
+  insert(text: string, at?: { x: number; y: number }): void;
+}
+
+/** Where the body starts: after the front-matter block, when the text has one. */
+function bodyStart(doc: string): number {
+  return /^---\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/.exec(doc)?.[0].length ?? 0;
+}
 
 /**
  * CodeMirror 6 with markdown support, loaded lazily on first use. Colours
@@ -11,10 +21,12 @@ export function MarkdownEditor({
   value,
   onChange,
   label,
+  apiRef,
 }: {
   value: string;
   onChange(value: string): void;
   label: string;
+  apiRef?: RefObject<MarkdownEditorApi | null>;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -107,6 +119,30 @@ export function MarkdownEditor({
         }),
       });
       viewRef.current = view;
+      if (apiRef) {
+        apiRef.current = {
+          insert(text: string, at?: { x: number; y: number }) {
+            const target = viewRef.current;
+            if (!target) return;
+            let { from, to } = target.state.selection.main;
+            const dropped = at ? target.posAtCoords(at) : null;
+            if (dropped !== null) from = to = dropped;
+            const doc = target.state.doc.toString();
+            let insert = text;
+            // Never inside the front-matter (where an unused editor's cursor sits): append instead.
+            if (from < bodyStart(doc)) {
+              from = to = doc.length;
+              insert = `${doc.endsWith('\n') ? '' : '\n'}\n${text}`;
+            }
+            target.dispatch({
+              changes: { from, to, insert },
+              selection: { anchor: from + insert.length },
+              scrollIntoView: true,
+            });
+            target.focus();
+          },
+        };
+      }
       setReady(true);
     })();
     return () => {
@@ -114,7 +150,7 @@ export function MarkdownEditor({
       view?.destroy();
       viewRef.current = null;
     };
-  }, [label]);
+  }, [label, apiRef]);
 
   // Outside changes (restoring or discarding a draft) replace the document.
   useEffect(() => {

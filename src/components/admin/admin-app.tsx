@@ -13,11 +13,18 @@ import {
   storageAvailable,
   type Session,
 } from '@/lib/admin/session';
-import { createRepoClient, type Snapshot } from '@/lib/github/client';
+import { createRepoClient, type CommitResult, type Snapshot } from '@/lib/github/client';
 import { toGitHubError } from '@/lib/github/errors';
-import { AdminContext, type AdminContextValue, type Option } from './admin-context';
+import { ActivityTab } from './activity-tab';
+import {
+  AdminContext,
+  type AdminContextValue,
+  type Option,
+  type PushedCommit,
+} from './admin-context';
 import { ContentTab } from './content-tab';
 import { formatDateTime } from './format';
+import { SiteStatus } from './site-status';
 
 type Boot = { kind: 'starting' } | { kind: 'no-storage' } | { kind: 'ready'; session: Session };
 
@@ -83,6 +90,9 @@ function SignedIn({
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [online, setOnline] = useState(true);
+  const [pushed, setPushed] = useState<PushedCommit[]>([]);
+  const [tab, setTab] = useState<'content' | 'activity'>('content');
+  const [commitCount, setCommitCount] = useState<number | null>(null);
 
   const handleError = useCallback(
     (error: unknown): string => {
@@ -133,6 +143,26 @@ function SignedIn({
     };
   }, [refresh]);
 
+  // Commits touching content/, for the Activity tab's count (refreshed after each push).
+  useEffect(() => {
+    let cancelled = false;
+    client
+      .countCommits('content')
+      .then((n) => !cancelled && setCommitCount(n))
+      .catch(() => !cancelled && setCommitCount(null));
+    return () => {
+      cancelled = true;
+    };
+  }, [client, pushed.length]);
+
+  const applyCommit = useCallback((result: CommitResult) => {
+    setSnapshot(result.snapshot);
+    setPushed((list) => [
+      { sha: result.commitSha, message: result.message, date: new Date().toISOString() },
+      ...list,
+    ]);
+  }, []);
+
   const value = useMemo<AdminContextValue | null>(
     () =>
       snapshot && {
@@ -150,10 +180,12 @@ function SignedIn({
         repoKey: `${session.owner}/${session.repo}`,
         tracks,
         sections,
+        pushed,
         refresh,
+        applyCommit,
         handleError,
       },
-    [snapshot, session, client, tracks, sections, refresh, handleError],
+    [snapshot, session, client, tracks, sections, pushed, refresh, applyCommit, handleError],
   );
 
   function signOut() {
@@ -161,7 +193,12 @@ function SignedIn({
     router.replace('/admin/login');
   }
 
-  return (
+  const tabClass = (active: boolean) =>
+    `inline-flex min-h-11 items-center gap-2 border-b-2 px-3 text-sm font-semibold ${
+      active ? 'border-text text-text' : 'border-transparent text-soft hover:text-text'
+    }`;
+
+  const page = (
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-30 border-b border-border bg-bg/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
@@ -190,14 +227,39 @@ function SignedIn({
             <ThemeToggle />
           </div>
         </div>
-        <nav aria-label="Admin" className="mx-auto flex max-w-7xl gap-1 px-4 sm:px-6">
-          <span
-            aria-current="page"
-            className="border-b-2 border-text px-3 py-2 text-sm font-semibold text-text"
-          >
-            Content
-          </span>
-        </nav>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 sm:px-6">
+          <div role="tablist" aria-label="Admin" className="flex gap-1">
+            <button
+              type="button"
+              role="tab"
+              id="admin-tab-content"
+              aria-selected={tab === 'content'}
+              aria-controls="admin-panel-content"
+              onClick={() => setTab('content')}
+              className={tabClass(tab === 'content')}
+            >
+              Content
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="admin-tab-activity"
+              aria-selected={tab === 'activity'}
+              aria-controls="admin-panel-activity"
+              onClick={() => setTab('activity')}
+              className={tabClass(tab === 'activity')}
+            >
+              Activity
+              {commitCount !== null && (
+                <span className="rounded-full bg-panel px-2 text-xs text-muted">
+                  {commitCount}
+                  <span className="sr-only"> commits</span>
+                </span>
+              )}
+            </button>
+          </div>
+          <span className="ml-auto">{value && <SiteStatus />}</span>
+        </div>
       </header>
 
       {!online && (
@@ -216,9 +278,25 @@ function SignedIn({
         className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 outline-none sm:px-6"
       >
         {value ? (
-          <AdminContext.Provider value={value}>
-            <ContentTab />
-          </AdminContext.Provider>
+          <>
+            {/* Both tabs stay mounted, so an open editor survives a look at Activity. */}
+            <div
+              id="admin-panel-content"
+              role="tabpanel"
+              aria-labelledby="admin-tab-content"
+              hidden={tab !== 'content'}
+            >
+              <ContentTab />
+            </div>
+            <div
+              id="admin-panel-activity"
+              role="tabpanel"
+              aria-labelledby="admin-tab-activity"
+              hidden={tab !== 'activity'}
+            >
+              {tab === 'activity' && <ActivityTab />}
+            </div>
+          </>
         ) : loadError ? (
           <div role="alert" className="rounded-lg border border-deleted bg-surface p-4">
             <p>{loadError}</p>
@@ -237,4 +315,6 @@ function SignedIn({
       </main>
     </div>
   );
+
+  return value ? <AdminContext.Provider value={value}>{page}</AdminContext.Provider> : page;
 }

@@ -2,7 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { allPass } from '@/lib/admin/checks';
 import { fromEditorDoc } from '@/lib/admin/document';
 import { describeError } from '@/lib/admin/messages';
-import { findBrokenLinkFixes, planDelete, planRename, planSave, planUndo } from '@/lib/admin/plan';
+import {
+  coursePages,
+  findBrokenLinkFixes,
+  findLinkFixes,
+  planDelete,
+  planDeleteCourse,
+  planRename,
+  planSave,
+  planUndo,
+} from '@/lib/admin/plan';
 import { templateFor } from '@/lib/admin/templates';
 import { GitHubError } from '@/lib/github/errors';
 import { setup, SKELETON, TOKEN, viewOf } from './helpers';
@@ -437,5 +446,106 @@ describe('network', () => {
       expect(r.path).not.toContain(TOKEN);
       expect(JSON.stringify(r.body ?? {})).not.toContain(TOKEN);
     }
+  });
+});
+
+describe('after a commit', () => {
+  it('returns the branch exactly as GitHub now has it', async () => {
+    const { fake, client } = setup();
+    const { result } = await createQuestion(client, 'Snapshot check');
+    const fresh = await client.snapshot();
+    expect(result.snapshot.commitSha).toBe(fake.headSha);
+    const sorted = (m: Map<string, unknown>) =>
+      [...m.entries()].sort(([a], [b]) => a.localeCompare(b));
+    expect(sorted(result.snapshot.files)).toEqual(sorted(fresh.files));
+  });
+
+  it('keeps working when GitHub still serves the old head for a moment', async () => {
+    const { fake, client } = setup();
+    fake.staleRefReads = 5;
+    const { plan: created, result: first } = await createQuestion(client, 'Lagging');
+    expect(first.snapshot.files.has(created.path)).toBe(true);
+
+    // Delete and Undo right away: no false "someone else pushed" conflict.
+    const view = {
+      files: first.snapshot.files,
+      read: (p: string) => client.readText(first.snapshot.files.get(p)!.sha),
+    };
+    const deleted = await client.commit(
+      await planDelete(view, {
+        section: 'interview-questions',
+        track: 'dsa-python',
+        path: created.path,
+      }),
+    );
+    expect(deleted.snapshot.files.has(created.path)).toBe(false);
+    const restored = await client.commit(
+      planUndo(deleted, 'docs(interview-questions): restore lagging.md'),
+    );
+    expect(restored.snapshot.files.has(created.path)).toBe(true);
+    expect(fake.commitsCreated).toBe(3);
+    expect(fake.files()[created.path]).toContain('question: Lagging');
+  });
+});
+
+describe('delete a course', () => {
+  const COURSE = 'content/learning-notes/dsa-python/arrays';
+  const files = {
+    ...SKELETON,
+    'content/learning-notes/dsa-python/.gitkeep': undefined as unknown as string,
+    [`${COURSE}/_course.json`]: '{"title":"Arrays","order":["intro.md","two-sum.md"],"html":{}}\n',
+    [`${COURSE}/intro.md`]: '---\ntitle: Intro\n---\n\nHi\n',
+    [`${COURSE}/two-sum.md`]:
+      '---\ntitle: Two Sum\n---\n\nSee [intro](/learning-notes/dsa-python/arrays/intro).\n',
+    [`${COURSE}/assets/diagram.svg`]: '<svg xmlns="http://www.w3.org/2000/svg"/>',
+    'content/roadmaps/dsa-python.md':
+      '---\ntitle: R\n---\n\n1. **Arrays** - Read [the course](/learning-notes/dsa-python/arrays) and [Two Sum](/learning-notes/dsa-python/arrays/two-sum).\n',
+  };
+  delete (files as Record<string, string | undefined>)[
+    'content/learning-notes/dsa-python/.gitkeep'
+  ];
+
+  it('removes every file of the course in one commit, unlinks references and restores .gitkeep', async () => {
+    const { fake, client } = setup(files);
+    const before = fake.files();
+    const { view } = await viewOf(client);
+    const links = await findLinkFixes(view, coursePages(view, 'dsa-python', 'arrays'), (p) =>
+      p.startsWith(`${COURSE}/`),
+    );
+    // Links inside the course itself are not counted: those files go away too.
+    expect(links.refs.map((r) => r.url)).toEqual([
+      '/learning-notes/dsa-python/arrays',
+      '/learning-notes/dsa-python/arrays/two-sum',
+    ]);
+    const plan = await planDeleteCourse(view, {
+      track: 'dsa-python',
+      course: 'arrays',
+      linkFixes: links.fixes,
+    });
+    expect(plan.message).toBe('docs(learning-notes): delete course arrays');
+    const result = await client.commit(plan);
+
+    expect(fake.commitsCreated).toBe(1);
+    const after = fake.files();
+    expect(Object.keys(after).filter((p) => p.startsWith(`${COURSE}/`))).toEqual([]);
+    expect(after['content/learning-notes/dsa-python/.gitkeep']).toBe('');
+    expect(after['content/roadmaps/dsa-python.md']).toContain('Read the course and Two Sum.');
+    expect(result.snapshot.files.has(`${COURSE}/_course.json`)).toBe(false);
+
+    await client.commit(planUndo(result, 'docs(learning-notes): restore course arrays'));
+    expect(fake.commitsCreated).toBe(2);
+    expect(fake.files()).toEqual(before);
+  });
+
+  it('leaves the track folder alone when another course remains', async () => {
+    const { fake, client } = setup({
+      ...files,
+      'content/learning-notes/dsa-python/graphs/_course.json':
+        '{"title":"Graphs","order":[],"html":{}}\n',
+    });
+    const { view } = await viewOf(client);
+    await client.commit(await planDeleteCourse(view, { track: 'dsa-python', course: 'arrays' }));
+    expect(fake.files()['content/learning-notes/dsa-python/.gitkeep']).toBeUndefined();
+    expect(fake.files()['content/learning-notes/dsa-python/graphs/_course.json']).toBeDefined();
   });
 });

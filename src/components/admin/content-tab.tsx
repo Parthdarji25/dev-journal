@@ -48,7 +48,8 @@ function useCourseTitles(track: string, courses: string[]): Record<string, strin
 }
 
 export function ContentTab() {
-  const { snapshot, tracks, sections } = useAdmin();
+  const { snapshot, tracks, sections, refresh } = useAdmin();
+  const [reloading, setReloading] = useState(false);
   const [place, setPlace] = useState<Place>({
     track: tracks[0]?.slug ?? '',
     section: (sections[0]?.slug ?? 'learning-notes') as SectionSlug,
@@ -206,11 +207,25 @@ export function ContentTab() {
             </select>
           </div>
         )}
+
+        <button
+          type="button"
+          disabled={reloading}
+          onClick={() => {
+            setReloading(true);
+            void refresh().finally(() => setReloading(false));
+          }}
+          className="text-sm font-semibold text-soft underline-offset-4 hover:text-text hover:underline disabled:opacity-50"
+        >
+          {reloading ? 'Reloading from GitHub...' : 'Reload from GitHub'}
+        </button>
       </aside>
 
       <section aria-label={section?.name} className="min-w-0">
         {viewState.kind === 'list' ? (
           <ItemList
+            key={`${place.section}/${place.track}/${course}`}
+            courseTitle={courseTitles[course]}
             section={place.section}
             sectionName={section?.name ?? place.section}
             track={place.track}
@@ -221,6 +236,7 @@ export function ContentTab() {
             onNew={() => go({}, { kind: 'new' })}
             onNewCourse={() => go({ course: NEW_COURSE }, { kind: 'new' })}
             onEdit={(path) => go({}, { kind: 'edit', path })}
+            onCourseRenamed={(slug) => setPlace((p) => ({ ...p, course: slug }))}
             showToast={showToast}
           />
         ) : (

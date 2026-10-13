@@ -1,95 +1,17 @@
-import { expect, test, type Page } from '@playwright/test';
-import { FakeGitHub } from '../../support/fake-github';
-
-/*
- * The admin against an in-memory GitHub: every request to api.github.com is
- * answered by FakeGitHub through page.route, so nothing reaches the network.
- */
-
-const TOKEN = 'github_pat_e2e_token';
-const OWNER = 'test-owner';
-const REPO = 'test-repo';
-const Q_DIR = 'content/interview-questions/dsa-python';
-
-const SKELETON: Record<string, string> = {
-  'content/_meta/tracks.json': '[]\n',
-  'content/_meta/sections.json': '[]\n',
-  'content/learning-notes/dsa-python/.gitkeep': '',
-  'content/interview-questions/dsa-python/.gitkeep': '',
-  'content/mind-maps/dsa-python/.gitkeep': '',
-  'content/roadmaps/.gitkeep': '',
-};
-
-const CORS = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-headers': '*',
-  'access-control-allow-methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-};
-
-async function routeFakeGitHub(page: Page, files = SKELETON): Promise<FakeGitHub> {
-  const fake = new FakeGitHub({
-    owner: OWNER,
-    repo: REPO,
-    files,
-    token: TOKEN,
-    tokenExpiration: '2026-12-31 00:00:00 UTC',
-  });
-  await page.route('https://api.github.com/**', async (route) => {
-    const request = route.request();
-    if (request.method() === 'OPTIONS') {
-      await route.fulfill({ status: 204, headers: CORS });
-      return;
-    }
-    const response = await fake.fetch(request.url(), {
-      method: request.method(),
-      headers: await request.allHeaders(),
-      body: request.postData() ?? undefined,
-    });
-    await route.fulfill({
-      status: response.status,
-      headers: { ...Object.fromEntries(response.headers.entries()), ...CORS },
-      body: Buffer.from(await response.arrayBuffer()),
-    });
-  });
-  return fake;
-}
-
-/** Starts signed in, as after a verified sign-in. */
-async function signedIn(page: Page, files = SKELETON) {
-  const fake = await routeFakeGitHub(page, files);
-  await page.addInitScript(
-    ([owner, repo, token]) => {
-      if (!window.localStorage.getItem('parth-notes:admin:session')) {
-        window.localStorage.setItem(
-          'parth-notes:admin:session',
-          JSON.stringify({
-            token,
-            owner,
-            repo,
-            branch: 'main',
-            expiresAt: '2026-12-31T00:00:00.000Z',
-          }),
-        );
-        window.localStorage.setItem(
-          'parth-notes:admin:place',
-          JSON.stringify({ track: 'dsa-python', section: 'interview-questions', course: '' }),
-        );
-      }
-    },
-    [OWNER, REPO, TOKEN],
-  );
-  await page.goto('/admin');
-  await expect(page.getByRole('heading', { level: 1, name: 'Interview Questions' })).toBeVisible();
-  return fake;
-}
-
-async function newQuestion(page: Page, title: string) {
-  await page.getByRole('button', { name: 'New', exact: true }).click();
-  await expect(page.locator('.cm-content')).toBeVisible();
-  await page.getByLabel('Question', { exact: true }).fill(title);
-}
-
-const commitButton = (page: Page) => page.getByRole('button', { name: /Commit & push|Pushing/ });
+import { expect, test } from '@playwright/test';
+import {
+  commitButton,
+  expectCommits,
+  newQuestion,
+  OWNER,
+  Q_DIR,
+  REPO,
+  routeFakeGitHub,
+  signedIn,
+  SKELETON,
+  toast,
+  TOKEN,
+} from './helpers';
 
 test.describe('sign-in', () => {
   test('verifies the token, shows write access and the expiry, then opens the admin', async ({
@@ -163,8 +85,8 @@ test.describe('content', () => {
     await expect(changes).toContainText('1 commit, 2 files written together');
     await expect(commitButton(page)).toBeEnabled();
     await commitButton(page).click();
-    await expect(page.getByRole('status')).toContainText('Committed what-is-a-closure.md');
-    await expect.poll(() => fake.commitsCreated).toBe(1);
+    await expect(toast(page)).toContainText('Committed what-is-a-closure.md');
+    await expectCommits(fake, 1);
     expect(fake.files()[`${Q_DIR}/what-is-a-closure.md`]).toContain('question: What is a closure?');
     expect(fake.files()[`${Q_DIR}/.gitkeep`]).toBeUndefined();
 
@@ -180,8 +102,8 @@ test.describe('content', () => {
       'docs(interview-questions): update what-is-a-closure.md',
     );
     await commitButton(page).click();
-    await expect(page.getByRole('status')).toContainText('Committed what-is-a-closure.md');
-    await expect.poll(() => fake.commitsCreated).toBe(2);
+    await expect(toast(page)).toContainText('Committed what-is-a-closure.md');
+    await expectCommits(fake, 2);
     expect(fake.files()[`${Q_DIR}/what-is-a-closure.md`]).toContain(
       'question: What is a closure in Python?',
     );
@@ -192,10 +114,8 @@ test.describe('content', () => {
     await expect(page.getByText('→ python-closures.md')).toBeVisible();
     await expect(page.getByText('No other page links here.')).toBeVisible();
     await page.getByRole('button', { name: 'Rename', exact: true }).click();
-    await expect(page.getByRole('status')).toContainText(
-      'Renamed what-is-a-closure.md to python-closures.md',
-    );
-    await expect.poll(() => fake.commitsCreated).toBe(3);
+    await expect(toast(page)).toContainText('Renamed what-is-a-closure.md to python-closures.md');
+    await expectCommits(fake, 3);
     expect(Object.keys(fake.files()).filter((p) => p.startsWith(Q_DIR))).toEqual([
       `${Q_DIR}/python-closures.md`,
     ]);
@@ -206,14 +126,14 @@ test.describe('content', () => {
     const confirm = page.getByRole('group', { name: 'Delete python-closures.md' });
     await expect(confirm).toContainText(`${Q_DIR}/.gitkeep`);
     await confirm.getByRole('button', { name: 'Delete', exact: true }).click();
-    await expect(page.getByRole('status')).toContainText('Deleted python-closures.md');
-    await expect.poll(() => fake.commitsCreated).toBe(4);
+    await expect(toast(page)).toContainText('Deleted python-closures.md');
+    await expectCommits(fake, 4);
     expect(fake.files()[`${Q_DIR}/python-closures.md`]).toBeUndefined();
     expect(fake.files()[`${Q_DIR}/.gitkeep`]).toBe('');
 
     await page.getByRole('button', { name: 'Undo' }).click();
-    await expect(page.getByRole('status')).toContainText('Restored python-closures.md');
-    await expect.poll(() => fake.commitsCreated).toBe(5);
+    await expect(toast(page)).toContainText('Restored python-closures.md');
+    await expectCommits(fake, 5);
     expect(fake.files()[`${Q_DIR}/python-closures.md`]).toContain('What is a closure in Python?');
     expect(fake.files()[`${Q_DIR}/.gitkeep`]).toBeUndefined();
     expect(fake.history().map((c) => c.message)).toEqual([
@@ -256,7 +176,7 @@ test.describe('content', () => {
     expect(fake.files()[`${Q_DIR}/racing.md`]).toBeUndefined();
 
     await page.getByRole('button', { name: 'Try again' }).click();
-    await expect(page.getByRole('status')).toContainText('Committed racing.md');
+    await expect(toast(page)).toContainText('Committed racing.md');
     expect(fake.files()['content/roadmaps/dsa-python.md']).toContain('Theirs');
     expect(fake.files()[`${Q_DIR}/racing.md`]).toBeDefined();
   });
@@ -312,8 +232,8 @@ test.describe('content', () => {
     await expect(panel).toContainText('content/learning-notes/dsa-python/arrays/_course.json');
     await expect(panel).toContainText('content/learning-notes/dsa-python/arrays/two-sum.md');
     await commitButton(page).click();
-    await expect(page.getByRole('status')).toContainText('Committed two-sum.md');
-    await expect.poll(() => fake.commitsCreated).toBe(1);
+    await expect(toast(page)).toContainText('Committed two-sum.md');
+    await expectCommits(fake, 1);
     expect(
       JSON.parse(fake.files()['content/learning-notes/dsa-python/arrays/_course.json'] as string),
     ).toMatchObject({
@@ -324,5 +244,69 @@ test.describe('content', () => {
     await expect(page.getByRole('listitem').filter({ hasText: 'two-sum.md' })).toContainText(
       'Two Sum',
     );
+  });
+});
+
+test.describe('updates right after a commit', () => {
+  test('a delete leaves the list at once, even while GitHub still serves the old head', async ({
+    page,
+  }) => {
+    const fake = await signedIn(page, {
+      ...SKELETON,
+      [`${Q_DIR}/lagging.md`]: '---\nquestion: Lagging?\ndifficulty: easy\n---\n\nA.\n',
+    });
+    fake.staleRefReads = 10;
+    const row = page.getByRole('listitem').filter({ hasText: 'lagging.md' });
+    await row.getByRole('button', { name: /^Delete/ }).click();
+    await page
+      .getByRole('group', { name: 'Delete lagging.md' })
+      .getByRole('button', { name: 'Delete', exact: true })
+      .click();
+    await expect(toast(page)).toContainText('Deleted lagging.md');
+    await expect(row).toHaveCount(0);
+    await expect(page.getByText('No interview questions for DSA with Python yet.')).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Interview Questions/ })).toContainText('0');
+
+    // Undo straight away: no false "someone else pushed" conflict.
+    await page.getByRole('button', { name: 'Undo' }).click();
+    await expect(toast(page)).toContainText('Restored lagging.md');
+    await expect(row).toHaveCount(1);
+    await expectCommits(fake, 2);
+  });
+
+  test('deletes a whole course after typing its name, and Undo brings it back', async ({
+    page,
+  }) => {
+    const course = 'content/learning-notes/dsa-python/arrays';
+    const files = { ...SKELETON };
+    delete files['content/learning-notes/dsa-python/.gitkeep'];
+    const fake = await signedIn(page, {
+      ...files,
+      [`${course}/_course.json`]: '{"title":"Arrays","order":["intro.md"],"html":{}}\n',
+      [`${course}/intro.md`]: '---\ntitle: Intro\n---\n\nHi\n',
+    });
+    await page.getByRole('button', { name: /^Learning Notes/ }).click();
+    await expect(page.getByLabel('Course')).toHaveValue('arrays');
+    await page.getByRole('button', { name: 'Delete course' }).click();
+
+    const panel = page.getByRole('group', { name: 'Delete the course Arrays' });
+    await expect(panel).toContainText(`${course}/_course.json`);
+    await expect(panel).toContainText(`${course}/intro.md`);
+    const confirm = panel.getByRole('button', { name: 'Delete course' });
+    await expect(confirm).toBeDisabled();
+    await panel.getByLabel('Type the course name, Arrays, to confirm').fill('Arrays');
+    await confirm.click();
+
+    await expect(toast(page)).toContainText('Deleted the course Arrays');
+    await expect(page.getByText('DSA with Python has no courses yet.')).toBeVisible();
+    await expectCommits(fake, 1);
+    expect(Object.keys(fake.files()).filter((p) => p.startsWith(`${course}/`))).toEqual([]);
+    expect(fake.files()['content/learning-notes/dsa-python/.gitkeep']).toBe('');
+
+    await page.getByRole('button', { name: 'Undo' }).click();
+    await expect(toast(page)).toContainText('Restored the course Arrays');
+    await expect(page.getByLabel('Course')).toHaveValue('arrays');
+    await expect(page.getByRole('listitem').filter({ hasText: 'intro.md' })).toBeVisible();
+    expect(fake.files()['content/learning-notes/dsa-python/.gitkeep']).toBeUndefined();
   });
 });

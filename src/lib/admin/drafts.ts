@@ -11,6 +11,14 @@ export interface Draft {
   /** Blob sha the draft started from (null for a new item). */
   baseSha: string | null;
   savedAt: number;
+  format?: 'md' | 'html';
+  /** HTML chapter metadata. */
+  description?: string;
+  tags?: string;
+  /** An uploaded HTML file (its text, when it fits in browser storage). */
+  html?: { name: string; size: number; text?: string };
+  /** Images uploaded while editing, base64-encoded. */
+  images?: { name: string; width: number; height: number; base64: string }[];
 }
 
 const PREFIX = 'parth-notes:admin:draft:';

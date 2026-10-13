@@ -45,7 +45,43 @@ export interface CommitResult {
   /** Blob sha of each touched path before and after the commit (null: absent). */
   before: Record<string, string | null>;
   after: Record<string, string | null>;
+  /** The branch exactly as this commit left it, so the admin can update without re-reading GitHub. */
+  snapshot: Snapshot;
+  message: string;
 }
+
+export interface CommitSummary {
+  sha: string;
+  message: string;
+  author: string;
+  /** ISO date-time. */
+  date: string;
+}
+
+export interface CommitPage {
+  commits: CommitSummary[];
+  hasMore: boolean;
+}
+
+export type FileStatus =
+  'added' | 'modified' | 'removed' | 'renamed' | 'copied' | 'changed' | 'unchanged';
+
+export interface CommitFile {
+  path: string;
+  status: FileStatus;
+  /** Path before a rename. */
+  previousPath?: string;
+  /** Blob sha after the commit (null when removed). */
+  sha: string | null;
+}
+
+export interface CommitDetail extends CommitSummary {
+  parents: string[];
+  files: CommitFile[];
+}
+
+/** What the deploy of a commit is doing, from its statuses, deployments and check runs. */
+export type SiteState = 'building' | 'live' | 'failed' | 'unknown';
 
 export interface VerifyResult {
   canPush: boolean;
@@ -84,6 +120,14 @@ export function createRepoClient(options: ClientOptions) {
     request: { fetch: createGitHubFetch({ fetch: options.fetch, sleep: options.sleep }) },
   });
   const textCache = new Map<string, string>();
+  const detailCache = new Map<string, CommitDetail>();
+  const treeCache = new Map<string, Map<string, TreeFile>>();
+  /** Sizes of blobs seen in any tree or written, so copied (restored) files keep their size. */
+  const blobSizes = new Map<string, number>();
+  const sleep = options.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
+  /** Heads this client moved the branch from and to, and the newest one it pushed. */
+  const ownHeads = new Set<string>();
+  let latestPushed: string | null = null;
 
   async function call<T>(fn: () => Promise<T>): Promise<T> {
     try {
@@ -93,10 +137,27 @@ export function createRepoClient(options: ClientOptions) {
     }
   }
 
+  /**
+   * The branch head. Right after a push GitHub can still answer with the old
+   * head for a moment; a head this client has already moved past is stale,
+   * so it asks again and, if GitHub still lags, uses the head it pushed.
+   */
+  async function headSha(): Promise<string> {
+    const read = async () =>
+      (await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` })).data.object.sha;
+    const stale = (sha: string) =>
+      latestPushed !== null && sha !== latestPushed && ownHeads.has(sha);
+    let sha = await read();
+    for (let attempt = 1; stale(sha) && attempt <= 3; attempt++) {
+      await sleep(250 * attempt);
+      sha = await read();
+    }
+    return stale(sha) ? (latestPushed as string) : sha;
+  }
+
   async function snapshot(): Promise<Snapshot> {
     return call(async () => {
-      const ref = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
-      const commitSha = ref.data.object.sha;
+      const commitSha = await headSha();
       const commit = await octokit.rest.git.getCommit({ owner, repo, commit_sha: commitSha });
       const treeSha = commit.data.tree.sha;
       const tree = await octokit.rest.git.getTree({
@@ -115,6 +176,7 @@ export function createRepoClient(options: ClientOptions) {
       for (const entry of tree.data.tree) {
         if (entry.type === 'blob' && entry.path && entry.sha) {
           files.set(entry.path, { path: entry.path, sha: entry.sha, size: entry.size ?? 0 });
+          blobSizes.set(entry.sha, entry.size ?? 0);
         }
       }
       return { commitSha, treeSha, files };
@@ -143,14 +205,29 @@ export function createRepoClient(options: ClientOptions) {
     repo,
     branch,
 
-    /** Checks the token can push to the repository and that the branch exists. */
+    /**
+     * Checks the token can push to the repository and that the branch exists.
+     * GitHub's "push" flag describes the account, not a fine-grained token, so
+     * write access is proven by writing the empty blob: every repository with
+     * a .gitkeep already has it, so nothing new appears.
+     */
     async verify(): Promise<VerifyResult> {
       return call(async () => {
         const response = await octokit.rest.repos.get({ owner, repo });
         await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
         const headers = response.headers as Record<string, string | undefined>;
+        let canPush = Boolean(response.data.permissions?.push);
+        if (canPush) {
+          try {
+            await octokit.rest.git.createBlob({ owner, repo, content: '', encoding: 'utf-8' });
+          } catch (error) {
+            const status = (error as { status?: number }).status;
+            if (status === 403 || status === 404) canPush = false;
+            else throw error;
+          }
+        }
         return {
-          canPush: Boolean(response.data.permissions?.push),
+          canPush,
           expiresAt: parseTokenExpiry(headers['github-authentication-token-expiration']),
         };
       });
@@ -159,6 +236,158 @@ export function createRepoClient(options: ClientOptions) {
     snapshot,
     readBlob,
     readText,
+
+    /** Commits on the branch that touch `path` (a file or a folder), newest first. */
+    async listCommits(
+      options: { path?: string; page?: number; perPage?: number } = {},
+    ): Promise<CommitPage> {
+      return call(async () => {
+        const response = await octokit.rest.repos.listCommits({
+          owner,
+          repo,
+          sha: branch,
+          path: options.path,
+          page: options.page ?? 1,
+          per_page: options.perPage ?? 20,
+        });
+        const link = (response.headers as Record<string, string | undefined>).link ?? '';
+        return {
+          commits: response.data.map((c) => ({
+            sha: c.sha,
+            message: c.commit.message,
+            author: c.commit.author?.name ?? c.author?.login ?? 'unknown',
+            date: c.commit.author?.date ?? c.commit.committer?.date ?? '',
+          })),
+          hasMore: /rel="next"/.test(link),
+        };
+      });
+    },
+
+    /** How many commits on the branch touch `path`. */
+    async countCommits(path?: string): Promise<number> {
+      return call(async () => {
+        const response = await octokit.rest.repos.listCommits({
+          owner,
+          repo,
+          sha: branch,
+          path,
+          per_page: 1,
+        });
+        const link = (response.headers as Record<string, string | undefined>).link ?? '';
+        const last = /[?&]page=(\d+)[^>]*>;\s*rel="last"/.exec(link);
+        return last ? Number(last[1]) : response.data.length;
+      });
+    },
+
+    /** One commit with its parents and changed files (cached: commits never change). */
+    async commitDetail(sha: string): Promise<CommitDetail> {
+      const cached = detailCache.get(sha);
+      if (cached) return cached;
+      const detail = await call(async () => {
+        const { data } = await octokit.rest.repos.getCommit({ owner, repo, ref: sha });
+        return {
+          sha: data.sha,
+          message: data.commit.message,
+          author: data.commit.author?.name ?? data.author?.login ?? 'unknown',
+          date: data.commit.author?.date ?? data.commit.committer?.date ?? '',
+          parents: data.parents.map((p) => p.sha),
+          files: (data.files ?? []).map((f) => ({
+            path: f.filename,
+            status: f.status as FileStatus,
+            previousPath: f.previous_filename,
+            sha: f.status === 'removed' ? null : (f.sha ?? null),
+          })),
+        };
+      });
+      detailCache.set(sha, detail);
+      return detail;
+    },
+
+    /** Every file of the tree at `commitSha` (cached). */
+    async treeAt(commitSha: string): Promise<Map<string, TreeFile>> {
+      const cached = treeCache.get(commitSha);
+      if (cached) return cached;
+      const files = await call(async () => {
+        const commit = await octokit.rest.git.getCommit({ owner, repo, commit_sha: commitSha });
+        const tree = await octokit.rest.git.getTree({
+          owner,
+          repo,
+          tree_sha: commit.data.tree.sha,
+          recursive: 'true',
+        });
+        const map = new Map<string, TreeFile>();
+        for (const entry of tree.data.tree) {
+          if (entry.type === 'blob' && entry.path && entry.sha) {
+            map.set(entry.path, { path: entry.path, sha: entry.sha, size: entry.size ?? 0 });
+            blobSizes.set(entry.sha, entry.size ?? 0);
+          }
+        }
+        return map;
+      });
+      treeCache.set(commitSha, files);
+      return files;
+    },
+
+    /**
+     * The deploy state of a commit, combining commit statuses, deployments
+     * and check runs. Anything the token may not read is skipped.
+     */
+    async siteStatus(sha: string): Promise<SiteState> {
+      const states: SiteState[] = [];
+      const fromStatus = (s: string | undefined | null): SiteState =>
+        s === 'success'
+          ? 'live'
+          : s === 'failure' || s === 'error'
+            ? 'failed'
+            : s === 'pending' || s === 'queued' || s === 'in_progress'
+              ? 'building'
+              : 'unknown';
+      await Promise.allSettled([
+        (async () => {
+          const { data } = await octokit.rest.repos.getCombinedStatusForRef({
+            owner,
+            repo,
+            ref: sha,
+          });
+          if (data.total_count > 0) states.push(fromStatus(data.state));
+        })(),
+        (async () => {
+          const { data } = await octokit.rest.repos.listDeployments({
+            owner,
+            repo,
+            sha,
+            per_page: 5,
+          });
+          for (const deployment of data) {
+            const statuses = await octokit.rest.repos.listDeploymentStatuses({
+              owner,
+              repo,
+              deployment_id: deployment.id,
+              per_page: 1,
+            });
+            const latest = statuses.data[0];
+            states.push(latest ? fromStatus(latest.state) : 'building');
+          }
+        })(),
+        (async () => {
+          const { data } = await octokit.rest.checks.listForRef({ owner, repo, ref: sha });
+          for (const run of data.check_runs) {
+            if (run.status !== 'completed') states.push('building');
+            else if (
+              run.conclusion === 'success' ||
+              run.conclusion === 'neutral' ||
+              run.conclusion === 'skipped'
+            ) {
+              states.push('live');
+            } else states.push('failed');
+          }
+        })(),
+      ]);
+      if (states.includes('failed')) return 'failed';
+      if (states.includes('building')) return 'building';
+      if (states.includes('live')) return 'live';
+      return 'unknown';
+    },
 
     /**
      * Writes every change as ONE commit through the Git Data API: fresh ref,
@@ -185,15 +414,19 @@ export function createRepoClient(options: ClientOptions) {
       return call(async () => {
         const after: Record<string, string | null> = { ...before };
         const tree: { path: string; mode: '100644'; type: 'blob'; sha: string | null }[] = [];
+        const files = new Map(base.files);
         for (const change of request.changes) {
           if (change.action === 'delete') {
             tree.push({ path: change.path, mode: '100644', type: 'blob', sha: null });
             after[change.path] = null;
+            files.delete(change.path);
             continue;
           }
           let sha: string;
+          let size: number;
           if (change.action === 'copy') {
             sha = change.sha;
+            size = blobSizes.get(sha) ?? 0;
           } else {
             const bytes =
               typeof change.content === 'string' ? textToBytes(change.content) : change.content;
@@ -204,9 +437,12 @@ export function createRepoClient(options: ClientOptions) {
               encoding: 'base64',
             });
             sha = blob.data.sha;
+            size = bytes.length;
+            blobSizes.set(sha, size);
           }
           tree.push({ path: change.path, mode: '100644', type: 'blob', sha });
           after[change.path] = sha;
+          files.set(change.path, { path: change.path, sha, size });
         }
 
         const newTree = await octokit.rest.git.createTree({
@@ -240,7 +476,17 @@ export function createRepoClient(options: ClientOptions) {
           }
           throw error;
         }
-        return { commitSha: commit.data.sha, treeSha: newTree.data.sha, before, after };
+        ownHeads.add(base.commitSha);
+        ownHeads.add(commit.data.sha);
+        latestPushed = commit.data.sha;
+        return {
+          commitSha: commit.data.sha,
+          treeSha: newTree.data.sha,
+          before,
+          after,
+          snapshot: { commitSha: commit.data.sha, treeSha: newTree.data.sha, files },
+          message: request.message,
+        };
       });
     },
   };
