@@ -2,8 +2,7 @@
   "title": "Generative AI for Professionals: Beginner to Pro",
   "description": "",
   "order": [
-    "01the-complete-generative-ai-roadmap-beginner-to-expert.md",
-    "04transformers-to-chatgpt-how-llms-and-diffusion-models-work.md"
+    "01the-complete-generative-ai-roadmap-beginner-to-expert.md"
   ],
   "html": {}
 }
