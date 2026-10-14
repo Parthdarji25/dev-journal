@@ -1,6 +1,26 @@
 {
   "title": "Generative AI for Professionals: Beginner to Pro",
   "description": "",
-  "order": [],
-  "html": {}
+  "order": [
+    "01genai-syllabus-2026-complete-roadmap-from-llm-foundations-to-production.html"
+  ],
+  "html": {
+    "01genai-syllabus-2026-complete-roadmap-from-llm-foundations-to-production.html": {
+      "title": "01. GenAI Syllabus 2026: Complete Roadmap from LLM Foundations to Production Deployment",
+      "description": "A structured 8-month roadmap for becoming a GenAI engineer. It runs from core prerequisites (Python, SQL, FastAPI, Docker, cloud) through 18 modules: transformer foundations, modern LLMs and SLMs, LLM APIs, training from scratch, fine-tuning (LoRA, QLoRA, RLHF, DPO), self-hosting, prompt and context engineering, RAG and multimodal RAG, agentic AI and multi-agent systems, evaluation, guardrails, MCP, no-code tools, cloud AI services (AWS, Azure, GCP), and deployment strategies. It ends with a full end-to-end project, a document portal with HLD/LLD, an advanced RAG design and a plan for scaling to 1M users per hour. ML and DL are optional, so it suits backend and full-stack developers as well as freshers ready for hands-on work.",
+      "tags": [
+        "GenAI",
+        "LLM",
+        "RAG",
+        "Agentic AI",
+        "MCP",
+        "Prompt Engineering",
+        "Fine-Tuning",
+        "LangChain",
+        "AI Roadmap",
+        "AI Engineer"
+      ],
+      "updated": "2026-10-14"
+    }
+  }
 }

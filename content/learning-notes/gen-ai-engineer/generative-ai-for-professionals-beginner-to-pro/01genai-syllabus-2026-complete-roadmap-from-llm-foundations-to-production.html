@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GenAI Syllabus</title>
+<style>
+:root{
+  --bg:#f7f6f2;--surface:#ffffff;--text:#1f2328;--muted:#5b616b;--border:#e3e0d8;
+  --accent:#c2410c;--accent-soft:#fff1e8;--code:#f1efe9;--good:#15803d;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#141517;--surface:#1c1e21;--text:#e8e6e1;--muted:#a3a6ad;--border:#2e3136;
+    --accent:#fb923c;--accent-soft:#2a1f17;--code:#24272b;--good:#4ade80;}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1280px;margin:0 auto}
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px;border-right:1px solid var(--border);font-size:14px}
+nav h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+nav a{display:block;padding:4px 8px;border-radius:6px;color:var(--text);text-decoration:none}
+nav a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:40px 48px 80px;min-width:0}
+header.hero{margin-bottom:36px}
+header.hero h1{font-size:40px;line-height:1.15;margin:0 0 8px}
+header.hero p{color:var(--muted);margin:0}
+section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 32px;margin:0 0 24px}
+section h2{margin:0 0 4px;font-size:26px}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--accent);background:var(--accent-soft);padding:2px 10px;border-radius:999px;margin-bottom:10px}
+h3{font-size:18px;margin:24px 0 8px}
+h4{font-size:15px;margin:16px 0 6px;color:var(--muted)}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+.cols{columns:2 260px;column-gap:32px}
+.cols>*{break-inside:avoid}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 4px}
+.tbl{overflow-x:auto}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--code);font-weight:600}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:13px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.flow span{background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-weight:600;font-size:14px}
+.flow i{color:var(--muted);font-style:normal}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.card h4{margin-top:0;color:var(--text)}
+a{color:var(--accent)}
+.check li{list-style:none;margin-left:-18px}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border)}
+  main{padding:24px 16px 60px}
+  section{padding:20px 16px}
+  header.hero h1{font-size:30px}
+}
+@media print{nav{display:none}.layout{display:block}section{break-inside:avoid-page}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <h2>Overview</h2>
+  <a href="#roadmap">Roadmap at a glance</a>
+  <a href="#faq">Common FAQs</a>
+  <a href="#core">Core Technical Requirements</a>
+  <a href="#product">AI Product Categories</a>
+  <a href="#mldl">ML &amp; DL Concepts (Optional)</a>
+  <a href="#modules">Main AI Roadmap</a>
+  <a href="#tools">Tools &amp; Frameworks</a>
+  <h2>Modules</h2>
+  <a href="#m1">1 · Foundations of Modern GenAI</a>
+  <a href="#m2">2 · Early Stage LLM</a>
+  <a href="#m3">3 · Modern LLMs, SLMs &amp; Multimodal</a>
+  <a href="#m4">4 · API for Accessing LLMs</a>
+  <a href="#m5">5 · Training an LLM from Scratch</a>
+  <a href="#m6">6 · Fine-Tuning LLMs</a>
+  <a href="#m7">7 · LLM Hosting</a>
+  <a href="#m8">8 · Prompt Engineering</a>
+  <a href="#m9">9 · RAG &amp; Multimodal RAG</a>
+  <a href="#m10">10 · Context Engineering</a>
+  <a href="#m11">11 · Agentic AI</a>
+  <a href="#m12">12 · Evaluation Strategies</a>
+  <a href="#m13">13 · Guardrails</a>
+  <a href="#m14">14 · MCP</a>
+  <a href="#m15">15 · No Code / Low Code</a>
+  <a href="#m16">16 · Cloud Services for GenAI</a>
+  <a href="#m17">17 · Deployment Strategies</a>
+  <a href="#m18">18 · Projects</a>
+</nav>
+
+<main>
+<header class="hero">
+  <span class="tag">29 December 2025</span>
+  <h1>GenAI Syllabus</h1>
+  <p>A structured path from core engineering skills to production-grade GenAI systems: LLMs, fine-tuning, RAG, agents, MCP, cloud and deployment.</p>
+</header>
+
+<section id="roadmap">
+  <span class="tag">Roadmap</span>
+  <h2>Roadmap at a glance</h2>
+  <div class="flow">
+    <span>Core Technical Requirement</span><i>→</i>
+    <span>ML &amp; DL (Optional)</span><i>→</i>
+    <span>GenAI Foundation</span><i>→</i>
+    <span>LLMs / SLMs / Multimodal</span><i>→</i>
+    <span>Fine-Tuning</span><i>→</i>
+    <span>RAG</span><i>→</i>
+    <span>Agents</span><i>→</i>
+    <span>MCP</span><i>→</i>
+    <span>Cloud Services for GenAI</span><i>→</i>
+    <span>Deployment Strategy</span><i>→</i>
+    <span>Projects (AI-Powered &amp; Integrated Apps)</span><i>→</i>
+    <span>Overall Verdict</span>
+  </div>
+</section>
+
+<section id="faq">
+  <span class="tag">FAQ</span>
+  <h2>Common FAQs</h2>
+
+  <h3>1) Who is this for?</h3>
+  <ul>
+    <li>Backend / full-stack developers who want to integrate LLMs, RAG, and agents.</li>
+    <li>Professionals preparing for interviews, projects, or startup-level AI products.</li>
+  </ul>
+
+  <h3>2) What about freshers?</h3>
+  <ul>
+    <li>Yes, freshers can do this, but with the right expectations.</li>
+    <li>Freshers should first be comfortable with Python, basic APIs, and Git.</li>
+    <li>For freshers, this syllabus can act as a career accelerator into GenAI roles.</li>
+    <li>Focus should be on learning concepts + hands-on practice, not rushing modules.</li>
+  </ul>
+
+  <h3>3) Who is this not for?</h3>
+  <ul>
+    <li>People looking for quick shortcuts or one-week crash courses</li>
+    <li>Those who want theory only, without hands-on coding or deployment</li>
+    <li>Anyone expecting copy-paste solutions without understanding system design</li>
+  </ul>
+
+  <h3>4) How much time will it take to prepare?</h3>
+  <p><strong>8-month structured learning.</strong></p>
+  <div class="grid">
+    <div class="card">
+      <h4>Months 1–2 · Foundations + Core Understanding</h4>
+      <ul>
+        <li>Module 1: Foundations of Modern GenAI</li>
+        <li>Module 2: Early Stage LLM</li>
+        <li>Module 3: Modern LLMs, SLMs &amp; Multimodal</li>
+        <li>Module 4: API for accessing the LLM</li>
+        <li>Module 5: Training LLM from Scratch</li>
+        <li>Module 8: Prompt Engineering</li>
+        <li>Module 9 (Basics): RAG fundamentals</li>
+        <li>Module 11 (Basics): Agent fundamentals</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Months 3–6 · Depth + GenAI Engineering Skills</h4>
+      <ul>
+        <li>Module 6: Fine-Tuning LLMs</li>
+        <li>Module 10: Context Engineering</li>
+        <li>Module 9 (Advanced): Data parsing, Multimodal RAG, Agentic RAG</li>
+        <li>Module 11 (Advanced): Multi-agent, Deep Agent</li>
+        <li>Module 12: Evaluation Strategies</li>
+        <li>Module 13: Guardrails</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Months 7–8 · Cloud + Deployment + Reality Check</h4>
+      <ul>
+        <li>Module 14: MCP</li>
+        <li>Module 16: Cloud Services for GenAI</li>
+        <li>Module 17: Deployment Strategies</li>
+        <li>Module 7: LLM Hosting on your own server</li>
+        <li>Module 18: End-to-End Projects</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">With consistent effort (1–2 hrs/day), you'll be industry-ready in 6–8 months.</div>
+
+  <h3>5) Do you need ML &amp; DL to start GenAI?</h3>
+  <p><strong>NO — ML &amp; DL are NOT mandatory before starting GenAI.</strong> GenAI application work does not require classic ML/DL. You can start GenAI directly and build:</p>
+  <ul><li>RAG systems</li><li>Agentic systems</li><li>Production GenAI apps</li></ul>
+  <h4>Then why do people say "Learn ML/DL first"?</h4>
+  <p><strong>Goal: GenAI Application Engineer (most people)</strong> — build systems (apps) using LLMs → ML/DL NOT mandatory.</p>
+  <p>But if you train models, modify model architectures, or fine-tune models, then ML &amp; DL basics are <strong>REQUIRED</strong>.</p>
+  <div class="callout"><strong>One-line industry truth:</strong> ML/DL is a booster, not a barrier.<br>
+  Stats → ML → DL → Math → Theory → (Burnout) — most people fail here… and never reach GenAI systems.</div>
+  <h4>Final recommendation (crystal clear)</h4>
+  <ul><li>Don't wait for ML/DL</li><li>Learn ML/DL in parallel or later</li><li>Start GenAI now</li><li>Build systems early</li></ul>
+</section>
+
+<section id="core">
+  <span class="tag">Prerequisites</span>
+  <h2>Core Technical Requirements</h2>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Skill Area</th><th>Priority</th><th>What to Learn</th><th>Level Required</th></tr>
+    <tr><td>1</td><td>Programming Language</td><td>MUST</td><td>Python</td><td>Basic → Intermediate → Advanced (Strong)</td></tr>
+    <tr><td>2</td><td>SQL</td><td>Required</td><td>—</td><td>Basic → Intermediate</td></tr>
+    <tr><td>3</td><td>SQL Database</td><td>Required</td><td>MySQL / PostgreSQL (Recommended) / Oracle</td><td>Working Knowledge</td></tr>
+    <tr><td>4</td><td>NoSQL Databases</td><td>Required</td><td>MongoDB, Redis, Neo4j</td><td>Basic → Intermediate</td></tr>
+    <tr><td>5</td><td>DSA</td><td>Required</td><td>—</td><td>Basic → Intermediate</td></tr>
+    <tr><td>6</td><td>API Creation</td><td>MUST</td><td>FastAPI (Preferred), Django</td><td>Production-ready APIs</td></tr>
+    <tr><td>7</td><td>Docker &amp; CI/CD</td><td>Required</td><td>Docker, GitHub Actions / CI pipelines</td><td>Working Knowledge</td></tr>
+    <tr><td>8</td><td>Cloud Knowledge</td><td>MUST</td><td>AWS / Azure / GCP (Any ONE)</td><td>GenAI Services &amp; Deployment-level</td></tr>
+    <tr><td>9</td><td>Version Control</td><td>MUST</td><td>Git, GitHub</td><td>Daily-use, collaboration-ready</td></tr>
+    <tr><td>10</td><td>IDE / Code Editor</td><td>Required</td><td>VS Code (Preferred), PyCharm</td><td>Comfortable for daily development</td></tr>
+    <tr><td>11</td><td>Writing Code with Copilot</td><td>MUST</td><td>GitHub Copilot, MS Copilot, Claude, ChatGPT</td><td>Master for highest productivity</td></tr>
+  </table></div>
+</section>
+
+<section id="product">
+  <span class="tag">Context</span>
+  <h2>AI Product Categories · Where AI Devs Fit · Who Should Learn AI</h2>
+  <p>Whenever we build an AI-enabled product, it generally falls into two categories.</p>
+  <div class="grid">
+    <div class="card"><h4>AI-native applications</h4><p>Systems where AI is the core of the product. Without AI, the application cannot exist.</p><p>Examples: ChatGPT, Manus, Perplexity</p></div>
+    <div class="card"><h4>AI-integrated applications</h4><p>Existing systems where AI is added as a feature or enhancement, not the core product.</p><p>Examples: IRCTC, Amazon customer support</p></div>
+  </div>
+  <h3>The most important point</h3>
+  <p>In both cases, the fundamental software engineering building blocks remain the same. You still need strong knowledge of:</p>
+  <ul class="cols">
+    <li>UI / UX frontend development</li><li>APIs</li><li>Backend</li><li>Databases</li>
+    <li>Cloud infrastructure / Deployment &amp; DevOps</li><li>Data Integration Layer</li><li>Software Development Life Cycle (SDLC)</li>
+  </ul>
+  <div class="callout">AI adds intelligence to a system, but designing scalable and reliable systems still depends on strong software engineering fundamentals.</div>
+
+  <h3>Products generally fall into two types</h3>
+  <h4>Consumer-scale products (millions of users)</h4>
+  <p>OpenAI – ChatGPT · Google – YouTube · Meta – Facebook · Netflix · Perplexity.ai</p>
+  <h4>Business / Enterprise products (domain-specific)</h4>
+  <div class="tbl"><table>
+    <tr><th>Domain</th><th>Major Companies</th></tr>
+    <tr><td>Healthcare</td><td>UnitedHealth Group, CVS Health</td></tr>
+    <tr><td>Pharma</td><td>Pfizer, Merck</td></tr>
+    <tr><td>Finance</td><td>BlackRock, Visa</td></tr>
+    <tr><td>Banking</td><td>JPMorgan Chase (Fraud Detection &amp; Monitoring, Trading &amp; Risk Platforms, Chase), Morgan Stanley, Goldman Sachs</td></tr>
+    <tr><td>Retail</td><td>Walmart, DMart</td></tr>
+    <tr><td>Education</td><td>Coursera, Udemy</td></tr>
+  </table></div>
+
+  <h3>SDLC Steps</h3>
+  <ol class="cols"><li>Requirement Analysis</li><li>Design</li><li>Development</li><li>Testing</li><li>Deployment</li><li>Maintenance &amp; Monitoring</li><li>Support</li></ol>
+
+  <h3>Agile Framework (with DevOps)</h3>
+  <p>Agile is a software development approach focused on iterative development, fast feedback, and continuous improvement.</p>
+  <div class="grid">
+    <div class="card"><h4>Jira (Tool)</h4><p>A project &amp; issue tracking tool used to implement Agile / Scrum in real projects.</p></div>
+    <div class="card"><h4>Sprint (usually 2 weeks)</h4><ul>
+      <li><strong>Product Backlog</strong> → complete list of all work</li>
+      <li><strong>User Story</strong> → requirement from user's perspective</li>
+      <li><strong>Epic</strong> → large feature broken into stories</li>
+      <li><strong>Task</strong> → small unit of work</li>
+      <li><strong>Bug</strong> → defect or issue</li></ul></div>
+    <div class="card"><h4>Scrum</h4><p>A process used to manage work using sprints.</p></div>
+  </div>
+
+  <h3>Roles</h3>
+  <div class="tbl"><table>
+    <tr><th>Role</th><th>AI Need</th><th>Responsibilities</th></tr>
+    <tr><td>Scrum Master</td><td>—</td><td>Facilitates daily stand-ups, conducts sprint retrospective, removes blockers, ensures Scrum process is followed</td></tr>
+    <tr><td>Product Owner</td><td>AI Required</td><td>Owns product vision</td></tr>
+    <tr><td>Product Manager</td><td>AI Required</td><td>Manages the product</td></tr>
+    <tr><td>Business Analyst</td><td>AI Required</td><td>Converts business requirements into user stories</td></tr>
+    <tr><td>Tech Lead</td><td>AI Must</td><td>Defines technical architecture</td></tr>
+    <tr><td>Frontend Developers</td><td>—</td><td>Build UI (web / mobile); integrate AI features into the user experience</td></tr>
+    <tr><td>Backend Developers</td><td>AI Required</td><td>Build APIs and business logic; integrate AI/LLM services into backend systems</td></tr>
+    <tr><td>Database Engineers</td><td>—</td><td>Design and manage databases; handle structured data, logs, and vector databases</td></tr>
+    <tr><td>AI / ML Engineers (AI Developers)</td><td>AI Must</td><td>Build and integrate AI models; design prompts, RAG pipelines, and agents; optimize model performance, cost, and accuracy</td></tr>
+    <tr><td>Testing Team</td><td>—</td><td>Manual &amp; automated testing</td></tr>
+    <tr><td>DevOps Team</td><td>—</td><td>CI/CD pipelines, cloud infrastructure, monitoring &amp; deployments</td></tr>
+    <tr><td>Support Team</td><td>—</td><td>Production issues, user support &amp; incident management</td></tr>
+  </table></div>
+</section>
+
+<section id="mldl">
+  <span class="tag">Optional</span>
+  <h2>ML &amp; DL Important Concepts</h2>
+  <div class="grid">
+    <div class="card"><h4>Supervised · Regression (continuous output)</h4>
+      <ul><li>Linear Regression</li><li>Multiple Linear Regression</li><li>Polynomial Regression</li></ul>
+      <p><em>Use cases:</em> house price, salary prediction, demand forecasting</p></div>
+    <div class="card"><h4>Supervised · Classification (discrete output)</h4>
+      <ul><li>Logistic Regression</li><li>k-Nearest Neighbors (KNN)</li><li>Support Vector Machines (SVM)</li><li>Naive Bayes</li><li>Decision Trees</li><li>Random Forest</li><li>Gradient Boosting</li><li>XGBoost / LightGBM / CatBoost</li></ul>
+      <p><em>Use cases:</em> spam detection, fraud detection, disease prediction</p></div>
+    <div class="card"><h4>Unsupervised · Clustering</h4>
+      <ul><li>K-Means</li><li>Hierarchical Clustering</li><li>DBSCAN</li></ul>
+      <p><em>Use cases:</em> customer segmentation, document grouping</p></div>
+    <div class="card"><h4>Dimensionality Reduction</h4>
+      <ul><li>PCA (Principal Component Analysis)</li><li>LDA (Linear Discriminant Analysis)</li><li>t-SNE (visualization focused)</li></ul>
+      <p><em>Use cases:</em> feature reduction, visualization, noise removal</p></div>
+    <div class="card"><h4>Evaluation Metrics</h4>
+      <ul><li>Accuracy</li><li>Precision</li><li>Recall</li><li>F1 Score</li><li>ROC–AUC</li><li>Confusion Matrix</li><li>Mean Squared Error (MSE)</li><li>R² Score</li></ul></div>
+    <div class="card"><h4>Other Important Concepts</h4>
+      <ul><li>Bias–Variance Tradeoff</li><li>Overfitting &amp; Underfitting</li><li>Cross Validation (K-Fold, Stratified)</li><li>Data Leakage</li><li>Data Drift</li><li>Hyperparameter Tuning</li></ul></div>
+  </div>
+
+  <h3>Deep Learning (DL) – Core Topics</h3>
+  <div class="grid">
+    <div class="card"><h4>Types of Neural Networks</h4><ul>
+      <li>ANN → basic neural networks</li><li>CNN → image &amp; vision tasks</li><li>RNN → sequential data</li>
+      <li>LSTM → sequential data, long-term dependencies</li><li>GAN → data generation</li>
+      <li>Autoencoders → data generation, feature learning, compression</li><li>RL (Reinforcement Learning) → agent-based learning</li></ul></div>
+    <div class="card"><h4>Deep Learning Fundamentals</h4><ul>
+      <li>Activation Functions (ReLU, Sigmoid, Softmax)</li><li>Loss Functions</li><li>Forward Propagation</li><li>Backpropagation</li><li>Gradient Descent</li><li>Learning Rate</li></ul></div>
+    <div class="card"><h4>Optimization &amp; Regularization</h4><ul>
+      <li>Optimizers: SGD, Adam, RMSprop</li><li>Weight Initialization</li><li>Batch Normalization</li><li>Dropout</li><li>Early Stopping</li><li>Learning Rate Schedulers</li><li>Vanishing / Exploding Gradients</li><li>Loss Curves analysis</li></ul></div>
+    <div class="card"><h4>Training &amp; Evaluation in DL</h4><ul>
+      <li>Epochs, Step &amp; Batch Size</li><li>Model Checkpointing</li><li>Hyperparameter Tuning</li></ul></div>
+    <div class="card"><h4>Practical Deep Learning</h4><ul>
+      <li>Transfer Learning</li><li>Fine-Tuning</li><li>Model Compression</li><li>Model Distillation</li><li>Model Quantization</li><li>Inference vs Training</li></ul></div>
+  </div>
+  <h3>Tools</h3>
+  <div class="tbl"><table>
+    <tr><th>Category</th><th>Tools</th></tr>
+    <tr><td>Data Processing</td><td>NumPy, Pandas</td></tr>
+    <tr><td>Visualization</td><td>Matplotlib, Seaborn</td></tr>
+    <tr><td>Classical ML</td><td>Scikit-learn</td></tr>
+    <tr><td>Deep Learning</td><td>TensorFlow, Keras, PyTorch</td></tr>
+  </table></div>
+</section>
+
+<section id="modules">
+  <span class="tag">Core AI Skills</span>
+  <h2>Main AI Roadmap</h2>
+  <ol class="cols">
+    <li>Foundations of Modern GenAI</li>
+    <li>Early Stage LLM</li>
+    <li>Modern LLMs, SLMs &amp; Multimodal</li>
+    <li>API for Accessing the LLM</li>
+    <li>Training an LLM from Scratch</li>
+    <li>Fine-Tuning LLMs</li>
+    <li>LLM Hosting on your own server and exposing as an API</li>
+    <li>Prompt Engineering</li>
+    <li>RAG &amp; Multimodal RAG (The Important) — Data Parsing · Chunking &amp; Embedding · Vector Databases · Retrieval Strategies</li>
+    <li>Context Engineering</li>
+    <li>Agentic AI – Agent &amp; Multi-agent Systems · Deep Agents</li>
+    <li>Evaluation Strategies</li>
+    <li>Guardrails</li>
+    <li>MCP</li>
+    <li>No Code / Low Code Tools</li>
+    <li>Cloud Services for GenAI</li>
+    <li>Deployment Strategies</li>
+    <li>Projects</li>
+  </ol>
+</section>
+
+<section id="tools">
+  <span class="tag">Stack</span>
+  <h2>Tools &amp; Frameworks to Use for GenAI</h2>
+  <div class="grid">
+    <div class="card"><h4>LLM Foundations</h4><p>Hugging Face, PyTorch</p></div>
+    <div class="card"><h4>Fine-tuning</h4><p>Unsloth, LLaMA Factory</p></div>
+    <div class="card"><h4>Vector Databases &amp; Search (RAG Backbone)</h4><p>FAISS, Chroma, Qdrant, Supabase, pgvector, Milvus, Pinecone, AWS OpenSearch, Azure AI Search</p></div>
+    <div class="card"><h4>Databases &amp; Storage</h4><p>Neo4j, MongoDB, PostgreSQL, Redis, SQLAlchemy</p></div>
+    <div class="card"><h4>LLM App Building Frameworks</h4><p>LangChain, LlamaIndex, Haystack, LangSmith</p></div>
+    <div class="card"><h4>Guardrails, Validation &amp; Safety</h4><p>Guardrails.ai, NVIDIA NeMo, OpenAI Guardrails</p></div>
+    <div class="card"><h4>Local LLMs &amp; Runtime</h4><p>Ollama</p></div>
+    <div class="card"><h4>Experiment Tracking</h4><p>MLflow</p></div>
+    <div class="card"><h4>Data Modelling</h4><p>Pydantic</p></div>
+    <div class="card"><h4>MCP</h4><p>FastMCP</p></div>
+    <div class="card"><h4>Document AI &amp; Parsing</h4><p>LlamaParse, Docling, Google Document AI, Amazon Textract, python-docx, PyMuPDF, pdfplumber, Parsio, Unstructured.io, Azure Document Intelligence</p></div>
+    <div class="card"><h4>Agentic AI Frameworks</h4><p>LangGraph, Deepagent, AutoGen, n8n</p></div>
+    <div class="card"><h4>Cloud GenAI Platforms</h4><p>Google ADK, AgentCore, AWS Bedrock, Azure AI Foundry, GCP Vertex AI</p></div>
+    <div class="card"><h4>Evaluation &amp; Observability</h4><p>RAGAS, TruLens, LlamaIndex Eval, DeepEval, OpenAI Evals</p></div>
+    <div class="card"><h4>Prompt Engineering &amp; Management</h4><p>LangChain Prompt Hub, PromptLayer, OpenAI Cookbook, PromptHub, DSPy (prompt-as-code), Guidance (Microsoft)</p></div>
+    <div class="card"><h4>Deployment, Infra &amp; CI/CD</h4><p>ECS + Fargate + EC2, AWS SageMaker, GitHub Actions, Azure VMs, Azure Kubernetes Service (AKS), Azure Container Apps / ACI</p></div>
+    <div class="card"><h4>Testing</h4><p>pytest</p></div>
+    <div class="card"><h4>Pipeline Orchestration</h4><p>Apache Airflow</p></div>
+  </div>
+</section>
+
+<section id="m1">
+  <span class="tag">Module 1</span>
+  <h2>Foundations of Modern GenAI</h2>
+  <ul class="cols">
+    <li>Sequence Learning Basics</li>
+    <li>Sequence Mapping Types (with examples)</li>
+    <li>Early Sequence Models</li>
+    <li>Encoder–Decoder Architecture</li>
+    <li>Transformer Architecture (Heart of LLMs)</li>
+    <li>Why Text Needs Encoding</li>
+    <li>Tokenization (Step 1 of encoding, vocabulary creation)</li>
+    <li>Classical Encoding Techniques (quick history)</li>
+    <li>Word Embedding Techniques</li>
+    <li>Contextual Embeddings → context awareness → modern approach</li>
+    <li>Vector Space &amp; Similarity</li>
+  </ul>
+  <h4>Tools</h4><p>Python, PyTorch, Keras, Hugging Face, NLTK, spaCy</p>
+</section>
+
+<section id="m2">
+  <span class="tag">Module 2 · Timeline 2018–2021</span>
+  <h2>Early Stage LLM</h2>
+  <h3>Models</h3>
+  <ul class="cols">
+    <li>BERT (Bidirectional Encoder Representations from Transformers)</li><li>RoBERTa</li><li>DistilBERT</li>
+    <li>T5 (Text-to-Text Transfer Transformer)</li><li>GPT-1</li><li>GPT-2</li><li>GPT-Neo / GPT-J</li>
+  </ul>
+  <h3>Concepts</h3>
+  <ul class="cols">
+    <li>Encoder and Decoder</li><li>Masked Language Modeling (MLM)</li><li>Autoregressive text generation</li>
+    <li>Attention mechanism</li><li>Cross-attention</li><li>Multi-head attention</li><li>Tokenization</li>
+    <li>Positional encoding</li><li>Pretraining vs fine-tuning</li><li>Inference</li><li>Loss functions</li><li>Activation functions</li>
+  </ul>
+  <h4>Tools &amp; Frameworks</h4><p>Python, PyTorch, Keras, Hugging Face, NLTK, spaCy</p>
+</section>
+
+<section id="m3">
+  <span class="tag">Module 3</span>
+  <h2>Modern LLMs, SLMs &amp; Multimodal</h2>
+  <p>Text / Vision-Language / Multimodal / Audio &amp; Speech / Code-focused models:</p>
+  <ul class="cols">
+    <li>GPT family</li><li>Gemini family</li><li>DeepSeek family</li><li>Llama family</li><li>Mistral family</li>
+    <li>Claude family</li><li>Qwen family</li><li>Gemma family</li><li>Phi family</li><li>LLaVA</li>
+    <li>BLIP / BLIP-2</li><li>CLIP</li><li>Whisper</li><li>DALL·E</li><li>VALL-E</li>
+    <li>CodeLLaMA</li><li>StarCoder / StarCoder2</li><li>DeepSeek-Coder</li><li>Phi-3-Mini (code)</li>
+  </ul>
+  <h3>Leaderboards</h3>
+  <ul>
+    <li><a href="https://lmarena.ai/leaderboard">lmarena.ai/leaderboard</a></li>
+    <li><a href="https://www.vellum.ai/llm-leaderboard">vellum.ai/llm-leaderboard</a></li>
+    <li><a href="https://llm-stats.com/">llm-stats.com</a></li>
+    <li><a href="https://scale.com/leaderboard">scale.com/leaderboard</a></li>
+    <li>Embedding models: <a href="https://huggingface.co/spaces/mteb/leaderboard">MTEB leaderboard (Hugging Face)</a></li>
+  </ul>
+  <h3>LLM vs SLM</h3>
+  <div class="tbl"><table>
+    <tr><th>Feature</th><th>LLM</th><th>SLM</th></tr>
+    <tr><td>Parameters</td><td>Billions–Trillions</td><td>Millions–Few Billions</td></tr>
+    <tr><td>Resource Needs</td><td>High</td><td>Low</td></tr>
+    <tr><td>Scope</td><td>Broad &amp; General</td><td>Specific &amp; Domain-focused</td></tr>
+    <tr><td>Training Data</td><td>Very Large</td><td>Smaller / Curated</td></tr>
+    <tr><td>Speed &amp; Cost</td><td>Slower, Expensive</td><td>Fast, Cost-Efficient</td></tr>
+  </table></div>
+  <h3>Example SLMs</h3>
+  <ol>
+    <li>Mistral NeMo – efficient small model</li>
+    <li>Gemma 2 – scalable smaller model</li>
+    <li>Phi-3.5 Mini – lightweight models from Microsoft</li>
+    <li>Qwen 2 (0.5B / 1B / 7B) – scalable SLM sizes</li>
+    <li>StableLM-Zephyr 3B – open-source smaller model</li>
+    <li>MobileLLaMA / TinyLLaMA / MiniCPM-V – very compact variants</li>
+  </ol>
+</section>
+
+<section id="m4">
+  <span class="tag">Module 4</span>
+  <h2>API for Accessing the LLM</h2>
+  <div class="grid">
+    <div class="card"><h4>API Ecosystem</h4><ul><li>OpenAI SDK</li><li>Anthropic SDK</li><li>Google (Gemini) AI Studio SDK</li><li>Meta API / open-source hosting SDK</li><li>Groq API SDK</li></ul></div>
+    <div class="card"><h4>Other Notable GenAI APIs</h4><ul><li>Cohere</li><li>Together AI</li><li>Fireworks AI</li><li>Replicate</li><li>Perplexity</li><li>DeepSeek</li><li>Mistral</li><li>OpenRouter</li></ul></div>
+    <div class="card"><h4>Cloud Provider Managed APIs</h4><ul><li>Microsoft Azure AI Foundry (Azure OpenAI)</li><li>Amazon AWS Bedrock</li><li>Google Cloud Vertex AI</li></ul></div>
+    <div class="card"><h4>Tools &amp; Frameworks</h4><ul><li>LangChain</li><li>LlamaIndex</li><li>Haystack</li></ul></div>
+  </div>
+</section>
+
+<section id="m5">
+  <span class="tag">Module 5</span>
+  <h2>Training an LLM from Scratch</h2>
+  <ul class="cols">
+    <li>LLM Pretraining Training pipeline</li>
+    <li>Data Collection for LLMs, Data Sources &amp; Challenges</li>
+    <li>Data Preprocessing &amp; Text Cleaning</li>
+    <li>Vocabulary Creation, Tokenization &amp; Vocabulary Design</li>
+    <li>Data Augmentation for LLM Training</li>
+    <li>Transformers &amp; LLM Architecture</li>
+    <li>Model Scaling Strategies</li>
+    <li>Pretraining Objectives: Causal Language Modeling, Autoregressive generation, Next-token prediction</li>
+    <li>Training Process, Training Loop &amp; Optimization</li>
+    <li>Distributed Training &amp; Infrastructure</li>
+    <li>Hardware, Software Stack</li>
+    <li>Monitoring, Debugging &amp; Checkpointing</li>
+    <li>LLM Evaluation: Evaluation Types, Metrics, Benchmarks</li>
+    <li>Ethical &amp; Responsible AI: Bias detection, Fairness, Privacy leakage, Hallucination, Truthfulness (TruthfulQA)</li>
+  </ul>
+  <h4>Tools &amp; Frameworks</h4>
+  <p>Python, PyTorch, Hugging Face, NLTK, spaCy, DeepSpeed, Megatron-LM, Experiment tracking (W&amp;B, MLflow), GPU Knowledge</p>
+</section>
+
+<section id="m6">
+  <span class="tag">Module 6</span>
+  <h2>Fine-Tuning LLMs</h2>
+  <ul class="cols">
+    <li>Fine-Tuning in Deep Learning (CNNs)</li>
+    <li>Why Fine-Tuning is Limited in RNN / LSTM?</li>
+    <li>Hugging Face Ecosystem vs LangChain</li>
+    <li>Fine-Tuning Classical Language Models</li>
+    <li>Knowledge Distillation in LLMs</li>
+    <li>LLM Quantization</li>
+    <li>Fine-Tuning Large Language Models (LLMs)</li>
+    <li>API-Based Model Fine-Tuning</li>
+    <li>Best Frameworks for LLM Fine-Tuning</li>
+    <li>Types of Fine-Tuning: Full Fine-Tuning, LoRA (Low-Rank Adaptation), QLoRA (Quantized LoRA), PEFT (Parameter-Efficient Fine-Tuning) overview</li>
+    <li>Dataset Preparation</li>
+    <li>Model Packaging: Hugging Face checkpoints, Safetensors, GGUF, GGML</li>
+    <li>Fine-Tuning Vision-Language Models</li>
+    <li>RLHF, DPO, ORPO, GRPO</li>
+    <li>Embedding Model Fine-Tuning</li>
+  </ul>
+</section>
+
+<section id="m7">
+  <span class="tag">Module 7</span>
+  <h2>LLM Hosting on Your Own Server &amp; Exposing as an API</h2>
+  <h3>Hosting Options (Where to Run LLMs)</h3>
+  <ul>
+    <li><strong>Bare Metal Server:</strong> physical server dedicated only to you, rented from a provider. No virtualization layer, no shared hardware.</li>
+    <li><strong>Cloud VM (GPU) or Cloud Managed service:</strong> compute provided by cloud providers like AWS, Azure, GCP.</li>
+    <li><strong>On-Prem Server:</strong> servers owned and hosted by your organization.</li>
+  </ul>
+  <h3>Inference Servers (How Models Are Served)</h3>
+  <p>vLLM · llama.cpp · FastAPI custom server</p>
+  <h3>Cloud Managed (AWS) Flow</h3>
+  <ol>
+    <li>Fine-tune base model (LoRA) on AWS SageMaker</li>
+    <li>Deploy model as a SageMaker Endpoint</li>
+    <li>Configure access using API Gateway <em>or</em> Application Load Balancer (ALB)</li>
+    <li>Perform inference using AWS Lambda (lightweight / burst) or ECS Fargate (container-based scaling)</li>
+    <li>Call API from a client application</li>
+  </ol>
+  <h3>Inference Challenges (Production Reality)</h3>
+  <ul>
+    <li><strong>Latency</strong> — time to first token</li>
+    <li><strong>Throughput</strong> — requests per second</li>
+    <li><strong>Resource usage</strong> — GPU memory, VRAM, CPU</li>
+    <li>Cold start &amp; scaling issues</li>
+  </ul>
+</section>
+
+<section id="m8">
+  <span class="tag">Module 8</span>
+  <h2>Prompt Engineering</h2>
+  <div class="grid">
+    <div class="card"><h4>Core Prompting Concepts</h4><ul><li>System vs User Prompts</li><li>Zero-Shot Prompting</li><li>Few-Shot Prompting</li><li>Chain-of-Thought (CoT)</li><li>Self-Consistency</li><li>ReAct (Reason + Act)</li><li>Fallback Prompts</li></ul></div>
+    <div class="card"><h4>Prompt Design Strategies</h4><ul><li>Task-Wise Prompting</li><li>Domain Prompting</li></ul></div>
+    <div class="card"><h4>Prompt Management (Production Grade)</h4><ul><li>Prompt Library</li><li>Jinja2 Templates</li><li>YAML-Based Prompt Configs</li></ul></div>
+    <div class="card"><h4>Structured &amp; Controlled Prompting</h4><ul><li>Output control: JSON / YAML outputs</li><li>Schema-based prompts</li><li>Guarded outputs (format enforcement)</li></ul></div>
+    <div class="card"><h4>Most Important</h4><ul><li>Token Cost Optimization</li><li>Context Window Optimization</li></ul></div>
+    <div class="card"><h4>Tools &amp; Frameworks</h4><ul><li>LangChain Prompt Hub</li><li>PromptLayer</li><li>OpenAI Cookbook / Prompt Examples</li><li>PromptHub (community repos)</li><li>DSPy (Prompt-as-Code)</li><li>Guidance (Microsoft)</li><li>LangChain Prompt Template</li><li>LlamaIndex Prompt Template</li></ul></div>
+  </div>
+</section>
+
+<section id="m9">
+  <span class="tag">Module 9 · The Important</span>
+  <h2>RAG &amp; Multimodal RAG</h2>
+  <p>What you need to master in Retrieval-Augmented Generation:</p>
+  <ul class="cols">
+    <li>Understanding why LLMs hallucinate</li>
+    <li>End-to-end RAG system architecture</li>
+    <li>Data ingestion and parsing</li>
+    <li>Chunking strategies (when and when not to use them)</li>
+    <li>Embedding generation and selection</li>
+    <li>Vector database design and management (local / open-source, 3rd-party managed / cloud managed)</li>
+    <li>Metadata design and filtering</li>
+    <li>Retrieval, ranking, and re-ranking strategies</li>
+    <li>Prompting with retrieved context</li>
+    <li>Context engineering for reliable outputs</li>
+    <li>Memory management</li>
+    <li>Caching strategies for performance and cost</li>
+    <li>Evaluating RAG quality and reliability</li>
+    <li>How multimodal RAG systems work</li>
+    <li>Common failure modes in RAG systems</li>
+    <li>Tools &amp; frameworks to follow</li>
+  </ul>
+  <p>Sub-modules: <strong>Data Parsing</strong> · <strong>Chunking &amp; Embedding</strong> · <strong>Vector Databases</strong> · <strong>Retrieval Strategies for RAG Systems</strong></p>
+</section>
+
+<section id="m10">
+  <span class="tag">Module 10</span>
+  <h2>Context Engineering</h2>
+  <p>Context Engineering is the art of curating and structuring the right input information for LLMs so they produce useful, accurate, and context-aware outputs.</p>
+  <h3>Main Components</h3>
+  <ul class="cols">
+    <li>Chunking Data</li><li>Prompt Templates</li><li>Retrieval Selection</li><li>Context Ranking</li>
+    <li>Context Injection Strategy</li><li>Maximizing Utility without Exceeding Context Window</li>
+  </ul>
+</section>
+
+<section id="m11">
+  <span class="tag">Module 11</span>
+  <h2>Agentic AI – Agent, Multi-agent System &amp; Deep Agent</h2>
+  <ul class="cols">
+    <li>Single-agent architectures</li>
+    <li>Multi-agent systems (Supervisor, Network, Hierarchical)</li>
+    <li>Deep agents</li>
+    <li>LLMs as the reasoning and decision-making core</li>
+    <li>Tools as agent interfaces</li>
+    <li>Agent orchestration layers</li>
+    <li>Memory and state management</li>
+    <li>Prompting strategies for agents</li>
+    <li>Human-in-the-loop mechanisms</li>
+    <li>Loop prevention and safety controls</li>
+    <li>Execution limits (max steps)</li>
+    <li>Token usage and cost budgeting</li>
+    <li>Agentic RAG architectures</li>
+    <li>Inter-agent collaboration and coordination</li>
+    <li>Tools &amp; frameworks to follow</li>
+  </ul>
+</section>
+
+<section id="m12">
+  <span class="tag">Module 12</span>
+  <h2>Evaluation Strategies</h2>
+  <div class="grid">
+    <div class="card"><h4>Observability &amp; Debugging (Foundation)</h4><ul><li>Logging and monitoring for GenAI systems</li><li>Conversation-level logs for debugging</li><li>Tracing prompts, context, tools, and responses</li><li>Understanding why a model behaved a certain way</li></ul></div>
+    <div class="card"><h4>Why Classical Evaluation Breaks in GenAI</h4><ul><li>Why traditional ML evaluation fails for GenAI</li><li>Limits of model-level metrics for system behavior</li><li>Model-level vs task-level evaluation</li><li>Why benchmarks don't reflect real-world usage</li></ul></div>
+    <div class="card"><h4>Core Evaluation Strategies</h4><ul><li>LLM-as-a-judge: how it works and where it fails</li><li>Human-in-the-loop evaluation</li><li>Combining automated + human feedback</li><li>Offline vs online evaluation</li><li>Evaluating outputs against task-specific goals</li></ul></div>
+    <div class="card"><h4>Evaluating Complex GenAI Systems</h4><ul><li>End-to-end evaluation of RAG pipelines</li><li>Evaluating single- and multi-agent systems</li><li>Measuring grounding, relevance, and faithfulness</li><li>Detecting hallucinations and reasoning failures</li></ul></div>
+    <div class="card"><h4>Beyond Accuracy: System-Level Metrics</h4><ul><li>Cost metrics (token usage, inference cost)</li><li>Latency metrics (response time, tool delays)</li><li>User experience (UX) metrics</li><li>Trade-offs between quality, speed, and cost</li></ul></div>
+    <div class="card"><h4>Classical Metrics (and Their Limits)</h4><ul><li>Perplexity and loss (research-focused)</li><li>Token-level metrics (high-level view)</li><li>Useful for research but not sufficient for production</li></ul></div>
+    <div class="card"><h4>Task-Specific Metrics</h4><ul><li>Accuracy (QA, classification)</li><li>BLEU / ROUGE (summarization, translation)</li><li>Exact match vs semantic match</li><li>Many metrics reward surface similarity and penalize valid alternative answers</li></ul><p><strong>Correct intent ≠ exact wording.</strong></p></div>
+    <div class="card"><h4>Common Evaluation Anti-Patterns</h4><ul><li>Evaluating models instead of systems</li><li>Relying on a single metric</li><li>Ignoring cost and latency</li><li>Over-trusting LLM-as-a-judge</li><li>Optimizing metrics instead of user outcomes</li></ul></div>
+    <div class="card"><h4>Tools in Practice</h4><ul><li>RAGAS – RAG-specific evaluation</li><li>TruLens – tracing + feedback functions</li><li>LangSmith – prompt, agent, and chain evaluation</li><li>Custom evaluation pipelines for production</li></ul></div>
+  </div>
+  <h3>Agent Evaluation Tools</h3>
+  <div class="tbl"><table>
+    <tr><th>Tool / Framework</th><th>Type</th><th>Best Use Case</th></tr>
+    <tr><td>IntellAgent</td><td>Open-source evaluation framework</td><td>Multi-agent simulation &amp; diagnosis</td></tr>
+    <tr><td>AgentBench</td><td>Benchmark suite</td><td>LLM agent benchmarking</td></tr>
+    <tr><td>Azure AI Evaluation SDK</td><td>Cloud SDK</td><td>Production batch evaluation &amp; telemetry</td></tr>
+    <tr><td>Maxim AI / Langfuse / Comet / Arize</td><td>Production observability tools</td><td>Monitoring and continuous evaluation</td></tr>
+    <tr><td>DeepEval</td><td>OSS evaluation module</td><td>Traceable agent component evaluation</td></tr>
+    <tr><td>Custom simulation + LLM-as-Judge</td><td>DIY approach</td><td>Flexible, domain-specific testing</td></tr>
+  </table></div>
+</section>
+
+<section id="m13">
+  <span class="tag">Module 13</span>
+  <h2>Guardrails</h2>
+  <ul class="cols">
+    <li>Introduction to Guardrails (Foundations)</li>
+    <li>Guardrails in Traditional Software Engineering (Pre-GenAI)</li>
+    <li>Guardrails in AI &amp; LLM Applications</li>
+    <li>Core Objectives of Guardrails</li>
+    <li>Input Validation Guardrails</li>
+    <li>Output Validation Guardrails</li>
+    <li>Schema-Based Guardrails with Pydantic</li>
+    <li>Prompt Injection Attacks</li>
+    <li>Guardrails Tools &amp; Frameworks</li>
+  </ul>
+</section>
+
+<section id="m14">
+  <span class="tag">Module 14</span>
+  <h2>MCP (Model Context Protocol)</h2>
+  <div class="grid">
+    <div class="card"><h4>Fundamentals</h4><ul><li>What is MCP?</li><li>Why MCP was introduced (problems with traditional tool calling)</li><li>MCP vs Plugins vs Function Calling</li><li>MCP in the GenAI ecosystem (RAG, Agents)</li><li>Real-world use cases</li><li>Architecture overview (Client ↔ Server ↔ LLM)</li></ul></div>
+    <div class="card"><h4>Core Components</h4><ul><li>MCP Host</li><li>MCP Client</li><li>MCP Server</li></ul></div>
+    <div class="card"><h4>Transports</h4><ul><li>STDIO transport (local execution)</li><li>SSE transport (event streaming)</li><li>Streamable HTTP transport (production standard)</li><li>Stateful vs stateless MCP servers</li><li>When to use which transport</li><li>Security implications of transports</li></ul></div>
+    <div class="card"><h4>MCP Python SDK</h4><ul><li>SDK overview &amp; architecture</li><li>FastMCP vs low-level MCP server</li><li>Installing MCP using uv and pip</li><li>MCP CLI tools (<code>mcp dev</code>, <code>mcp run</code>, <code>mcp install</code>)</li><li>Project structure best practices</li><li>Building MCP servers with FastMCP (core)</li></ul></div>
+    <div class="card"><h4>Capabilities</h4><ul><li>MCP Tools</li><li>Structured output in MCP</li><li>MCP Prompts (reusable intelligence)</li><li>Prompt templates vs tool prompts</li><li>Multi-message prompt responses</li><li>Context object deep dive</li></ul></div>
+    <div class="card"><h4>Advanced MCP</h4><ul><li>User interaction in MCP</li><li>MCP sampling &amp; LLM interaction</li><li>Authentication &amp; security</li><li>Running MCP servers (Dev → Prod)</li><li>Mounting MCP to existing applications</li><li>Building MCP clients (Python)</li><li>Auth-enabled MCP clients</li><li>Advanced server patterns</li><li>Pagination &amp; large data handling</li><li>MCP for Agentic AI systems</li></ul></div>
+  </div>
+</section>
+
+<section id="m15">
+  <span class="tag">Module 15 · Optional</span>
+  <h2>No Code / Low Code Tools</h2>
+  <h3>n8n Track</h3>
+  <ul class="cols">
+    <li>AI Automation &amp; n8n Foundations</li><li>n8n Setup &amp; Interface</li><li>n8n Concepts &amp; Nodes</li><li>Automation with n8n</li>
+    <li>JSON with n8n</li><li>API Explained in Depth</li><li>API with n8n</li><li>AI in Automation</li><li>Agents in Automation</li>
+    <li>Multi-Agent Architecture (Chain, Parallel, Controller, ReAct, Hierarchical)</li>
+    <li>AI Personal Assistant using Swarm Agents</li><li>MCP Explained</li><li>MCP in n8n Cloud</li><li>MCP in n8n Self-Hosted</li>
+    <li>RAG Explained</li><li>RAG on n8n</li><li>RAG using Supabase</li><li>RAG using Pinecone</li>
+    <li>Running n8n Locally and on Self-Hosted Cloud</li><li>Mastering Local n8n</li><li>n8n Self-Hosting Kit</li><li>RAG with Self-Hosted Kit</li>
+    <li>Social Media Automation</li><li>GitHub PR Automation Agent</li><li>WhatsApp Agent</li><li>Video Creation with Gemini</li>
+  </ul>
+  <div class="callout">This proves automation, AI, agents, and APIs — all together.</div>
+  <h3>Other Tools</h3>
+  <div class="tbl"><table>
+    <tr><th>Tool</th><th>Best For</th><th>Tech Level</th></tr>
+    <tr><td>Zapier</td><td>Business workflows, many integrations</td><td>No-code</td></tr>
+    <tr><td>Make</td><td>Detailed automation with logic</td><td>No-code / Low-code</td></tr>
+    <tr><td>Power Automate</td><td>Enterprise + Microsoft ecosystem</td><td>Low-code</td></tr>
+    <tr><td>Apache Airflow</td><td>Data pipelines &amp; scheduling</td><td>Dev / Engineer</td></tr>
+    <tr><td>Pipedream</td><td>API + script-centric automation</td><td>Low-code / Pro-code</td></tr>
+    <tr><td>Activepieces</td><td>Open-source automation</td><td>No-code / Dev</td></tr>
+    <tr><td>Gumloop</td><td>AI/LLM workflows</td><td>No-code / AI focus</td></tr>
+    <tr><td>Latenode</td><td>Custom low-code workflows</td><td>Low-code</td></tr>
+    <tr><td>Integrately</td><td>Simple app automations</td><td>No-code</td></tr>
+    <tr><td>IFTTT</td><td>Personal automation</td><td>No-code</td></tr>
+  </table></div>
+</section>
+
+<section id="m16">
+  <span class="tag">Module 16</span>
+  <h2>Cloud Services for GenAI</h2>
+  <div class="grid">
+    <div class="card"><h4>AWS AI Services (Must-Know)</h4><ul>
+      <li>Amazon SageMaker – ML training, deployment, MLOps</li><li>Amazon Bedrock – managed GenAI / foundation models</li>
+      <li>Amazon OpenSearch Service – vector DB for search &amp; RAG</li><li>Amazon Textract – OCR + extraction</li>
+      <li>Amazon Comprehend – NLP (entities, sentiment, topics)</li><li>Amazon Rekognition – image &amp; video analysis</li>
+      <li>Amazon Transcribe – speech-to-text</li><li>Amazon Personalize – recommendations</li><li>AgentCore – building agents</li></ul></div>
+    <div class="card"><h4>Azure AI Services (Must-Know)</h4><ul>
+      <li>Azure AI Foundry (top-level platform)</li><li>Azure OpenAI Service</li><li>Azure Machine Learning</li><li>Azure AI Vision</li>
+      <li>Azure AI Custom Vision</li><li>Azure AI Speech Services</li><li>Azure AI Translator</li><li>Azure AI Document Intelligence</li>
+      <li>Azure Bot Service</li><li>Azure AI Personalizer</li><li>Azure AI Anomaly Detector</li><li>Azure AI Search</li></ul></div>
+    <div class="card"><h4>GCP AI Services</h4><ul>
+      <li>Vertex AI (most important platform)</li><li>Gemini (via Vertex AI)</li><li>Vertex AI Search (formerly Gen App Builder)</li>
+      <li>Document AI</li><li>Vision AI</li><li>Speech-to-Text &amp; Text-to-Speech</li><li>Natural Language AI</li></ul></div>
+  </div>
+  <h3>Cross-Cloud Mapping</h3>
+  <div class="tbl"><table>
+    <tr><th>Use Case</th><th>AWS</th><th>Azure</th><th>GCP</th></tr>
+    <tr><td>GenAI models</td><td>Bedrock</td><td>Azure OpenAI</td><td>Gemini</td></tr>
+    <tr><td>ML Platform</td><td>SageMaker</td><td>Azure ML</td><td>Vertex AI</td></tr>
+    <tr><td>Vector / RAG</td><td>OpenSearch</td><td>AI Search</td><td>Vertex AI Search</td></tr>
+    <tr><td>OCR / Docs</td><td>Textract</td><td>Doc Intelligence</td><td>Document AI</td></tr>
+    <tr><td>Vision</td><td>Rekognition</td><td>AI Vision</td><td>Vision AI</td></tr>
+    <tr><td>Speech</td><td>Transcribe</td><td>Speech</td><td>Speech-to-Text</td></tr>
+    <tr><td>NLP</td><td>Comprehend</td><td>Text Analytics</td><td>Natural Language AI</td></tr>
+  </table></div>
+</section>
+
+<section id="m17">
+  <span class="tag">Module 17</span>
+  <h2>Deployment Strategies</h2>
+  <h3>AWS</h3>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Method</th><th>Type</th><th>Best For</th><th>Infra Mgmt</th><th>Complexity</th></tr>
+    <tr><td>1</td><td>Lambda</td><td>Serverless</td><td>APIs, events</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>2</td><td>API GW + Lambda</td><td>Serverless</td><td>REST APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>3</td><td>ALB + Lambda</td><td>Serverless</td><td>Routing APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>4</td><td>ECS (EC2)</td><td>Container</td><td>Control-heavy apps</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>5</td><td>ECS Fargate</td><td>Container</td><td>Modern backend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>6</td><td>App Runner</td><td>Container</td><td>Fast deploy</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>7</td><td>EKS</td><td>Kubernetes</td><td>Enterprise scale</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>8</td><td>EKS + Fargate</td><td>Kubernetes</td><td>Serverless K8s</td><td>❌</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>9</td><td>EC2</td><td>VM</td><td>Legacy / GPU</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>10</td><td>EC2 + ASG</td><td>VM</td><td>Scalable VM apps</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>11</td><td>S3 Static</td><td>Frontend</td><td>Static sites</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>12</td><td>S3 + CloudFront</td><td>Frontend</td><td>Prod frontend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>13</td><td>Elastic Beanstalk</td><td>PaaS</td><td>Simple apps</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>14</td><td>Step Functions</td><td>Workflow</td><td>Orchestration</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>15</td><td>EventBridge</td><td>Event</td><td>Event driven</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>16</td><td>CodePipeline</td><td>CI/CD</td><td>AWS CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>17</td><td>GitHub Actions</td><td>CI/CD</td><td>Modern CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>18</td><td>SageMaker</td><td>ML</td><td>ML production</td><td>❌</td><td>⭐⭐⭐</td></tr>
+  </table></div>
+
+  <h3>Core Cloud Building Blocks (Quick)</h3>
+  <ul class="cols">
+    <li>Compute, Storage, Networking, IAM / Security</li><li>Amazon S3</li><li>Amazon EC2</li><li>Amazon CloudFront</li><li>AWS CloudFormation</li>
+    <li>AWS IAM: Users, Roles, Policies</li><li>Authentication (AWS IAM / Cognito)</li><li>Amazon DynamoDB</li><li>Amazon RDS</li>
+    <li>Amazon OpenSearch Service</li><li>Amazon Redshift</li><li>Amazon Bedrock</li><li>Amazon Q</li>
+  </ul>
+
+  <h3>Azure</h3>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Method</th><th>Type</th><th>Best For</th><th>Infra Mgmt</th><th>Complexity</th></tr>
+    <tr><td>1</td><td>Azure Functions</td><td>Serverless</td><td>APIs, events</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>2</td><td>API Management + Functions</td><td>Serverless</td><td>REST APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>3</td><td>Application Gateway + Functions</td><td>Serverless</td><td>Routing APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>4</td><td>AKS (VM-based nodes)</td><td>Container</td><td>Control-heavy apps</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>5</td><td>Azure Container Apps</td><td>Container</td><td>Modern backend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>6</td><td>Azure App Service (Container)</td><td>Container</td><td>Fast deploy</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>7</td><td>AKS</td><td>Kubernetes</td><td>Enterprise scale</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>8</td><td>AKS + Virtual Nodes</td><td>Kubernetes</td><td>Serverless K8s</td><td>❌</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>9</td><td>Azure VM</td><td>VM</td><td>Legacy / GPU</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>10</td><td>VM Scale Sets</td><td>VM</td><td>Scalable VM apps</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>11</td><td>Azure Static Web Apps</td><td>Frontend</td><td>Static sites</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>12</td><td>Blob Storage + Azure CDN</td><td>Frontend</td><td>Prod frontend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>13</td><td>Azure App Service</td><td>PaaS</td><td>Simple apps</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>14</td><td>Logic Apps</td><td>Workflow</td><td>Orchestration</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>15</td><td>Event Grid</td><td>Event</td><td>Event driven</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>16</td><td>Azure DevOps Pipelines</td><td>CI/CD</td><td>Azure CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>17</td><td>GitHub Actions</td><td>CI/CD</td><td>Modern CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>18</td><td>Azure Machine Learning</td><td>ML</td><td>ML production</td><td>❌</td><td>⭐⭐⭐</td></tr>
+  </table></div>
+
+  <h3>GCP</h3>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Method</th><th>Type</th><th>Best For</th><th>Infra Mgmt</th><th>Complexity</th></tr>
+    <tr><td>1</td><td>Cloud Functions</td><td>Serverless</td><td>APIs, events</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>2</td><td>API Gateway + Cloud Functions</td><td>Serverless</td><td>REST APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>3</td><td>Cloud Load Balancer + Functions</td><td>Serverless</td><td>Routing APIs</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>4</td><td>GKE (Node pools)</td><td>Container</td><td>Control-heavy apps</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>5</td><td>Cloud Run</td><td>Container</td><td>Modern backend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>6</td><td>App Engine (Flex/Std)</td><td>Container</td><td>Fast deploy</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>7</td><td>GKE</td><td>Kubernetes</td><td>Enterprise scale</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>8</td><td>GKE Autopilot</td><td>Kubernetes</td><td>Serverless K8s</td><td>❌</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>9</td><td>Compute Engine</td><td>VM</td><td>Legacy / GPU</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>10</td><td>Managed Instance Groups</td><td>VM</td><td>Scalable VM apps</td><td>✅</td><td>⭐⭐⭐</td></tr>
+    <tr><td>11</td><td>Firebase Hosting</td><td>Frontend</td><td>Static sites</td><td>❌</td><td>⭐</td></tr>
+    <tr><td>12</td><td>Cloud Storage + Cloud CDN</td><td>Frontend</td><td>Prod frontend</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>13</td><td>App Engine</td><td>PaaS</td><td>Simple apps</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>14</td><td>Workflows</td><td>Workflow</td><td>Orchestration</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>15</td><td>Eventarc</td><td>Event</td><td>Event driven</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>16</td><td>Cloud Build</td><td>CI/CD</td><td>GCP CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>17</td><td>GitHub Actions</td><td>CI/CD</td><td>Modern CI/CD</td><td>❌</td><td>⭐⭐</td></tr>
+    <tr><td>18</td><td>Vertex AI</td><td>ML</td><td>ML production</td><td>❌</td><td>⭐⭐⭐</td></tr>
+  </table></div>
+
+  <h3>Equivalent Services Across Clouds</h3>
+  <div class="tbl"><table>
+    <tr><th>AWS</th><th>Azure</th><th>GCP</th></tr>
+    <tr><td>Lambda</td><td>Azure Functions</td><td>Cloud Functions</td></tr>
+    <tr><td>API Gateway</td><td>API Management</td><td>API Gateway</td></tr>
+    <tr><td>ECS Fargate</td><td>Container Apps</td><td>Cloud Run</td></tr>
+    <tr><td>App Runner</td><td>App Service</td><td>App Engine</td></tr>
+    <tr><td>EKS</td><td>AKS</td><td>GKE</td></tr>
+    <tr><td>EC2</td><td>VM</td><td>Compute Engine</td></tr>
+    <tr><td>ASG</td><td>VM Scale Sets</td><td>Managed Instance Groups</td></tr>
+    <tr><td>S3 + CloudFront</td><td>Blob + CDN</td><td>GCS + CDN</td></tr>
+    <tr><td>Step Functions</td><td>Logic Apps</td><td>Workflows</td></tr>
+    <tr><td>EventBridge</td><td>Event Grid</td><td>Eventarc</td></tr>
+    <tr><td>SageMaker</td><td>Azure ML</td><td>Vertex AI</td></tr>
+  </table></div>
+</section>
+
+<section id="m18">
+  <span class="tag">Module 18</span>
+  <h2>Projects</h2>
+  <p><strong>LLM = Generation</strong> (text, code, image, audio, video). LLM-based AI projects fundamentally involve generation. Regardless of the application — conversational system, automation system, report generator — the fundamental remains the same: generation. That is why they're called Generative AI.</p>
+
+  <div class="grid">
+    <div class="card"><h4>Conversational AI / Chatbots / QA Systems</h4><ul><li>Human-like chat assistants</li><li>Customer support bots</li><li>Voice assistants</li><li>Coding assistants</li><li>Language translation &amp; language services</li></ul></div>
+    <div class="card"><h4>Content Generation Systems</h4><ul><li>Report generation</li><li>Code generation &amp; coding assistants</li><li>Synthetic data / data augmentation</li><li>Blog / article writing</li></ul></div>
+    <div class="card"><h4>Document Processing &amp; Understanding</h4><ul><li>Data extraction or parsing</li><li>Summarization of long docs</li><li>Document interpretation</li></ul></div>
+  </div>
+
+  <h3>Enterprise Automation Flows</h3>
+  <h4>SDLC Automation</h4>
+  <p>Jira Ticket → Design (AI generates) → Development (AI generates boilerplate) → Code Review (AI-powered) → Testing (AI generates test cases / scripts) → Deployment → Monitoring &amp; Alerts</p>
+  <h4>Customer Service &amp; Support Automation</h4>
+  <p>Customer Query / Ticket → Intent Detection (AI) → Context Retrieval (KB / CRM / RAG) → Response Generation (LLM) → Confidence / Safety Check (AI) → Auto-Reply OR Human Escalation → Ticket Update &amp; Closure → Monitoring &amp; Feedback</p>
+  <h4>HR Automation</h4>
+  <p>Employee Request / Resume / HR Ticket → Requirement Classification (AI) → Data Extraction (AI parses resume / form) → Decision Support (Policy / Rules + AI) → Action Execution (Approval / Rejection / Scheduling) → Notification to Employee → Audit Logs &amp; Monitoring</p>
+  <h4>Report Generation &amp; Decision Support</h4>
+  <p>Data Sources → Data Aggregation → Data Cleaning &amp; Validation → Insight Generation (AI) → Report Draft Generation (LLM) → Human Review (Optional) → Final Report Delivery → Monitoring &amp; Feedback</p>
+
+  <h3>HLD vs LLD — the house analogy</h3>
+  <div class="grid">
+    <div class="card"><h4>High-Level Design (HLD) — the architect decides</h4><ul><li>How many floors the house will have</li><li>Where the kitchen, bathroom, and rooms go</li><li>Number of rooms and overall layout</li><li>Flow of water and electricity</li></ul><p><strong>HLD →</strong> overall system architecture</p></div>
+    <div class="card"><h4>Low-Level Design (LLD) — the engineer decides</h4><ul><li>Grade of cement</li><li>Size of electrical wires</li><li>Diameter of pipes</li><li>Model of switches</li></ul><p><strong>LLD →</strong> classes, methods, DB tables, APIs (GET, POST), logic</p></div>
+  </div>
+
+  <h3>HLD Components (System Architecture / Tech Lead)</h3>
+  <ul>
+    <li>Frontend (UI / UX)</li>
+    <li>API Layer (REST, gRPC, WebSocket, GraphQL) — versioning, rate limiting, idempotency</li>
+    <li>Asynchronous processing — background workers, message queues, event-driven systems, workers &amp; consumers</li>
+    <li>Security &amp; Auth — authentication &amp; authorization, API keys / OAuth / JWT, encryption at rest &amp; in transit, secrets management, role checks, permission logic</li>
+    <li>Backend Services</li>
+    <li>Databases (Relational, NoSQL, Vector DB)</li>
+    <li>Data Integration Layer (ETL, streaming, batch pipelines)</li>
+    <li>AI / LLM Layer</li>
+    <li>Caching Layer</li>
+    <li>Observability, Monitoring &amp; Error handling (logs, metrics, tracing, alerts)</li>
+    <li>Cloud Infrastructure / Deployment Architecture — blue-green / canary deployments, Infrastructure as Code</li>
+  </ul>
+  <div class="grid">
+    <div class="card"><h4>Scalability</h4><ul><li>Auto-scaling (vertical or horizontal)</li><li>Stateless services (JWT / DB / Redis)</li><li>Sharding</li></ul></div>
+    <div class="card"><h4>Availability</h4><ul><li>Load balancers</li><li>Single point of failure removal</li><li>Multi-AZ / multi-region</li><li>Failover strategies</li></ul></div>
+    <div class="card"><h4>Reliability &amp; Fault Tolerance</h4><ul><li>Retries</li><li>Timeouts</li><li>Circuit breakers</li><li>Graceful degradation</li></ul></div>
+    <div class="card"><h4>Latency &amp; Performance</h4><ul><li>Caching (Redis, CDN)</li><li>Async processing, background jobs</li><li>Pagination &amp; batching</li><li>DB indexing, read replicas</li><li>Batch processing</li><li>Time complexity</li><li>DB query optimization</li></ul></div>
+    <div class="card"><h4>Consistency Models (CAP)</h4><ul><li><strong>C</strong> – Consistency</li><li><strong>A</strong> – Availability</li><li><strong>P</strong> – Partition tolerance (network failure)</li></ul><p>Plus cost optimization.</p></div>
+    <div class="card"><h4>Trade-offs (no perfect design exists)</h4><ul><li>Consistency vs Availability</li><li>Cost vs Performance</li><li>Simplicity vs Flexibility</li><li>Accuracy vs Latency</li></ul></div>
+  </div>
+
+  <h3>LLD Components (Engineers / Devs)</h3>
+  <ol class="cols">
+    <li>API Design: routes, HTTP methods, request/response schemas, status codes, error payloads, versioning</li>
+    <li>Data Models: DTOs/schemas (Pydantic/dataclasses), enums, validation rules</li>
+    <li>Class Design (attributes / fields / methods / functions)</li>
+    <li>Service Layer: business logic, orchestration, workflows</li>
+    <li>DAO/Repository Layer: DB access patterns, queries, transactions</li>
+    <li>Database Schema Design: tables/collections, PK/FK, indexes, constraints, migrations</li>
+    <li>Method-Level Data Flow: validation → processing → persistence → response</li>
+    <li>Error Handling: exceptions, error mapping, retries/timeouts, fallbacks</li>
+    <li>Async/Concurrency: queues, background jobs, race handling</li>
+    <li>Logging: logs, metrics, tracing, error handling</li>
+    <li>Config Management: env vars, feature flags, config files</li>
+    <li>Testing Plan: unit/integration tests, test data, mocking strategy</li>
+    <li>Performance Notes: pagination, batching, limits, query optimization</li>
+    <li>Fallbacks</li>
+  </ol>
+
+  <h3>Case Study: Document Portal — Upload, Analysis, Chat, Comparison</h3>
+  <p>Features: Single-doc chat · Multi-doc chat · Analysis · Compare (Doc A vs Doc B)</p>
+  <div class="grid">
+    <div class="card"><h4>Compare mode 1 · Semantic</h4><ul><li>Retrieve top topics from both docs</li><li>Align similar sections</li><li>Summarize differences with citations</li></ul></div>
+    <div class="card"><h4>Compare mode 2 · Question-driven</h4><ul><li>User asks: "Compare X between the two documents"</li><li>System retrieves relevant chunks from both docs</li><li>Generates a side-by-side response</li></ul></div>
+  </div>
+
+  <h4>Architecture</h4>
+  <div class="tbl"><table>
+    <tr><th>Layer</th><th>Details</th></tr>
+    <tr><td>Frontend</td><td>Streamlit (fast) or React (later): upload UI, chat UI, comparison UI, citations viewer</td></tr>
+    <tr><td>API Layer</td><td>FastAPI REST endpoints; WebSocket for streaming responses (optional)</td></tr>
+    <tr><td>Backend Services</td><td>Auth/User service (optional); Document service (upload, versioning, access control); Ingestion pipeline (parse → chunk → embed → index); Retrieval service (vector search, filters, reranking); Chat orchestration (memory, query rewrite, context condense); Comparison service (alignment, diff summary, similarity); Evaluation service (offline eval + feedback)</td></tr>
+    <tr><td>Databases</td><td>Postgres: users, sessions, docs, metadata, audit · S3: original files, extracted artifacts, thumbnails · Vector DB: FAISS/Chroma (dev), Pinecone/Qdrant/Weaviate (prod; Qdrant recommended for self-host) · Redis: session cache, CAG cache, rate limit, job status</td></tr>
+    <tr><td>Async Processing</td><td>Queue (SQS / Redis Queue / Celery); workers for ingestion, embedding, OCR, batch comparison, evaluation</td></tr>
+  </table></div>
+
+  <h4>AI/LLM Layer Components</h4>
+  <div class="grid">
+    <div class="card"><h4>A) Model Router</h4><p>Chooses a model based on latency budget, cost budget, context length, safety policy, task type (summarize vs QA vs compare).</p><ul><li>Chat: Groq (fast)</li><li>Heavy compare: OpenAI (better reasoning)</li><li>Offline eval: local LLM</li><li>vLLM for self-host (optional)</li></ul></div>
+    <div class="card"><h4>B) Prompt + Context Engine</h4><ul><li>Prompt templates (system + developer + user)</li><li>Context policies: max context tokens, citation enforcement, "no answer if not in sources"</li><li>Context condensation: compress chat history into a summary</li><li>Query rewriting: multi-query (RAG-fusion), HyDE (optional)</li><li>Tool calling (optional): citation formatter, chunk viewer</li></ul></div>
+    <div class="card"><h4>C) Retrieval Engine (Advanced RAG)</h4><ol><li>Query normalize</li><li>Query rewrite (optional)</li><li>Retrieve K chunks (vector search + metadata filters)</li><li>MMR (diversity)</li><li>Rerank (cross-encoder / LLM reranker)</li><li>Context packer (token-aware packing)</li><li>Answer generator with citations</li></ol></div>
+    <div class="card"><h4>D) CAG (Cache-Augmented Generation)</h4><ul><li>Cache key: normalized query + doc-set + topK + prompt version</li><li>Cache value: final answer + citations + chunk IDs</li><li>TTL: per doc version</li><li>Best for repeated enterprise &amp; compliance queries</li></ul></div>
+    <div class="card"><h4>E) MM-RAG (Optional)</h4><p>If docs contain images/charts:</p><ul><li>Image captioning (BLIP / InternVL)</li><li>Store captions as text chunks + image embeddings (CLIP)</li><li>Retrieve both text + image captions</li></ul></div>
+  </div>
+
+  <h4>Advanced RAG Design</h4>
+  <div class="grid">
+    <div class="card"><h4>Chunking</h4><ul><li>Recursive character splitter baseline</li><li>Header-aware chunking (DOCX headings)</li><li>Page-aware chunking (PDF pages)</li><li>Overlap: 10–20%</li></ul></div>
+    <div class="card"><h4>Embeddings</h4><ul><li>HF: bge-small / large</li><li>OpenAI embeddings</li><li>Keep embedding model version in metadata</li></ul></div>
+    <div class="card"><h4>Vector Store</h4><ul><li>Dev: FAISS (fast local)</li><li>Prod: Pinecone (managed) or Qdrant (self-host on ECS/EKS)</li></ul></div>
+    <div class="card"><h4>Retrieval</h4><ul><li>Similarity: cosine / L2 (depends on embedding model)</li><li>MMR for diversity</li><li>RAG fusion: multi-query retrieval</li><li>Reranker: cross-encoder (best accuracy)</li></ul></div>
+    <div class="card"><h4>Query Rewriting &amp; Condensation</h4><ul><li>Rewrite query if user refers to "that section"</li><li>Summarize chat history to keep token budget</li></ul></div>
+    <div class="card"><h4>Guardrails</h4><ul><li>Prompt injection filters</li><li>PII redaction (optional)</li><li>"Answer only from sources"</li><li>Refuse if insufficient context</li><li>Citation required in response template</li></ul></div>
+    <div class="card"><h4>Evaluation</h4><ul><li>Faithfulness (groundedness)</li><li>Context precision / recall</li><li>Answer relevance</li><li>Latency</li><li>Cost per query</li><li>Tools: RAGAS / TruLens (optional)</li></ul></div>
+    <div class="card"><h4>Observability</h4><ul><li>Logs: CloudWatch</li><li>Metrics: Prometheus/Grafana or CloudWatch</li><li>Tracing: OpenTelemetry (optional)</li><li>Alerts: CloudWatch Alarms</li></ul></div>
+    <div class="card"><h4>Cloud Deployment</h4><ul><li>AWS: ECR + ECS Fargate + ALB + S3 + RDS + Redis (ElastiCache) + Secrets Manager</li><li>CI/CD: GitHub Actions + SonarQube + IaC (Terraform / CloudFormation)</li></ul></div>
+  </div>
+
+  <h4>Scalability · Availability · Reliability · Latency</h4>
+  <div class="grid">
+    <div class="card"><h4>Scalability</h4><ul><li>Stateless FastAPI behind ALB</li><li>Horizontal autoscaling (ECS service autoscaling)</li><li>Worker autoscaling separately</li><li>Vector DB: managed Pinecone or Qdrant cluster</li><li>Sharding by tenant/collection (logical partition)</li></ul></div>
+    <div class="card"><h4>Availability</h4><ul><li>Multi-AZ for RDS + Redis</li><li>ALB + ECS across multiple AZs</li><li>S3 inherently HA</li><li>Failover: DB failover + retry</li></ul></div>
+    <div class="card"><h4>Reliability &amp; Fault Tolerance</h4><ul><li>Retries + backoff for embeddings API, vector DB writes, LLM calls</li><li>Timeouts everywhere</li><li>Circuit breaker for provider outages (OpenAI down → Groq fallback)</li><li>Graceful degradation: reranker fails → skip rerank; MM-RAG fails → text-only RAG</li></ul></div>
+    <div class="card"><h4>Latency &amp; Performance</h4><ul><li>Caching: Redis response cache (CAG), embedding cache for duplicate chunks</li><li>Async: ingestion off request path</li><li>Batching: chunk upload &amp; vector upsert in batches</li><li>Indexes on doc_id, tenant_id, status, created_at</li><li>Read replicas (optional) for analytics load</li></ul></div>
+    <div class="card"><h4>Consistency Model</h4><ul><li>Doc ingestion: eventual consistency — indexing finishes after upload</li><li>User sees "processing" state until READY</li></ul></div>
+    <div class="card"><h4>Cost Optimization</h4><ul><li>Groq for fast, cheap inference where possible</li><li>OpenAI only for heavy compare/summarize</li><li>Chunk dedup + embedding reuse</li><li>Compress old chat history</li><li>Vector DB retention policies per tenant</li></ul></div>
+  </div>
+  <div class="callout"><strong>Explicit trade-offs:</strong> Accuracy vs latency (reranker improves accuracy but adds latency) · Cost vs performance (OpenAI best reasoning but expensive) · Consistency vs availability (ingestion pipeline is async for availability)</div>
+
+  <h3>Low-Level Design (LLD)</h3>
+  <h4>API Routes</h4>
+  <div class="tbl"><table>
+    <tr><th>Area</th><th>Routes</th></tr>
+    <tr><td>Documents</td><td><code>POST /v1/documents/upload</code><br><code>GET /v1/documents/{doc_id}</code><br><code>GET /v1/documents?status=READY</code><br><code>POST /v1/documents/{doc_id}/reingest</code><br><code>DELETE /v1/documents/{doc_id}</code></td></tr>
+    <tr><td>Jobs</td><td><code>GET /v1/jobs/{job_id}</code></td></tr>
+    <tr><td>Chat</td><td><code>POST /v1/chat/sessions</code> (create session)<br><code>POST /v1/chat/query</code> (doc_id / collection_id + question)<br><code>GET /v1/chat/sessions/{session_id}/history</code><br><code>WS /v1/chat/stream</code> (optional streaming)</td></tr>
+    <tr><td>Compare</td><td><code>POST /v1/compare</code> — payload: <code>{doc_a, doc_b, mode: semantic|question, question?}</code></td></tr>
+    <tr><td>Eval (optional)</td><td><code>POST /v1/eval/run</code><br><code>POST /v1/feedback</code></td></tr>
+  </table></div>
+
+  <h4>Data Models (Pydantic style)</h4>
+  <div class="grid">
+    <div class="card"><h4>Document</h4><p><code>doc_id</code> (uuid), <code>tenant_id</code>, <code>name</code>, <code>type</code>, <code>s3_uri_raw</code>, <code>status</code>: UPLOADED|PROCESSING|READY|FAILED, <code>created_at</code>, <code>updated_at</code>, <code>version</code></p></div>
+    <div class="card"><h4>ChunkMetadata</h4><p><code>chunk_id</code>, <code>doc_id</code>, <code>page_no</code>, <code>section_title</code>, <code>source_span</code>, <code>hash</code> (dedup), <code>embedding_model</code>, <code>vector_id</code></p></div>
+    <div class="card"><h4>ChatSession</h4><p><code>session_id</code>, <code>tenant_id</code>, <code>scope</code>: SINGLE_DOC|MULTI_DOC, <code>doc_ids</code> / <code>collection_id</code>, <code>created_at</code></p></div>
+    <div class="card"><h4>ChatTurn</h4><p><code>turn_id</code>, <code>session_id</code>, <code>role</code>: user/assistant, <code>content</code>, <code>citations</code>: list, <code>token_usage</code>, <code>latency_ms</code></p></div>
+  </div>
+
+  <h4>DB Schema (Postgres)</h4>
+  <p><strong>Tables:</strong> tenants, users, documents, document_versions, chunks (metadata only), chat_sessions, chat_turns, compare_runs, jobs, audit_logs</p>
+  <p><strong>Indexes:</strong> <code>documents(tenant_id, status)</code>, <code>chunks(doc_id, page_no)</code>, <code>chat_turns(session_id, created_at)</code>, <code>jobs(status, created_at)</code></p>
+
+  <h4>Core Backend Classes</h4>
+  <p>DocumentController · IngestionService · ParserService · ChunkingService · EmbeddingService (HF/OpenAI/BGE) · VectorStoreService (FAISS/Qdrant/Pinecone interface) · RetrievalService (MMR + rerank) · ChatOrchestrator · CompareService · CacheService (Redis) · ModelRouter · PromptManager · GuardrailService · TelemetryService</p>
+
+  <h3>Checklist: Handling 1M Users / Hour</h3>
+  <ul class="check">
+    <li>✅ CDN for frontend</li>
+    <li>✅ Stateless API + ECS autoscaling</li>
+    <li>✅ Redis rate limiting</li>
+    <li>✅ CAG response cache</li>
+    <li>✅ Retrieval cache</li>
+    <li>✅ Queue ingestion and heavy compare</li>
+    <li>✅ Managed vector DB or clustered Qdrant + caching</li>
+    <li>✅ RDS Multi-AZ + read replicas</li>
+    <li>✅ Multi-provider LLM router + fallback</li>
+    <li>✅ Observability: p95 latency, queue depth, cache hit ratio, LLM error rate</li>
+    <li>✅ Load testing with k6 / Locust</li>
+  </ul>
+  <div class="callout"><strong>Simple final answer:</strong> To handle 1M users/hour, separate real-time and async paths, scale stateless APIs horizontally on ECS Fargate behind ALB, use Redis for rate limiting and caching (CAG + retrieval cache), offload ingestion/comparison to SQS workers, use a scalable vector DB (Pinecone/Qdrant cluster), add DB read replicas, and implement graceful degradation + multi-LLM fallback to stay available under spikes.</div>
+
+  <h3>Project Sources</h3>
+  <ul>
+    <li><a href="https://github.com/ashishpatel26/500-AI-Agents-Projects">github.com/ashishpatel26/500-AI-Agents-Projects</a></li>
+    <li><a href="https://github.com/GURPREETKAURJETHRA/END-TO-END-GENERATIVE-AI-PROJECTS">github.com/GURPREETKAURJETHRA/END-TO-END-GENERATIVE-AI-PROJECTS</a></li>
+  </ul>
+</section>
+</main>
+</div>
+</body>
+</html>
