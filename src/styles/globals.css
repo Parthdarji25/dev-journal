@@ -183,6 +183,14 @@
 .prose-content {
   color: var(--soft);
   overflow-wrap: break-word;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+@media (min-width: 1024px) {
+  .prose-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
 }
 .prose-content > * + * {
   margin-top: 1rem;

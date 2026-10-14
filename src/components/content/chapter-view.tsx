@@ -2,7 +2,6 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import path from 'node:path';
 import { Chip, DifficultyChip, FormatBadge } from '@/components/ui/chip';
-import { containerClass } from '@/components/ui/styles';
 import { routes, type Chapter, type Course } from '@/lib/content';
 import { readingMinutes, renderMarkdown, type RenderOptions } from '@/lib/content/markdown/render';
 import { renderCaseStudy, renderProblem } from '@/lib/content/markdown/sections';
@@ -248,7 +247,7 @@ export async function ChapterView({
   ].filter(Boolean);
 
   return (
-    <div className={`${containerClass} ${trackClass(track.slug)}`}>
+    <div className={`mx-auto w-full max-w-368 px-4 sm:px-6 ${trackClass(track.slug)}`}>
       <div className="pt-6">
         <Breadcrumb
           items={[
@@ -261,8 +260,8 @@ export async function ChapterView({
 
       {/* The right column only when there is a table of contents (HTML chapters have none). */}
       <div
-        className={`mt-4 grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] ${
-          toc.length > 0 ? 'xl:grid-cols-[15rem_minmax(0,1fr)_13rem]' : ''
+        className={`mt-4 grid gap-6 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-10 ${
+          toc.length > 0 ? 'xl:grid-cols-[14rem_minmax(0,1fr)_14rem]' : ''
         }`}
       >
         <aside className="print:hidden">
