@@ -3,7 +3,6 @@
   "description": "",
   "order": [
     "01the-complete-generative-ai-roadmap-beginner-to-expert.md",
-    "02understanding-the-ai-landscape-ai-vs-ml-vs-deep-learning-vs-generative-ai.md",
     "03sequence-models-explained-language-modelling-seq2seq-rnn-lstm-and-gru.md",
     "04transformers-to-chatgpt-how-llms-and-diffusion-models-work.md"
   ],
