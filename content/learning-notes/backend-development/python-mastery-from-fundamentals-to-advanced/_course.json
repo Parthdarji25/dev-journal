@@ -3,7 +3,26 @@
   "description": "",
   "order": [
     "01hello-python-setup-and-first-programs.md",
-    "02building-blocks-variables-and-data-types.md"
+    "02building-blocks-variables-and-data-types.md",
+    "python-basic-to-advanced-complete-mastery-roadmap.html"
   ],
-  "html": {}
+  "html": {
+    "python-basic-to-advanced-complete-mastery-roadmap.html": {
+      "title": "Python Basic to Advanced: Complete Mastery Roadmap",
+      "description": "A 60-phase roadmap that takes you from Python basics to professional-level development. Each phase has the concepts to learn and a ready-to-use Mastery Prompt, covering OOP, async, testing, internals, architecture and interview prep.",
+      "tags": [
+        "Python",
+        "Python Roadmap",
+        "Learn Python",
+        "Python Mastery",
+        "OOP",
+        "Async Python",
+        "Python Interview",
+        "Clean Code",
+        "System Design",
+        "ChatGPT Prompts"
+      ],
+      "updated": "2026-10-14"
+    }
+  }
 }
