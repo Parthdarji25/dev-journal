@@ -9,7 +9,7 @@
   "html": {
     "python-basic-to-advanced-complete-mastery-roadmap.html": {
       "title": "Python Basic to Advanced: Complete Mastery Roadmap",
-      "description": "A 60-phase roadmap that takes you from Python basics to professional-level development. Each phase has the concepts to learn and a ready-to-use Mastery Prompt, covering OOP, async, testing, internals, architecture and interview prep.",
+      "description": "A phase roadmap that takes you from Python basics to professional-level development. Each phase has the concepts to learn and a ready-to-use Mastery Prompt, covering OOP, async, testing, internals, architecture and interview prep.",
       "tags": [
         "Python",
         "Python Roadmap",
@@ -22,7 +22,7 @@
         "System Design",
         "ChatGPT Prompts"
       ],
-      "updated": "2026-10-14"
+      "updated": "2026-10-15"
     }
   }
 }
