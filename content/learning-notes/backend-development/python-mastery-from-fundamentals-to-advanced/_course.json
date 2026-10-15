@@ -3,7 +3,6 @@
   "description": "",
   "order": [
     "python-basic-to-advanced-complete-mastery-roadmap.html",
-    "01hello-python-setup-and-first-programs.md",
     "02building-blocks-variables-and-data-types.md"
   ],
   "html": {
