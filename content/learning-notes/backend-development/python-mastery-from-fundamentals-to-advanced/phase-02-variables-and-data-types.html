@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 02 — Variables &amp; Data Types</title>
+<style>
+:root {
+  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#efede6; --ink:#1c1e1f; --muted:#5f6461;
+  --line:#dedad0; --accent:#0f6b5c; --accent-soft:#dcefe9;
+  --code-bg:#13201c; --code-ink:#dbeae5; --inline-bg:#ebe8df; --inline-ink:#7a2e55;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#101312; --surface:#171b1a; --surface-2:#1f2423; --ink:#e7ebe9; --muted:#9ba39f;
+    --line:#2b3230; --accent:#4cc3a8; --accent-soft:#17362f;
+    --code-bg:#0a0f0d; --code-ink:#d3e6e0; --inline-bg:#232a28; --inline-ink:#f0a3c7;
+  }
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:72px; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.topbar { position:sticky; top:0; z-index:10; background:var(--bg); border-bottom:1px solid var(--line); }
+.topbar-in { max-width:1240px; margin:0 auto; padding:10px 16px; display:flex; gap:10px; align-items:center; }
+.brand { font-weight:700; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.btn { border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px;
+  padding:6px 12px; font:inherit; font-size:13px; cursor:pointer; }
+.menu-btn { display:none; }
+.layout { max-width:1240px; margin:0 auto; padding:0 16px; display:grid; grid-template-columns:260px minmax(0,1fr); gap:40px; }
+nav.toc { position:sticky; top:64px; align-self:start; max-height:calc(100vh - 72px); overflow:auto; padding:28px 0 40px; font-size:14px; }
+nav.toc p { margin:0 0 8px; font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+nav.toc ol { list-style:none; margin:0; padding:0; }
+nav.toc a { display:block; padding:4px 8px; border-radius:6px; color:var(--muted); text-decoration:none; }
+nav.toc a:hover, nav.toc a.active { background:var(--surface-2); color:var(--ink); }
+main { padding:32px 0 80px; min-width:0; }
+header.hero h1 { font-size:clamp(28px,4.5vw,42px); line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; }
+h2 { font-size:25px; margin:48px 0 14px; padding-top:8px; border-top:1px solid var(--line); line-height:1.3; }
+h3 { font-size:19px; margin:28px 0 10px; }
+h4 { font-size:13px; margin:22px 0 8px; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); }
+a { color:var(--accent); }
+blockquote { margin:16px 0; padding:14px 18px; background:var(--accent-soft); border-left:4px solid var(--accent); border-radius:0 10px 10px 0; }
+blockquote p { margin:0; }
+hr { display:none; }
+.summary { color:var(--muted); font-size:17px; margin:0 0 12px; }
+.tags { display:flex; flex-wrap:wrap; gap:6px; }
+.tag { font-size:12.5px; padding:2px 9px; border-radius:99px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+code { font:0.9em/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; background:var(--inline-bg); color:var(--inline-ink);
+  padding:2px 5px 3px; border-radius:5px; line-height:1.8; }
+pre { position:relative; background:var(--code-bg); color:var(--code-ink); border-radius:12px; padding:40px 18px 16px; overflow-x:auto; margin:16px 0; }
+pre code { display:block; background:none; color:inherit; padding:0; font-size:13.5px; line-height:1.6; }
+pre code.language-text { line-height:1.25; }
+pre .lang { position:absolute; top:8px; right:76px; font:600 11px system-ui, sans-serif; text-transform:uppercase; letter-spacing:.06em; color:#7f9a92; }
+pre .copy { position:absolute; top:6px; right:8px; background:#24352f; color:#cfe5de; border:0; border-radius:6px; padding:3px 10px; font:600 12px system-ui, sans-serif; cursor:pointer; }
+pre .cmt { color:#7f9a92; font-style:italic; }
+.table-wrap { overflow-x:auto; margin:16px 0; border:1px solid var(--line); border-radius:10px; }
+table { border-collapse:collapse; width:100%; font-size:14.5px; background:var(--surface); }
+th, td { padding:9px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--surface-2); font-weight:600; }
+tr:last-child td { border-bottom:0; }
+ul, ol { padding-left:22px; }
+li { margin:4px 0; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; gap:0; }
+  .menu-btn { display:inline-block; }
+  nav.toc { display:none; position:fixed; inset:57px 0 0 0; max-height:none; background:var(--bg); z-index:9; padding:20px 16px; }
+  nav.toc.open { display:block; }
+}
+@media print {
+  .topbar, nav.toc, pre .copy { display:none !important; }
+  .layout { display:block; } pre { white-space:pre-wrap; }
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <button class="btn menu-btn" id="menuBtn" type="button">Contents</button>
+  <div class="brand">Phase 02 — Variables &amp; Data Types</div>
+</div></div>
+<div class="layout">
+<nav class="toc" id="toc"><p>Contents</p><ol>
+<li><a href="#key-ideas">Key ideas</a></li>
+<li><a href="#how-to-read-the-memory-diagrams">How to read the memory diagrams</a></li>
+<li><a href="#1-objects">1. Objects</a></li>
+<li><a href="#2-variables-and-references">2. Variables and references</a></li>
+<li><a href="#3-assignment">3. Assignment</a></li>
+<li><a href="#4-dynamic-typing">4. Dynamic typing</a></li>
+<li><a href="#5-int">5. int</a></li>
+<li><a href="#6-float">6. float</a></li>
+<li><a href="#7-complex">7. complex</a></li>
+<li><a href="#8-bool">8. bool</a></li>
+<li><a href="#9-str">9. str</a></li>
+<li><a href="#10-none">10. None</a></li>
+<li><a href="#11-type-and-isinstance">11. type() and isinstance()</a></li>
+<li><a href="#12-id">12. id()</a></li>
+<li><a href="#13-type-conversion">13. Type conversion</a></li>
+<li><a href="#14-mutable-vs-immutable-objects">14. Mutable vs immutable objects</a></li>
+<li><a href="#15-equality-vs-identity-vs-is">15. Equality vs identity (== vs is)</a></li>
+</ol></nav>
+<main>
+<header class="hero"><h1>Phase 02 — Variables &amp; Data Types</h1><p class="summary">Objects, variables as references, assignment, dynamic typing, int, float, complex, bool, str, None, type(), id(), type conversion, mutable vs immutable objects, and == vs is.</p><div class="tags"><span class="tag">#python</span><span class="tag">#phase-02</span><span class="tag">#python-foundations</span><span class="tag">#variables</span><span class="tag">#objects</span><span class="tag">#references</span><span class="tag">#memory-model</span><span class="tag">#data-types</span><span class="tag">#mutability</span><span class="tag">#identity</span></div></header>
+<p><strong>Phase 02 — Variables &amp; Data Types</strong> (Part I: Python Foundations). In Python every value is an <strong>object</strong>, and a variable is just a <strong>name that refers to an object</strong>. Once that picture is clear, assignment, copying, mutation and <code>==</code> vs <code>is</code> all make sense.</p>
+<p>Every concept below has the same eight parts: beginner explanation, internal explanation, code examples, common mistakes, debugging examples, practical exercises, interview questions and tricky questions. Try each exercise and question before reading its answer.</p>
+<h2 id="key-ideas">Key ideas</h2>
+<ul>
+<li>Every value is an object with an <strong>identity</strong> (<code>id()</code>), a <strong>type</strong> (<code>type()</code>) and a <strong>value</strong>.</li>
+<li>A variable is a <strong>name tag</strong> pointing at an object. It doesn't contain the value and has no type of its own.</li>
+<li><code>b = a</code> copies the <strong>reference</strong>, not the object: both names now point at the <strong>same</strong> object.</li>
+<li>Re-binding a name (<code>a = 20</code>) never affects other names. <strong>Mutating</strong> an object (<code>a.append(3)</code>) is seen by every name pointing at it.</li>
+<li>Python is <strong>dynamically typed</strong> (names can point at any type) but <strong>strongly typed</strong> (<code>"5" + 5</code> is an error).</li>
+<li><code>int</code> has unlimited size; <code>float</code> is approximate (<code>0.1 + 0.2 != 0.3</code>); <code>bool</code> is a subclass of <code>int</code>.</li>
+<li><code>None</code> is the single "no value" object. Test it with <code>is None</code>.</li>
+<li><strong>Immutable</strong>: int, float, complex, bool, str, tuple, None. <strong>Mutable</strong>: list, dict, set.</li>
+<li><code>==</code> asks "same <strong>value</strong>?"; <code>is</code> asks "same <strong>object</strong>?". Use <code>is</code> only for <code>None</code>.</li>
+</ul>
+<h2 id="how-to-read-the-memory-diagrams">How to read the memory diagrams</h2>
+<p>Names live on the left; objects live in memory on the right. An arrow means "this name refers to this object."</p>
+<pre><code class="language-text"> NAMES                OBJECTS IN MEMORY
+                     ┌──────────────────┐
+ a ────────────────▶ │ int   10         │
+                     └──────────────────┘
+</code></pre>
+<p>When two arrows point at one box, both names share <strong>the same object</strong>.</p>
+<h2 id="1-objects">1. Objects</h2>
+<h3 id="beginner-explanation">Beginner explanation</h3>
+<p>A running program has to keep data somewhere in memory: a number, a name, a list of users. In Python, <strong>every</strong> piece of data lives in an <strong>object</strong>, a small chunk of memory that knows three things about itself:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Question it answers</th>
+<th>How to see it</th>
+<th>Can it change?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Identity</strong></td>
+<td><em>Which</em> object is this?</td>
+<td><code>id(obj)</code></td>
+<td>Never, for its whole life</td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><em>What kind</em> of thing is it? What can it do?</td>
+<td><code>type(obj)</code></td>
+<td>Never</td>
+</tr>
+<tr>
+<td><strong>Value</strong></td>
+<td><em>What data</em> does it hold?</td>
+<td>the object itself</td>
+<td>Only if the type is mutable</td>
+</tr>
+</tbody>
+</table>
+<p>"Everything is an object" is literal: numbers, strings, <code>None</code>, lists, functions, classes, even types themselves.</p>
+<p><strong>Why it exists:</strong> one uniform model makes Python simple. Every value can be stored in a variable, put in a list, passed to a function, compared and printed in exactly the same way. There are no special "primitive" values with different rules, as in Java or C.</p>
+<h3 id="internal-explanation">Internal explanation</h3>
+<p>In CPython, every object begins with the same small <strong>header</strong>:</p>
+<pre><code class="language-text"> one object in memory
+┌──────────────────────────────┐
+│ reference count   2          │  ← how many references point here
+│ type pointer   ──────────────┼──▶ &lt;class 'int'&gt;   (decides what it can do)
+├──────────────────────────────┤
+│ value             42         │  ← the actual data
+└──────────────────────────────┘
+ its address in memory = id(obj) in CPython
+</code></pre>
+<ul>
+<li>The <strong>type pointer</strong> is why the object always knows its type, and why <code>type()</code> can answer instantly.</li>
+<li>The <strong>reference count</strong> tracks how many names, lists and other objects refer to it. When it drops to zero, Python frees the memory automatically (Phase 26).</li>
+<li>Even a small <code>int</code> is a full object: about 28 bytes on 64-bit CPython (<code>sys.getsizeof(1)</code>), far more than the 4 or 8 bytes a C integer uses. That's the price of "everything is an object."</li>
+</ul>
+<h3 id="code-examples">Code examples</h3>
+<pre><code class="language-python">x = 42
+print(type(x))     # &lt;class 'int'&gt;    → its type
+print(id(x))       # 140735928821064  → its identity (a different number on your machine)
+print(x)           # 42               → its value
+</code></pre>
+<pre><code class="language-python">values = [10, 3.5, &quot;hi&quot;, True, None, [1, 2]]
+for value in values:
+    print(value, &quot;→&quot;, type(value).__name__)   # every one of them is an object with a type
+</code></pre>
+<pre><code class="language-text">10 → int
+3.5 → float
+hi → str
+True → bool
+None → NoneType
+[1, 2] → list
+</code></pre>
+<p><strong>Real-world:</strong> checking what an API actually sent before using it.</p>
+<pre><code class="language-python">response_value = &quot;1499&quot;            # looks like a number, but what is it really?
+print(type(response_value))        # &lt;class 'str'&gt; → must convert before doing maths
+price = int(response_value)
+print(type(price), price * 2)      # &lt;class 'int'&gt; 2998
+</code></pre>
+<h3 id="common-mistakes">Common mistakes</h3>
+<pre><code class="language-python">count = 5
+count.upper()      # AttributeError: 'int' object has no attribute 'upper'
+</code></pre>
+<p><strong>Why:</strong> the <strong>type</strong> decides what an object can do. <code>upper()</code> is a string method; <code>int</code> objects don't have it.</p>
+<ul>
+<li><strong>Thinking numbers are "simpler" than other values.</strong> In Python they're objects too, with a type, an identity and methods: <code>(255).bit_length()</code> → <code>8</code>.</li>
+</ul>
+<h3 id="debugging-examples">Debugging examples</h3>
+<p><strong>D1.</strong> Why does this crash?</p>
+<pre><code class="language-python">age = 25
+print(age.title())
+</code></pre>
+<p><strong>Answer:</strong> <code>AttributeError: 'int' object has no attribute 'title'</code>. <code>title()</code> belongs to strings. Use <code>str(age)</code> if you want text; otherwise don't call string methods on a number.</p>
+<p><strong>D2.</strong> A function receives <code>quantity</code> and crashes on <code>quantity * 2 + 1</code> with <code>TypeError: can only concatenate str (not "int") to str</code>. How do you find the cause quickly?</p>
+<p><strong>Answer:</strong> print the type: <code>print(type(quantity), repr(quantity))</code>. It shows <code>&lt;class 'str'&gt; '3'</code>: the value came in as text (<code>"3" * 2</code> is <code>"33"</code>, then <code>"33" + 1</code> fails). Convert it with <code>int(quantity)</code> where the data enters the program.</p>
+<h3 id="practical-exercises">Practical exercises</h3>
+<p><strong>E1.</strong> For <code>name = "Ravi"</code>, which of identity, type and value can ever change while that object exists?</p>
+<p><strong>Answer:</strong> none. Strings are immutable, so even the value can't change. <code>name</code> can later point at a <em>different</em> object, but this object stays as it is.</p>
+<p><strong>E2.</strong> Print the type of <code>7</code>, <code>7.0</code>, <code>"7"</code> and <code>[7]</code>.</p>
+<p><strong>Answer:</strong> <code>int</code>, <code>float</code>, <code>str</code>, <code>list</code>: four different objects that all "look like 7" to a human.</p>
+<h3 id="interview-questions">Interview questions</h3>
+<p><strong>Q1. What does "everything in Python is an object" mean?</strong>
+Every value, including numbers, strings, <code>None</code>, functions and classes, is an object with an identity, a type and a value, and they can all be stored, passed and inspected the same way.</p>
+<p><strong>Q2. What three properties does every object have?</strong>
+Identity (<code>id()</code>), type (<code>type()</code>) and value. Identity and type never change; the value changes only for mutable objects.</p>
+<h3 id="tricky-questions">Tricky questions</h3>
+<p><strong>T1.</strong> Is a class an object?</p>
+<p><strong>Answer:</strong> yes. <code>type(int)</code> is <code>&lt;class 'type'&gt;</code>. Classes are objects whose type is <code>type</code>, and you can store them in variables: <code>t = int; t("5")</code> → <code>5</code>.</p>
+<p><strong>T2.</strong> What does <code>type(type)</code> return?</p>
+<p><strong>Answer:</strong> <code>&lt;class 'type'&gt;</code>. <code>type</code> is its own type: the one place where the chain of "what is the type of this?" ends.</p>
+<hr />
+<h2 id="2-variables-and-references">2. Variables and references</h2>
+<h3 id="beginner-explanation_1">Beginner explanation</h3>
+<p>A <strong>variable</strong> is a <strong>name</strong> that <strong>refers to</strong> an object. It's <strong>not a box</strong> that holds the value. Think of a <strong>name tag</strong> (or sticky note) attached to an object:</p>
+<ul>
+<li>One object can have <strong>many</strong> name tags.</li>
+<li>A name tag can be <strong>moved</strong> to a different object at any time.</li>
+<li>The object doesn't know or care which names point at it.</li>
+</ul>
+<p><strong>Why it exists:</strong> references are efficient and flexible. Passing a list of a million items to a function passes one reference, not a million copies. This one idea also explains <em>all</em> of Python's "surprising" behaviour with lists and dictionaries, so it's worth getting right on day one.</p>
+<h3 id="internal-explanation_1">Internal explanation</h3>
+<p>Names are stored in a <strong>namespace</strong>, which is really a dictionary that maps a name (a string) to a reference to an object. At the top level of a file, you can see it with <code>globals()</code>:</p>
+<pre><code class="language-python">price = 100
+print(globals()[&quot;price&quot;])     # 100 → the name &quot;price&quot; is a key in a dict
+</code></pre>
+<p><strong>The classic example, step by step:</strong></p>
+<pre><code class="language-python">a = 10
+b = a
+a = 20
+print(a, b)    # 20 10
+</code></pre>
+<pre><code class="language-text">Step 1: a = 10        a ──────▶ ┌────────┐
+                                │ int 10 │
+                                └────────┘
+
+Step 2: b = a         a ──────▶ ┌────────┐
+                      b ──────▶ │ int 10 │     ← b copies the REFERENCE: both tags on one object
+                                └────────┘
+
+Step 3: a = 20        a ──────▶ ┌────────┐
+                                │ int 20 │     ← a's tag MOVES to a new object
+                                └────────┘
+                      b ──────▶ ┌────────┐
+                                │ int 10 │     ← b is untouched
+                                └────────┘
+</code></pre>
+<p><strong>The same thing with a mutable list:</strong></p>
+<pre><code class="language-python">a = [1, 2]
+b = a
+a.append(3)
+print(b)       # [1, 2, 3]
+</code></pre>
+<pre><code class="language-text">Step 2: b = a         a ──────▶ ┌─────────────┐
+                      b ──────▶ │ list [1, 2] │
+                                └─────────────┘
+
+Step 3: a.append(3)   a ──────▶ ┌────────────────┐
+                      b ──────▶ │ list [1, 2, 3] │   ← the ONE shared object changed
+                                └────────────────┘
+</code></pre>
+<p><strong>The rule that explains everything:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>What happens</th>
+<th>Do other names see it?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Re-binding</strong>: <code>a = something</code></td>
+<td>The name tag moves to another object</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Mutating</strong>: <code>a.append(x)</code>, <code>a[0] = x</code>, <code>a["k"] = v</code></td>
+<td>The object itself changes</td>
+<td><strong>Yes</strong>, every name pointing at it</td>
+</tr>
+</tbody>
+</table>
+<h3 id="code-examples_1">Code examples</h3>
+<pre><code class="language-python">cart = [&quot;pen&quot;, &quot;notebook&quot;]
+checkout_cart = cart              # same list, second name
+checkout_cart.append(&quot;bag&quot;)       # modifies the one shared list
+print(cart)                       # ['pen', 'notebook', 'bag']
+</code></pre>
+<p><strong>Real-world, done correctly:</strong> keeping a real backup before editing.</p>
+<pre><code class="language-python">original = [&quot;pen&quot;, &quot;notebook&quot;]
+backup = original.copy()      # a NEW list with the same items
+backup.append(&quot;bag&quot;)
+print(original)               # ['pen', 'notebook'] → unchanged
+print(backup)                 # ['pen', 'notebook', 'bag']
+</code></pre>
+<h3 id="common-mistakes_1">Common mistakes</h3>
+<pre><code class="language-python">settings = [&quot;dark_mode&quot;]
+backup = settings             # ❌ not a copy: two names, one list
+</code></pre>
+<p><strong>Fix:</strong> <code>backup = settings.copy()</code> (or <code>list(settings)</code>). Nested data needs <code>copy.deepcopy()</code> (Phase 27).</p>
+<pre><code class="language-python">print(total)
+total = 100                   # NameError: name 'total' is not defined
+</code></pre>
+<p><strong>Why:</strong> the name isn't bound to any object yet when line 1 runs.</p>
+<h3 id="debugging-examples_1">Debugging examples</h3>
+<p><strong>D1.</strong> A developer saves a "backup" before editing, but the backup changes too. Why? Fix it.</p>
+<pre><code class="language-python">settings = [&quot;dark_mode&quot;, &quot;notifications&quot;]
+backup = settings
+settings.remove(&quot;notifications&quot;)
+print(backup)          # ['dark_mode']  ← backup was supposed to keep both
+</code></pre>
+<p><strong>Answer:</strong> <code>backup = settings</code> copied the reference, so both names point at one list, and <code>remove()</code> mutated it. Fix: <code>backup = settings.copy()</code>.</p>
+<p><strong>D2.</strong> Why does <code>y</code> not change here, when the list version did?</p>
+<pre><code class="language-python">x = &quot;hello&quot;
+y = x
+x = x.upper()
+print(y)       # hello
+</code></pre>
+<p><strong>Answer:</strong> <code>x.upper()</code> builds a <strong>new</strong> string, and <code>x = ...</code> re-binds <code>x</code> to it. That's re-binding, not mutation, so <code>y</code> still points at the original <code>"hello"</code>. (Strings can't be mutated anyway.)</p>
+<h3 id="practical-exercises_1">Practical exercises</h3>
+<p><strong>E1.</strong> Predict the output, then draw the memory diagram.</p>
+<pre><code class="language-python">x = 5
+y = x
+x = x + 1
+print(x, y)
+</code></pre>
+<p><strong>Answer:</strong> <code>6 5</code>. <code>x + 1</code> creates a new object <code>6</code> and moves the <code>x</code> tag to it; <code>y</code> still points at <code>5</code>.</p>
+<p><strong>E2.</strong> Predict the output.</p>
+<pre><code class="language-python">x = [1, 2]
+y = x
+y.append(3)
+print(x)
+</code></pre>
+<p><strong>Answer:</strong> <code>[1, 2, 3]</code>. <code>x</code> and <code>y</code> are two names for one list, and <code>append</code> changes it in place.</p>
+<h3 id="interview-questions_1">Interview questions</h3>
+<p><strong>Q1. What is a variable in Python?</strong>
+A name bound to an object, stored in a namespace (essentially a dictionary). The variable holds a reference, not the value itself.</p>
+<p><strong>Q2. What's the difference between re-binding a name and mutating an object?</strong>
+Re-binding (<code>a = ...</code>) moves one name to a different object and affects no other name. Mutating (<code>a.append(...)</code>) changes the object, and every name referring to it sees the change.</p>
+<h3 id="tricky-questions_1">Tricky questions</h3>
+<p><strong>T1.</strong> Predict the output.</p>
+<pre><code class="language-python">a = [1, 2]
+b = a
+a = a + [3]
+print(b)
+</code></pre>
+<p><strong>Answer:</strong> <code>[1, 2]</code>. <code>a + [3]</code> builds a <strong>new</strong> list, and <code>a = ...</code> re-binds <code>a</code>. Nothing mutated the original list, so <code>b</code> is unchanged.</p>
+<p><strong>T2.</strong> Predict the output.</p>
+<pre><code class="language-python">a = [1, 2]
+b = a
+a += [3]
+print(b)
+</code></pre>
+<p><strong>Answer:</strong> <code>[1, 2, 3]</code>. For lists, <code>+=</code> <strong>mutates in place</strong> (it calls <code>extend</code>), so the shared list changes. <code>a = a + [3]</code> and <code>a += [3]</code> are <em>not</em> the same for lists.</p>
+<hr />
+<h2 id="3-assignment">3. Assignment</h2>
+<h3 id="beginner-explanation_2">Beginner explanation</h3>
+<p><strong>Assignment</strong> binds a name to an object: <code>name = expression</code>. The <code>=</code> sign doesn't mean "equals" as in maths. Read it as <strong>"make this name refer to this value."</strong></p>
+<p><strong>Why it exists:</strong> programs need to remember results so they can use them later: a price, a user's name, a running total.</p>
+<p>Naming rules: letters, digits and underscores; can't start with a digit; case-sensitive; can't be a keyword (<code>class</code>, <code>if</code>, <code>for</code>, …). Style (PEP 8): <code>snake_case</code> for variables, <code>UPPER_CASE</code> for constants.</p>
+<h3 id="internal-explanation_2">Internal explanation</h3>
+<ol>
+<li>Python evaluates the <strong>right-hand side first</strong>, producing an object.</li>
+<li>Then it stores a reference to that object under the name(s) on the left (the <code>STORE_NAME</code> bytecode instruction from Phase 1).</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Example</th>
+<th>What really happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td><code>x = 5</code></td>
+<td>bind <code>x</code> to the object <code>5</code></td>
+</tr>
+<tr>
+<td>Unpacking</td>
+<td><code>x, y = 1, 2</code></td>
+<td>build the tuple <code>(1, 2)</code>, then bind each name</td>
+</tr>
+<tr>
+<td>Swap</td>
+<td><code>x, y = y, x</code></td>
+<td>the right side is fully built <strong>from the old values</strong> first, then unpacked</td>
+</tr>
+<tr>
+<td>Chained</td>
+<td><code>a = b = []</code></td>
+<td><strong>one</strong> object, two names</td>
+</tr>
+<tr>
+<td>Augmented</td>
+<td><code>n += 1</code></td>
+<td>immutable <code>n</code>: build a new object, re-bind. Mutable list: change it in place</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-text">a = b = []
+
+a ──────▶ ┌──────────┐
+b ──────▶ │ list []  │     ← ONE list, not two
+          └──────────┘
+</code></pre>
+<h3 id="code-examples_2">Code examples</h3>
+<pre><code class="language-python">count = 0
+count += 1             # right side (count + 1) is evaluated first, then count is re-bound
+count += 1
+print(count)           # 2
+</code></pre>
+<p><strong>Real-world:</strong> unpacking and swapping without a temporary variable.</p>
+<pre><code class="language-python">width, height = 1920, 1080          # unpack two values at once
+width, height = height, width       # rotate the screen: swap them
+print(width, height)                # 1080 1920
+
+MAX_LOGIN_ATTEMPTS = 5              # UPPER_CASE signals &quot;constant, don't change this&quot;
+</code></pre>
+<h3 id="common-mistakes_2">Common mistakes</h3>
+<pre><code class="language-python">2nd_place = &quot;Ravi&quot;       # SyntaxError: invalid decimal literal
+class = &quot;Python 101&quot;     # SyntaxError: invalid syntax
+user name = &quot;Asha&quot;       # SyntaxError: invalid syntax
+</code></pre>
+<p><strong>Why:</strong> names can't start with a digit, be keywords, or contain spaces. Use <code>second_place</code>, <code>course_name</code>, <code>user_name</code>.</p>
+<pre><code class="language-python">a, b = 1, 2, 3           # ValueError: too many values to unpack (expected 2)
+</code></pre>
+<p><strong>Why:</strong> unpacking needs exactly as many names as values.</p>
+<pre><code class="language-python">visited = unvisited = []   # ❌ two names, ONE list
+visited.append(&quot;Pune&quot;)
+print(unvisited)           # ['Pune']
+</code></pre>
+<p><strong>Fix:</strong> <code>visited = []</code> and <code>unvisited = []</code> on separate lines.</p>
+<h3 id="debugging-examples_2">Debugging examples</h3>
+<p><strong>D1.</strong> This swap doesn't work. Why? Fix it.</p>
+<pre><code class="language-python">x = 5
+y = 9
+x = y
+y = x
+print(x, y)        # 9 9
+</code></pre>
+<p><strong>Answer:</strong> after <code>x = y</code>, the object <code>5</code> has no name left, so <code>y = x</code> just copies <code>9</code> back. Use <code>x, y = y, x</code> → <code>9 5</code>.</p>
+<p><strong>D2.</strong> Two counters always show the same list of events. Why?</p>
+<pre><code class="language-python">login_events = error_events = []
+login_events.append(&quot;login&quot;)
+print(error_events)          # ['login']
+</code></pre>
+<p><strong>Answer:</strong> chained assignment binds both names to <strong>one</strong> list object. Create two lists: <code>login_events = []</code> and <code>error_events = []</code>.</p>
+<h3 id="practical-exercises_2">Practical exercises</h3>
+<p><strong>E1.</strong> Predict the output.</p>
+<pre><code class="language-python">a = 1
+b = 2
+a, b = b, a + b
+print(a, b)
+</code></pre>
+<p><strong>Answer:</strong> <code>2 3</code>. The right side <code>(b, a + b)</code> is fully evaluated with the old values, giving <code>(2, 3)</code>, then unpacked.</p>
+<p><strong>E2.</strong> Which names are valid? <code>total_price</code>, <code>_hidden</code>, <code>price$</code>, <code>for</code>, <code>Price2</code>, <code>2price</code>.</p>
+<p><strong>Answer:</strong> valid: <code>total_price</code>, <code>_hidden</code>, <code>Price2</code>. Invalid: <code>price$</code> (symbol), <code>for</code> (keyword), <code>2price</code> (starts with a digit).</p>
+<h3 id="interview-questions_2">Interview questions</h3>
+<p><strong>Q1. In <code>x = y + 1</code>, what happens first?</strong>
+The right-hand side is evaluated to an object, then the name <code>x</code> is bound to it.</p>
+<p><strong>Q2. How does Python swap two variables without a temporary?</strong>
+<code>a, b = b, a</code>: the right side builds a tuple from the current values first, then unpacks it into the names.</p>
+<h3 id="tricky-questions_2">Tricky questions</h3>
+<p><strong>T1.</strong> Predict the output.</p>
+<pre><code class="language-python">a = b = 5
+a += 1
+print(b)
+</code></pre>
+<p><strong>Answer:</strong> <code>5</code>. Both names start on the same <code>int</code> object, but ints are immutable, so <code>a += 1</code> creates <code>6</code> and re-binds only <code>a</code>.</p>
+<p><strong>T2.</strong> Predict the output.</p>
+<pre><code class="language-python">a = b = [5]
+a += [6]
+print(b)
+</code></pre>
+<p><strong>Answer:</strong> <code>[5, 6]</code>. Same shape as T1, different result: lists are mutable and <code>+=</code> changes the shared list in place.</p>
+<hr />
+<h2 id="4-dynamic-typing">4. Dynamic typing</h2>
+<h3 id="beginner-explanation_3">Beginner explanation</h3>
+<p>In some languages (Java, C, Go) you declare a variable's type, and it can only ever hold that type: <code>int age = 25;</code>. That's <strong>static typing</strong>. In Python, <strong>names have no type; objects do</strong>. A name can point at an <code>int</code> now and a <code>str</code> later. That's <strong>dynamic typing</strong>: types are checked while the program runs.</p>
+<p><strong>Why it exists:</strong></p>
+<ul>
+<li>Less code to write; faster to experiment.</li>
+<li>The same code can work with many types that behave alike ("duck typing": if it walks like a duck and quacks like a duck, treat it as a duck).</li>
+<li>The trade-off: some type mistakes only show up at runtime, so professionals add <strong>type hints</strong> and checkers (Phase 24).</li>
+</ul>
+<h3 id="internal-explanation_3">Internal explanation</h3>
+<ul>
+<li>The type is stored <strong>in the object</strong> (its type pointer). The namespace only stores <code>name → reference</code>, with no type information at all.</li>
+<li>When an operation runs, for example <code>BINARY_OP +</code>, the virtual machine looks at the <strong>types of the actual objects</strong> at that moment and picks the right behaviour: number addition, string joining, list concatenation, or a <code>TypeError</code>.</li>
+<li>Python is also <strong>strongly typed</strong>: it won't silently convert between unrelated types. <code>"5" + 5</code> raises <code>TypeError</code> instead of guessing <code>"55"</code> or <code>10</code>. (JavaScript, a weakly typed language, gives <code>"55"</code>.)</li>
+<li><strong>Type hints</strong> (<code>age: int = 25</code>) are stored as metadata in <code>__annotations__</code>. The interpreter <strong>ignores</strong> them when running code.</li>
+</ul>
+<pre><code class="language-text">namespace (dict)                 objects
+┌─────────────────┐
+│ &quot;value&quot; ────────┼──────▶  int 42         ← after value = 42
+└─────────────────┘
+┌─────────────────┐
+│ &quot;value&quot; ────────┼──────▶  str &quot;forty&quot;    ← after value = &quot;forty&quot;: same name, new object, new type
+└─────────────────┘
+</code></pre>
+<h3 id="code-examples_3">Code examples</h3>
+<pre><code class="language-python">value = 42          # value → int
+value = &quot;forty&quot;     # now value → str: allowed
+print(type(value))  # &lt;class 'str'&gt;
+</code></pre>
+<p><strong>Real-world:</strong> values from outside are always checked and converted, because the name tells you nothing about the type.</p>
+<pre><code class="language-python">quantity = input(&quot;Quantity: &quot;)     # always a str, even if the user typed 3
+quantity = int(quantity)           # re-bind the name to an int object
+total: float = quantity * 249.5    # type hint documents the intended type
+print(f&quot;₹{total:.2f}&quot;)
+</code></pre>
+<h3 id="common-mistakes_3">Common mistakes</h3>
+<pre><code class="language-python">print(&quot;Age: &quot; + 25)    # TypeError: can only concatenate str (not &quot;int&quot;) to str
+</code></pre>
+<p><strong>Why:</strong> dynamic doesn't mean weak. Use <code>f"Age: {25}"</code> or <code>"Age: " + str(25)</code>.</p>
+<pre><code class="language-python">age: int = &quot;hello&quot;     # runs without any error!
+</code></pre>
+<p><strong>Why:</strong> type hints aren't enforced at runtime. A type checker like mypy would flag it; Python won't.</p>
+<ul>
+<li><strong>Re-using one name for different types</strong> (<code>data = "5"</code>, later <code>data = 5</code>, later <code>data = [5]</code>) makes code hard to follow. Use different, descriptive names.</li>
+</ul>
+<h3 id="debugging-examples_3">Debugging examples</h3>
+<p><strong>D1.</strong> Why does this crash, and what are two fixes?</p>
+<pre><code class="language-python">items = 3
+message = &quot;You have &quot; + items + &quot; items&quot;
+</code></pre>
+<p><strong>Answer:</strong> <code>TypeError: can only concatenate str (not "int") to str</code>. Python won't auto-convert. Fixes: <code>f"You have {items} items"</code> (best) or <code>"You have " + str(items) + " items"</code>.</p>
+<p><strong>D2.</strong> This function works for <code>total(2, 3)</code> but gives <code>"23"</code> for <code>total("2", "3")</code>. Why doesn't Python stop you?</p>
+<pre><code class="language-python">def total(a, b):
+    return a + b
+</code></pre>
+<p><strong>Answer:</strong> with dynamic typing, <code>+</code> does whatever the <em>objects' types</em> define: numbers add, strings join. Nothing checks the types beforehand. Convert inputs at the boundary (<code>int(a)</code>), and add hints <code>def total(a: int, b: int) -&gt; int:</code> so a type checker can catch bad calls.</p>
+<h3 id="practical-exercises_3">Practical exercises</h3>
+<p><strong>E1.</strong> Is Python statically or dynamically typed? Strongly or weakly? Give one line of code that shows each.</p>
+<p><strong>Answer:</strong> dynamically: <code>x = 1</code> then <code>x = "one"</code> works. Strongly: <code>"1" + 1</code> raises <code>TypeError</code>.</p>
+<p><strong>E2.</strong> Does <code>score: int = "high"</code> raise an error? Why?</p>
+<p><strong>Answer:</strong> no. Type hints aren't checked at runtime; only tools like mypy or your editor warn.</p>
+<h3 id="interview-questions_3">Interview questions</h3>
+<p><strong>Q1. Dynamic vs static typing?</strong>
+Static: types are attached to variables and checked before running (Java, Go). Dynamic: types are attached to objects and checked while running (Python).</p>
+<p><strong>Q2. Is Python weakly typed because it's dynamic?</strong>
+No. It's dynamic <strong>and</strong> strong: it refuses to implicitly mix unrelated types such as <code>str</code> and <code>int</code>.</p>
+<h3 id="tricky-questions_3">Tricky questions</h3>
+<p><strong>T1.</strong> What does <code>"3" * 3</code> give? And <code>"3" + 3</code>?</p>
+<p><strong>Answer:</strong> <code>"333"</code> (repeating a string by an int is defined), but <code>"3" + 3</code> is a <code>TypeError</code>. Whether an operation works depends on the <strong>types involved</strong>, not on whether it "looks like maths."</p>
+<p><strong>T2.</strong> Does this line raise an error: <code>x: int = 3.7</code>?</p>
+<p><strong>Answer:</strong> no. <code>x</code> is <code>3.7</code>, a float. Hints are documentation for tools, not runtime checks.</p>
+<hr />
+<h2 id="5-int">5. int</h2>
+<h3 id="beginner-explanation_4">Beginner explanation</h3>
+<p><code>int</code> represents <strong>whole numbers</strong>: positive, negative or zero, with no fractional part. <code>-3</code>, <code>0</code>, <code>42</code>, <code>10_000_000</code>.</p>
+<p><strong>Why it exists:</strong> counting, indexing, IDs, quantities and money stored in the smallest unit (paise, cents) all need exact whole numbers. Integers are <strong>exact</strong>: no rounding errors.</p>
+<h3 id="internal-explanation_4">Internal explanation</h3>
+<ul>
+<li>CPython ints have <strong>unlimited precision</strong>. The value is stored as an array of 30-bit chunks ("digits") that grows as needed, so <code>2 ** 100</code> is exact. (Many languages overflow past about 9.2 quintillion.)</li>
+<li>Bigger numbers use more memory: <code>sys.getsizeof(1)</code> is 28 bytes; <code>sys.getsizeof(2**100)</code> is 40 bytes (64-bit CPython 3.13).</li>
+<li><strong>Small-int cache:</strong> CPython creates the ints from <strong>-5 to 256</strong> once at startup and reuses them everywhere. Every <code>5</code> in your program is the same object. Bigger ints created at runtime are new objects. This is an optimisation, not a language rule.</li>
+<li>Ints are <strong>immutable</strong>: <code>n += 1</code> creates (or reuses) another object and re-binds <code>n</code>.</li>
+</ul>
+<pre><code class="language-text">n = 5            n ──▶ int 5   (from the shared small-int cache)
+n += 1           n ──▶ int 6   ← a different object; 5 is untouched
+</code></pre>
+<ul>
+<li><code>/</code> <strong>always</strong> returns a float (<code>7 / 2</code> → <code>3.5</code>); <code>//</code> is <strong>floor</strong> division (rounds <strong>down</strong>: <code>-7 // 2</code> → <code>-4</code>); <code>%</code> is the remainder (<code>-7 % 2</code> → <code>1</code>).</li>
+<li><code>int(3.9)</code> → <code>3</code> and <code>int(-3.9)</code> → <code>-3</code>: converting a float <strong>truncates toward zero</strong>. It doesn't round.</li>
+</ul>
+<h3 id="code-examples_4">Code examples</h3>
+<pre><code class="language-python">students = 32
+groups = 5
+print(students // groups)   # 6  → full groups
+print(students % groups)    # 2  → students left over
+print(2 ** 100)             # 1267650600228229401496703205376 → exact
+print(0b1010, 0o17, 0xFF)   # 10 15 255 → binary, octal, hex literals
+print(int(&quot;FF&quot;, 16))        # 255 → parse hex text
+</code></pre>
+<p><strong>Real-world:</strong> storing money as an integer number of <strong>paise</strong> to avoid float errors.</p>
+<pre><code class="language-python">price_paise = 149_900              # ₹1,499.00 stored exactly
+quantity = 3
+total_paise = price_paise * quantity
+print(f&quot;₹{total_paise // 100}.{total_paise % 100:02d}&quot;)   # ₹4497.00
+</code></pre>
+<h3 id="common-mistakes_4">Common mistakes</h3>
+<pre><code class="language-python">pages = 10 / 2
+print(pages, type(pages))        # 5.0 &lt;class 'float'&gt;  ← not an int!
+</code></pre>
+<p><strong>Why:</strong> <code>/</code> always produces a float. Use <code>//</code> for a whole-number result.</p>
+<pre><code class="language-python">int(&quot;3.5&quot;)     # ValueError: invalid literal for int() with base 10: '3.5'
+</code></pre>
+<p><strong>Why:</strong> <code>int()</code> only parses whole-number text. Use <code>int(float("3.5"))</code> if truncation is really what you want.</p>
+<ul>
+<li><strong>Expecting <code>int()</code> to round:</strong> <code>int(2.9)</code> is <code>2</code>. Use <code>round(2.9)</code> → <code>3</code> when you want rounding.</li>
+</ul>
+<h3 id="debugging-examples_4">Debugging examples</h3>
+<p><strong>D1.</strong> <code>range(pages)</code> crashes. Why? Fix it.</p>
+<pre><code class="language-python">items = 50
+per_page = 10
+pages = items / per_page
+for page in range(pages):
+    print(page)
+</code></pre>
+<p><strong>Answer:</strong> <code>/</code> returns <code>5.0</code>, and <code>range()</code> needs an int: <code>TypeError: 'float' object cannot be interpreted as an integer</code>. Use <code>pages = items // per_page</code>.</p>
+<p><strong>D2.</strong> Splitting a ₹-7 refund into 2 parts gives <code>-4</code> per part. Why?</p>
+<pre><code class="language-python">print(-7 // 2)     # -4
+</code></pre>
+<p><strong>Answer:</strong> <code>//</code> rounds <strong>down</strong> (toward negative infinity), not toward zero. For "truncate toward zero" use <code>int(-7 / 2)</code> → <code>-3</code>. Better: decide explicitly how refunds should round.</p>
+<h3 id="practical-exercises_4">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>17 // 5</code>, <code>17 % 5</code>, <code>17 / 5</code>, <code>int(7.99)</code>, <code>int(-7.99)</code>.</p>
+<p><strong>Answer:</strong> <code>3</code>, <code>2</code>, <code>3.4</code>, <code>7</code>, <code>-7</code>.</p>
+<p><strong>E2.</strong> Convert 3725 seconds into hours, minutes and seconds using <code>//</code> and <code>%</code>.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">total = 3725
+hours = total // 3600              # 1
+minutes = (total % 3600) // 60     # 2
+seconds = total % 60               # 5
+print(f&quot;{hours}h {minutes}m {seconds}s&quot;)   # 1h 2m 5s
+</code></pre>
+<h3 id="interview-questions_4">Interview questions</h3>
+<p><strong>Q1. Can a Python int overflow?</strong>
+No. Python ints have arbitrary precision and grow as needed, limited only by memory.</p>
+<p><strong>Q2. What's the difference between <code>/</code> and <code>//</code>?</strong>
+<code>/</code> is true division and always returns a float. <code>//</code> is floor division and rounds down; with two ints it returns an int.</p>
+<h3 id="tricky-questions_4">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>a = int("256"); b = int("256"); print(a is b)</code>, then the same with <code>257</code>.</p>
+<p><strong>Answer:</strong> <code>True</code>, then <code>False</code> (in CPython). 256 is inside the small-int cache, so both names get the cached object; 257 isn't, so <code>int()</code> creates two separate objects. Never rely on this: compare numbers with <code>==</code>.</p>
+<p><strong>T2.</strong> Predict: <code>-7 // 2</code>, <code>-7 % 2</code>, <code>int(-7 / 2)</code>.</p>
+<p><strong>Answer:</strong> <code>-4</code>, <code>1</code>, <code>-3</code>. Floor division rounds down; <code>int()</code> truncates toward zero. Python keeps <code>(a // b) * b + a % b == a</code> true.</p>
+<hr />
+<h2 id="6-float">6. float</h2>
+<h3 id="beginner-explanation_5">Beginner explanation</h3>
+<p><code>float</code> represents <strong>numbers with a fractional part</strong>: <code>3.14</code>, <code>-0.5</code>, <code>2.0</code>, <code>1e3</code> (= <code>1000.0</code>).</p>
+<p><strong>Why it exists:</strong> measurements, percentages, averages, scientific values and coordinates need fractions and a huge range of sizes.</p>
+<p>The one thing every beginner must know: <strong>floats are approximations.</strong> <code>0.1 + 0.2</code> is <code>0.30000000000000004</code>, not <code>0.3</code>.</p>
+<h3 id="internal-explanation_5">Internal explanation</h3>
+<ul>
+<li>A float is stored as a 64-bit <strong>IEEE 754 double</strong>, the same format almost every language uses: 1 sign bit, 11 exponent bits and 52 fraction bits. That gives about <strong>15–17 significant digits</strong> and a range up to about <code>1.8e308</code> (<code>sys.float_info.max</code>).</li>
+<li>The number is stored in <strong>binary</strong>. Many decimal fractions, such as <code>0.1</code>, can't be written exactly in binary, just as 1/3 can't be written exactly in decimal (0.3333…). Python stores the nearest possible binary value:</li>
+</ul>
+<pre><code class="language-python">print(f&quot;{0.1:.30f}&quot;)     # 0.100000000000000005551115123126 → what is REALLY stored
+</code></pre>
+<ul>
+<li>When you print <code>0.1</code>, Python shows the <strong>shortest</strong> text that maps back to the same stored value, which is why it looks exact until you do arithmetic.</li>
+<li><code>round()</code> uses "banker's rounding" for exact halves: <code>round(2.5)</code> → <code>2</code>, <code>round(3.5)</code> → <code>4</code> (round half to even).</li>
+<li>Special values: <code>float("inf")</code>, <code>float("-inf")</code> and <code>float("nan")</code> (not a number). <code>nan</code> is not equal even to itself.</li>
+<li>For <strong>money</strong>, use integers in the smallest unit (paise) or <code>decimal.Decimal</code>, created from <strong>strings</strong>.</li>
+</ul>
+<h3 id="code-examples_5">Code examples</h3>
+<pre><code class="language-python">temperature = 36.6
+average = (90 + 85 + 77) / 3
+print(round(average, 2))      # 84.0
+print(1e3, type(1e3))         # 1000.0 &lt;class 'float'&gt;
+</code></pre>
+<pre><code class="language-python">import math
+
+result = 0.1 + 0.2
+print(result)                         # 0.30000000000000004
+print(math.isclose(result, 0.3))      # True → compare floats with a tolerance
+print(f&quot;{result:.2f}&quot;)                # 0.30 → format for display
+</code></pre>
+<p><strong>Real-world:</strong> exact money calculations with <code>Decimal</code>.</p>
+<pre><code class="language-python">from decimal import Decimal
+
+price = Decimal(&quot;0.10&quot;)
+total = price + Decimal(&quot;0.20&quot;)
+print(total)                          # 0.30 → exact
+print(total == Decimal(&quot;0.30&quot;))       # True
+</code></pre>
+<h3 id="common-mistakes_5">Common mistakes</h3>
+<pre><code class="language-python">if 0.1 + 0.2 == 0.3:        # ❌ False
+    print(&quot;Equal&quot;)
+</code></pre>
+<p><strong>Fix:</strong> <code>math.isclose(0.1 + 0.2, 0.3)</code>.</p>
+<pre><code class="language-python">Decimal(0.1)     # Decimal('0.1000000000000000055511151231257827021181583404541015625')
+</code></pre>
+<p><strong>Why:</strong> creating a <code>Decimal</code> from a float copies the float's error. Pass a string: <code>Decimal("0.1")</code>.</p>
+<ul>
+<li><strong>Storing money as floats.</strong> Small errors add up across thousands of transactions. Use paise (int) or <code>Decimal</code>.</li>
+</ul>
+<h3 id="debugging-examples_5">Debugging examples</h3>
+<p><strong>D1.</strong> A discount check never passes. Why? Fix it.</p>
+<pre><code class="language-python">discount = 1 - 0.9
+if discount == 0.1:
+    print(&quot;10% discount applied&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>1 - 0.9</code> is <code>0.09999999999999998</code>. Use <code>math.isclose(discount, 0.1)</code>, or store percentages as integers (<code>discount_percent = 10</code>).</p>
+<p><strong>D2.</strong> A shop's total of three ₹0.10 items shows <code>₹0.30000000000000004</code> on the receipt. Fix the display and the calculation.</p>
+<p><strong>Answer:</strong> for display, format it: <code>f"₹{total:.2f}"</code>. For the calculation itself, use <code>Decimal("0.10") * 3</code> or integer paise (<code>10 * 3</code> paise), so the stored value is exact.</p>
+<h3 id="practical-exercises_5">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>round(2.5)</code>, <code>round(3.5)</code>, <code>0.1 * 3</code>, <code>float("nan") == float("nan")</code>.</p>
+<p><strong>Answer:</strong> <code>2</code>, <code>4</code>, <code>0.30000000000000004</code>, <code>False</code>.</p>
+<p><strong>E2.</strong> Total ₹0.10, ₹0.20 and ₹0.30 so the result prints exactly <code>0.60</code>.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">from decimal import Decimal
+total = Decimal(&quot;0.10&quot;) + Decimal(&quot;0.20&quot;) + Decimal(&quot;0.30&quot;)
+print(total)          # 0.60
+</code></pre>
+<h3 id="interview-questions_5">Interview questions</h3>
+<p><strong>Q1. Why is <code>0.1 + 0.2 != 0.3</code> in Python?</strong>
+Floats are binary IEEE 754 doubles. <code>0.1</code> and <code>0.2</code> can't be represented exactly in binary, so their sum is the nearest double to <code>0.30000000000000004</code>, not exactly <code>0.3</code>. It's the same in almost every language.</p>
+<p><strong>Q2. How should you handle money in Python?</strong>
+Use integers in the smallest currency unit, or <code>decimal.Decimal</code> created from strings. Never plain floats.</p>
+<h3 id="tricky-questions_5">Tricky questions</h3>
+<p><strong>T1.</strong> Predict the output.</p>
+<pre><code class="language-python">x = float(&quot;nan&quot;)
+print(x == x, [x] == [x])
+</code></pre>
+<p><strong>Answer:</strong> <code>False True</code>. <code>nan</code> is never equal to itself. But list comparison first checks whether the elements are the <strong>same object</strong> (<code>is</code>), and here they are, so the lists compare equal.</p>
+<p><strong>T2.</strong> Predict: <code>round(0.5)</code>, <code>round(1.5)</code>, <code>round(2.675, 2)</code>.</p>
+<p><strong>Answer:</strong> <code>0</code>, <code>2</code>, <code>2.67</code>. Exact halves round to the even number; and <code>2.675</code> is really stored as <code>2.67499999…</code>, so it rounds down.</p>
+<hr />
+<h2 id="7-complex">7. complex</h2>
+<h3 id="beginner-explanation_6">Beginner explanation</h3>
+<p>A <strong>complex number</strong> has a real part and an imaginary part: <code>3 + 4j</code>. In maths the imaginary unit is written <em>i</em> (√−1); Python, like electrical engineering, writes <code>j</code>.</p>
+<p><strong>Why it exists:</strong> complex numbers are essential in electrical engineering, signal processing and physics. Python builds them in so basic use needs no library. As a backend developer you'll rarely need them, but you should recognise them.</p>
+<h3 id="internal-explanation_6">Internal explanation</h3>
+<ul>
+<li>A <code>complex</code> object stores <strong>two floats</strong>: the real part and the imaginary part. So both parts have float precision and float rounding behaviour.</li>
+<li><code>.real</code> and <code>.imag</code> return those floats; <code>abs(z)</code> returns the magnitude √(real² + imag²).</li>
+<li>Complex numbers support <code>+ - * /</code> and <code>**</code>, but <strong>not</strong> ordering (<code>&lt;</code>, <code>&gt;</code>): there's no natural "bigger" for points on a plane.</li>
+<li>Numeric types widen automatically: <code>int</code> → <code>float</code> → <code>complex</code> (<code>1 + 2j + 3</code> is <code>(4+2j)</code>).</li>
+<li>The <code>cmath</code> module has complex versions of <code>math</code> functions.</li>
+</ul>
+<h3 id="code-examples_6">Code examples</h3>
+<pre><code class="language-python">z = 3 + 4j
+print(z.real, z.imag)    # 3.0 4.0
+print(abs(z))            # 5.0 → distance from 0 (a 3-4-5 triangle)
+print(type(z))           # &lt;class 'complex'&gt;
+print(complex(3, 4) == z)  # True
+</code></pre>
+<p><strong>Real-world:</strong> the impedance of a circuit (resistance + reactance).</p>
+<pre><code class="language-python">resistance = 30            # ohms
+reactance = 40             # ohms
+impedance = complex(resistance, reactance)
+print(abs(impedance))      # 50.0 ohms: the total opposition to current
+</code></pre>
+<h3 id="common-mistakes_6">Common mistakes</h3>
+<pre><code class="language-python">print(3 + 4j &lt; 1 + 1j)
+</code></pre>
+<pre><code class="language-text">TypeError: '&lt;' not supported between instances of 'complex' and 'complex'
+</code></pre>
+<p><strong>Why:</strong> complex numbers have no natural order. Compare <code>abs()</code> values or the parts.</p>
+<pre><code class="language-python">z = 3 + 4i      # SyntaxError: invalid decimal literal
+</code></pre>
+<p><strong>Why:</strong> Python uses <code>j</code>, not <code>i</code>.</p>
+<h3 id="debugging-examples_6">Debugging examples</h3>
+<p><strong>D1.</strong> Why does <code>sorted([3 + 1j, 1 + 1j])</code> crash, and how do you sort by size?</p>
+<p><strong>Answer:</strong> sorting compares items with <code>&lt;</code>, which complex numbers don't support (<code>TypeError</code>). Sort by magnitude: <code>sorted([3 + 1j, 1 + 1j], key=abs)</code> → <code>[(1+1j), (3+1j)]</code>.</p>
+<p><strong>D2.</strong> <code>j = 2</code> then <code>z = 3 + j</code> gives <code>5</code>, not a complex number. Why?</p>
+<p><strong>Answer:</strong> without a digit in front, <code>j</code> is just a <strong>variable name</strong>. The imaginary literal needs a number: <code>3 + 1j</code>.</p>
+<h3 id="practical-exercises_6">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>(2 + 3j).imag</code>, <code>abs(6 + 8j)</code>, <code>type(5j)</code>, <code>1 + 2j + 3</code>.</p>
+<p><strong>Answer:</strong> <code>3.0</code>, <code>10.0</code>, <code>&lt;class 'complex'&gt;</code>, <code>(4+2j)</code>.</p>
+<h3 id="interview-questions_6">Interview questions</h3>
+<p><strong>Q1. How is a complex number stored in Python?</strong>
+As two floats, the real and imaginary parts, available as <code>.real</code> and <code>.imag</code>.</p>
+<p><strong>Q2. Why can't you sort complex numbers directly?</strong>
+They have no natural ordering, so <code>&lt;</code> isn't defined. Sort with a key, such as <code>abs</code>.</p>
+<h3 id="tricky-questions_6">Tricky questions</h3>
+<p><strong>T1.</strong> What is the type of <code>(1 + 2j).real</code>?</p>
+<p><strong>Answer:</strong> <code>float</code> (<code>1.0</code>), even though you wrote an int. Both parts are always stored as floats.</p>
+<p><strong>T2.</strong> Is <code>1 + 0j == 1</code> true?</p>
+<p><strong>Answer:</strong> yes. Numbers of different types compare equal when their values are equal: <code>1 + 0j == 1.0 == 1</code>.</p>
+<hr />
+<h2 id="8-bool">8. bool</h2>
+<h3 id="beginner-explanation_7">Beginner explanation</h3>
+<p><code>bool</code> has exactly two values: <code>True</code> and <code>False</code>. It answers yes/no questions: "Is the user logged in?" "Is the cart empty?"</p>
+<p><strong>Why it exists:</strong> every decision in a program, every <code>if</code> and every <code>while</code>, comes down to true or false. Comparisons (<code>&gt;</code>, <code>==</code>, <code>in</code>) produce bools.</p>
+<p><strong>Truthiness:</strong> every object can be used in a condition. These are <strong>falsy</strong>; almost everything else is truthy:</p>
+<table>
+<thead>
+<tr>
+<th>Falsy values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>False</code>, <code>None</code></td>
+</tr>
+<tr>
+<td><code>0</code>, <code>0.0</code>, <code>0j</code></td>
+</tr>
+<tr>
+<td>empty collections: <code>""</code>, <code>[]</code>, <code>()</code>, <code>{}</code>, <code>set()</code>, <code>range(0)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-explanation_7">Internal explanation</h3>
+<ul>
+<li><code>bool</code> is a <strong>subclass of <code>int</code></strong>: <code>True</code> behaves as <code>1</code> and <code>False</code> as <code>0</code>. So <code>True + True == 2</code>, and <code>isinstance(True, int)</code> is <code>True</code>.</li>
+<li>There are exactly <strong>two</strong> bool objects in the whole program. <code>True</code> and <code>False</code> are singletons, so <code>bool(1) is True</code> is <code>True</code>.</li>
+<li>When Python needs a truth value (<code>if x:</code>), it asks the object: first its <code>__bool__</code> method; if there isn't one, its <code>__len__</code> (zero length → false); otherwise it's true. That's why empty containers are falsy.</li>
+<li><code>and</code>/<code>or</code> return <strong>one of the operands</strong>, not necessarily a bool: <code>"" or "Guest"</code> → <code>"Guest"</code>.</li>
+</ul>
+<h3 id="code-examples_7">Code examples</h3>
+<pre><code class="language-python">age = 20
+is_adult = age &gt;= 18        # comparison → bool
+print(is_adult)             # True
+print(bool(&quot;&quot;), bool(&quot;hi&quot;)) # False True
+print(True + True)          # 2 → bool is an int
+</code></pre>
+<p><strong>Real-world:</strong> Pythonic checks that rely on truthiness.</p>
+<pre><code class="language-python">cart_items = []
+coupon_code = &quot;&quot;
+
+if not cart_items:                  # empty list is falsy
+    print(&quot;Your cart is empty&quot;)
+if coupon_code:                     # empty string is falsy
+    print(&quot;Applying coupon&quot;)
+
+display_name = &quot;&quot; or &quot;Guest&quot;        # `or` returns the first truthy operand
+print(display_name)                 # Guest
+</code></pre>
+<h3 id="common-mistakes_7">Common mistakes</h3>
+<pre><code class="language-python">is_active = true    # NameError: name 'true' is not defined. Did you mean: 'True'?
+</code></pre>
+<p><strong>Why:</strong> the values are capitalised: <code>True</code>, <code>False</code>.</p>
+<pre><code class="language-python">answer = &quot;False&quot;          # text from a form or config file
+if bool(answer):
+    print(&quot;Subscribed&quot;)   # prints! bool(&quot;False&quot;) is True
+</code></pre>
+<p><strong>Why:</strong> any <strong>non-empty string</strong> is truthy. Compare the text: <code>answer.strip().lower() == "true"</code>.</p>
+<ul>
+<li><strong>Writing <code>if is_active == True:</code>.</strong> Just write <code>if is_active:</code>.</li>
+</ul>
+<h3 id="debugging-examples_7">Debugging examples</h3>
+<p><strong>D1.</strong> A feature flag from a config file is always on, even when it says <code>"false"</code>. Fix it.</p>
+<pre><code class="language-python">feature_flag = &quot;false&quot;          # read from a config file as text
+if feature_flag:
+    print(&quot;New checkout enabled&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>"false"</code> is a non-empty string, so it's truthy. Parse it: <code>enabled = feature_flag.strip().lower() == "true"</code>, then <code>if enabled:</code>.</p>
+<p><strong>D2.</strong> A count of "approved" orders is <code>3</code> even though the list holds booleans, not numbers. Is that a bug?</p>
+<pre><code class="language-python">approved = [True, False, True, True]
+print(sum(approved))        # 3
+</code></pre>
+<p><strong>Answer:</strong> not a bug. It's a common idiom: <code>True</code> counts as <code>1</code>, so <code>sum()</code> counts the <code>True</code> values. Just be aware it works <em>because</em> <code>bool</code> is a subclass of <code>int</code>.</p>
+<h3 id="practical-exercises_7">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>bool(0)</code>, <code>bool(0.0)</code>, <code>bool(" ")</code>, <code>bool([0])</code>, <code>bool(None)</code>, <code>True + True + False</code>.</p>
+<p><strong>Answer:</strong> <code>False</code>, <code>False</code>, <code>True</code> (a space is a character), <code>True</code> (a list with one item), <code>False</code>, <code>2</code>.</p>
+<p><strong>E2.</strong> Rewrite <code>if len(names) &gt; 0:</code> in a more Pythonic way.</p>
+<p><strong>Answer:</strong> <code>if names:</code>.</p>
+<h3 id="interview-questions_7">Interview questions</h3>
+<p><strong>Q1. What values are falsy in Python?</strong>
+<code>False</code>, <code>None</code>, numeric zeros (<code>0</code>, <code>0.0</code>, <code>0j</code>) and empty collections (<code>""</code>, <code>[]</code>, <code>()</code>, <code>{}</code>, <code>set()</code>, <code>range(0)</code>). Almost everything else is truthy.</p>
+<p><strong>Q2. Why is <code>isinstance(True, int)</code> true?</strong>
+<code>bool</code> is a subclass of <code>int</code>; <code>True</code> and <code>False</code> behave as <code>1</code> and <code>0</code>.</p>
+<h3 id="tricky-questions_7">Tricky questions</h3>
+<p><strong>T1.</strong> Predict the output.</p>
+<pre><code class="language-python">print({True: &quot;a&quot;, 1: &quot;b&quot;})
+</code></pre>
+<p><strong>Answer:</strong> <code>{True: 'b'}</code>. <code>True == 1</code> and they have the same hash, so they're the <strong>same key</strong>. The first key object (<code>True</code>) is kept and its value is overwritten with <code>"b"</code>.</p>
+<p><strong>T2.</strong> Predict: <code>0 or "default"</code>, <code>"" and "x"</code>, <code>[] or [] or "last"</code>.</p>
+<p><strong>Answer:</strong> <code>"default"</code>, <code>""</code>, <code>"last"</code>. <code>or</code> returns the first truthy operand (or the last one); <code>and</code> returns the first falsy operand (or the last one).</p>
+<hr />
+<h2 id="9-str">9. str</h2>
+<h3 id="beginner-explanation_8">Beginner explanation</h3>
+<p><code>str</code> represents <strong>text</strong>: a sequence of characters. <code>"Asha"</code>, <code>'₹499'</code>, <code>"नमस्ते"</code>, <code>""</code> (the empty string). Phase 4 covers strings in depth; here you need them as a data type.</p>
+<p><strong>Why it exists:</strong> names, messages, emails, JSON, HTML, file contents and user input are all text. Most programs handle more strings than any other type.</p>
+<ul>
+<li>Create with single or double quotes; triple quotes (<code>"""..."""</code>) span multiple lines.</li>
+<li><code>len(s)</code> counts characters; <code>s[0]</code> is the first character; <code>+</code> joins; <code>*</code> repeats.</li>
+<li>Strings are <strong>immutable</strong>: methods like <code>.upper()</code> return a <strong>new</strong> string.</li>
+</ul>
+<h3 id="internal-explanation_8">Internal explanation</h3>
+<ul>
+<li>A <code>str</code> is an immutable sequence of <strong>Unicode code points</strong> (each character has a number: <code>ord("A")</code> → <code>65</code>, <code>ord("₹")</code> → <code>8377</code>).</li>
+<li>CPython stores each string compactly using <strong>1, 2 or 4 bytes per character</strong>, depending on the widest character in it. ASCII-only text uses 1 byte per character; adding one <code>₹</code> switches that string to 2 bytes per character.</li>
+<li><code>len()</code> counts <strong>characters</strong>, not bytes: <code>len("₹")</code> is <code>1</code>, but its UTF-8 encoding is 3 bytes (<code>len("₹".encode())</code> → <code>3</code>).</li>
+<li>Because strings are immutable, every "change" builds a new object:</li>
+</ul>
+<pre><code class="language-text">name = &quot;asha&quot;           name ──▶ str &quot;asha&quot;
+name = name.title()     name ──▶ str &quot;Asha&quot;     ← NEW object; &quot;asha&quot; is untouched
+</code></pre>
+<ul>
+<li>CPython <strong>interns</strong> (reuses) some strings automatically, mostly short identifier-like ones such as <code>"user_id"</code>. That's an optimisation; never rely on it.</li>
+</ul>
+<h3 id="code-examples_8">Code examples</h3>
+<pre><code class="language-python">name = &quot;asha&quot;
+print(len(name))         # 4
+print(name[0])           # a
+print(name.title())      # Asha → a NEW string
+print(name)              # asha → original unchanged
+print(&quot;ha&quot; * 3)          # hahaha
+</code></pre>
+<p><strong>Real-world:</strong> cleaning user input before saving it.</p>
+<pre><code class="language-python">raw_email = &quot;  Asha.Rao@Example.COM  &quot;
+email = raw_email.strip().lower()     # each method returns a new string
+print(email)                          # asha.rao@example.com
+</code></pre>
+<h3 id="common-mistakes_8">Common mistakes</h3>
+<pre><code class="language-python">name = &quot;asha&quot;
+name[0] = &quot;A&quot;      # TypeError: 'str' object does not support item assignment
+</code></pre>
+<p><strong>Why:</strong> strings are immutable. Build a new one: <code>name = "A" + name[1:]</code> or <code>name = name.capitalize()</code>.</p>
+<pre><code class="language-python">name = &quot;asha&quot;
+name.upper()
+print(name)        # asha  ← the result of upper() was thrown away
+</code></pre>
+<p><strong>Why:</strong> <code>upper()</code> returns a new string. Assign it: <code>name = name.upper()</code>.</p>
+<h3 id="debugging-examples_8">Debugging examples</h3>
+<p><strong>D1.</strong> The username is stored in lowercase, but this check fails for <code>Asha</code>. Fix it.</p>
+<pre><code class="language-python">stored = &quot;asha&quot;
+typed = &quot;Asha&quot;
+typed.lower()
+print(typed == stored)       # False
+</code></pre>
+<p><strong>Answer:</strong> <code>typed.lower()</code> returns a new string that's thrown away. Use it: <code>print(typed.lower() == stored)</code> → <code>True</code>.</p>
+<p><strong>D2.</strong> A database field holds at most 10 bytes. The check passes, but the database rejects the value. Why?</p>
+<pre><code class="language-python">text = &quot;₹₹₹₹&quot;
+if len(text) &lt;= 10:
+    save(text)          # rejected: value too long
+</code></pre>
+<p><strong>Answer:</strong> <code>len()</code> counts characters (4), not bytes. Each <code>₹</code> is 3 bytes in UTF-8, so the value is 12 bytes. When a limit is in bytes, check <code>len(text.encode("utf-8")) &lt;= 10</code>.</p>
+<h3 id="practical-exercises_8">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>len("₹500")</code>, <code>"5" + "5"</code>, <code>"5" * 2</code>, <code>str(3.0)</code>.</p>
+<p><strong>Answer:</strong> <code>4</code>, <code>"55"</code>, <code>"55"</code>, <code>"3.0"</code>.</p>
+<p><strong>E2.</strong> Turn <code>"  ravi KUMAR "</code> into <code>"Ravi Kumar"</code> in one line.</p>
+<p><strong>Answer:</strong> <code>"  ravi KUMAR ".strip().title()</code>.</p>
+<h3 id="interview-questions_8">Interview questions</h3>
+<p><strong>Q1. Are Python strings mutable?</strong>
+No. Every method that "changes" a string returns a new string object.</p>
+<p><strong>Q2. What's the difference between characters and bytes in a string?</strong>
+A <code>str</code> holds Unicode characters; <code>len()</code> counts those. Bytes appear only when you encode the text (e.g. UTF-8), where one character can take 1–4 bytes.</p>
+<h3 id="tricky-questions_8">Tricky questions</h3>
+<p><strong>T1.</strong> Predict the output.</p>
+<pre><code class="language-python">s = &quot;hi&quot;
+t = s
+s += &quot;!&quot;
+print(t)
+</code></pre>
+<p><strong>Answer:</strong> <code>hi</code>. Strings are immutable, so <code>s += "!"</code> builds a new string and re-binds only <code>s</code>.</p>
+<p><strong>T2.</strong> Predict: <code>len("नमस्ते")</code>.</p>
+<p><strong>Answer:</strong> <code>6</code>. The word looks like 3–4 letters, but it's made of 6 Unicode code points (consonants plus combining vowel signs), and <code>len()</code> counts code points.</p>
+<hr />
+<h2 id="10-none">10. None</h2>
+<h3 id="beginner-explanation_9">Beginner explanation</h3>
+<p><code>None</code> means <strong>"no value"</strong> or <strong>"nothing here yet."</strong> It isn't <code>0</code>, not <code>""</code> and not <code>False</code>; it's the absence of a value.</p>
+<p><strong>Why it exists:</strong> programs constantly need to say "not set," "not found" or "optional": a user with no middle name, a search with no result, a setting nobody chose. <code>None</code> makes that explicit instead of using a fake value like <code>-1</code> or <code>""</code>.</p>
+<h3 id="internal-explanation_9">Internal explanation</h3>
+<ul>
+<li>There is exactly <strong>one</strong> <code>None</code> object in a running program. Its type is <code>NoneType</code>, and even calling that type gives back the same object: <code>type(None)() is None</code> → <code>True</code>.</li>
+<li>Because it's a singleton, <code>x is None</code> is the correct, fastest and conventional test.</li>
+<li>Functions that finish without <code>return</code> return <code>None</code>, which is why <code>print()</code> returns <code>None</code>.</li>
+<li><code>None</code> is falsy, but so are <code>0</code> and <code>""</code>, so <code>if not x:</code> can't tell "missing" from "zero" or "empty."</li>
+<li>Calling a method on <code>None</code> raises <code>AttributeError: 'NoneType' object has no attribute ...</code>, one of the most common errors in real code.</li>
+</ul>
+<pre><code class="language-text">a = None         a ──▶ ┌──────────────┐
+b = None         b ──▶ │ the ONE None │     ← every None in the program is this object
+                       └──────────────┘
+</code></pre>
+<h3 id="code-examples_9">Code examples</h3>
+<pre><code class="language-python">middle_name = None
+print(middle_name)            # None
+print(type(middle_name))      # &lt;class 'NoneType'&gt;
+print(middle_name is None)    # True
+</code></pre>
+<p><strong>Real-world:</strong> an optional discount that may not have been set.</p>
+<pre><code class="language-python">discount = None            # no discount chosen yet
+
+if discount is None:
+    print(&quot;No discount applied&quot;)
+else:
+    print(f&quot;Discount: {discount}%&quot;)
+</code></pre>
+<p><code>is None</code> matters here: a discount of <code>0</code> is a real value ("0% off") and must not be treated as missing.</p>
+<h3 id="common-mistakes_9">Common mistakes</h3>
+<pre><code class="language-python">discount = 0
+if not discount:
+    print(&quot;No discount set&quot;)     # ❌ prints, but 0 WAS set
+</code></pre>
+<p><strong>Fix:</strong> <code>if discount is None:</code> when you mean "missing."</p>
+<pre><code class="language-python">user = None
+print(user.upper())   # AttributeError: 'NoneType' object has no attribute 'upper'
+</code></pre>
+<p><strong>Fix:</strong> check for <code>None</code> before using a value that might be missing.</p>
+<ul>
+<li><strong><code>value == None</code></strong> works but isn't idiomatic. Write <code>value is None</code>.</li>
+</ul>
+<h3 id="debugging-examples_9">Debugging examples</h3>
+<p><strong>D1.</strong> A user who chose a score of <code>0</code> is told they haven't chosen one. Fix it.</p>
+<pre><code class="language-python">score = 0            # user picked 0
+if not score:
+    print(&quot;Please choose a score&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>0</code> is falsy. Represent "not chosen" with <code>None</code> and check <code>if score is None:</code>.</p>
+<p><strong>D2.</strong> Why does <code>name</code> end up as <code>None</code>?</p>
+<pre><code class="language-python">name = print(&quot;Asha&quot;)
+print(name.upper())
+</code></pre>
+<p><strong>Answer:</strong> <code>print()</code> returns <code>None</code>, so <code>name</code> is <code>None</code> and <code>.upper()</code> raises <code>AttributeError</code>. Assign the value itself: <code>name = "Asha"</code>.</p>
+<h3 id="practical-exercises_9">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>None == 0</code>, <code>None == False</code>, <code>bool(None)</code>, <code>None is None</code>.</p>
+<p><strong>Answer:</strong> <code>False</code>, <code>False</code>, <code>False</code>, <code>True</code>.</p>
+<p><strong>E2.</strong> Write a check that prints <code>"Guest"</code> when <code>nickname</code> is <code>None</code>, and the nickname otherwise (even if it's an empty string).</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">nickname = None
+print(&quot;Guest&quot; if nickname is None else nickname)
+</code></pre>
+<h3 id="interview-questions_9">Interview questions</h3>
+<p><strong>Q1. Why use <code>is None</code> instead of <code>== None</code>?</strong>
+<code>None</code> is a singleton, so identity is the precise test. <code>==</code> can be overridden by a class to return surprising results; <code>is</code> can't.</p>
+<p><strong>Q2. What does a function return if it has no <code>return</code> statement?</strong>
+<code>None</code>.</p>
+<h3 id="tricky-questions_9">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>print(None or 0 or "")</code>.</p>
+<p><strong>Answer:</strong> an empty line. <code>or</code> returns the first truthy operand; none are truthy, so it returns the last one, <code>""</code>.</p>
+<p><strong>T2.</strong> Is <code>[] == None</code>? Is <code>not []</code>?</p>
+<p><strong>Answer:</strong> <code>[] == None</code> is <code>False</code> (an empty list isn't <code>None</code>), but <code>not []</code> is <code>True</code> (empty lists are falsy). Falsy is not the same as <code>None</code>.</p>
+<hr />
+<h2 id="11-type-and-isinstance">11. type() and isinstance()</h2>
+<h3 id="beginner-explanation_10">Beginner explanation</h3>
+<p>Every object knows its type. <code>type(obj)</code> asks, "What kind of thing are you?" and returns the <strong>class</strong> it was made from. <code>isinstance(obj, SomeType)</code> asks, "Are you this kind of thing, or a more specific version of it?"</p>
+<p><strong>Why it exists:</strong> data from outside (user input, JSON, files, other people's code) may not be the type you expect, so you check before using it. It's also the first debugging step: "Why does this crash? Oh, it's a <code>str</code>, not an <code>int</code>."</p>
+<h3 id="internal-explanation_10">Internal explanation</h3>
+<ul>
+<li><code>type(obj)</code> simply follows the object's <strong>type pointer</strong> (section 1) and returns that class object.</li>
+<li>Types are objects too, and their type is <code>type</code>: <code>type(int)</code> → <code>&lt;class 'type'&gt;</code>.</li>
+<li><code>isinstance(obj, cls)</code> checks the object's class <strong>and all its parent classes</strong>. Python records that chain in <code>__mro__</code> ("method resolution order"):</li>
+</ul>
+<pre><code class="language-python">print(bool.__mro__)    # (&lt;class 'bool'&gt;, &lt;class 'int'&gt;, &lt;class 'object'&gt;)
+</code></pre>
+<p>So <code>isinstance(True, int)</code> is <code>True</code>, but <code>type(True) is int</code> is <code>False</code>.</p>
+<ul>
+<li><code>isinstance(x, (int, float))</code> checks several types at once.</li>
+<li>Professional habit: use <code>isinstance()</code> for checks; use <code>type()</code> mainly to print and debug.</li>
+</ul>
+<h3 id="code-examples_10">Code examples</h3>
+<pre><code class="language-python">print(type(42))              # &lt;class 'int'&gt;
+print(type(4.2))             # &lt;class 'float'&gt;
+print(type(&quot;42&quot;))            # &lt;class 'str'&gt;
+print(isinstance(42, int))   # True
+print(type(42).__name__)     # int → just the name, handy in messages
+</code></pre>
+<p><strong>Real-world:</strong> validating a value from a JSON request before doing maths (Pydantic automates this in Phase 52).</p>
+<pre><code class="language-python">data = {&quot;quantity&quot;: &quot;3&quot;}            # came from a client: is it really a number?
+
+quantity = data[&quot;quantity&quot;]
+if isinstance(quantity, int) and not isinstance(quantity, bool):
+    print(&quot;OK&quot;)
+else:
+    print(f&quot;Expected int, got {type(quantity).__name__}&quot;)   # Expected int, got str
+</code></pre>
+<h3 id="common-mistakes_10">Common mistakes</h3>
+<pre><code class="language-python">value = 5
+if type(value) == &quot;int&quot;:     # ❌ never true
+    print(&quot;integer&quot;)
+</code></pre>
+<p><strong>Why:</strong> <code>type()</code> returns a <strong>class</strong>, not the text <code>"int"</code>. Use <code>isinstance(value, int)</code>.</p>
+<pre><code class="language-python">is_admin = True
+print(isinstance(is_admin, int))    # True ← surprise
+</code></pre>
+<p><strong>Why:</strong> <code>bool</code> is a subclass of <code>int</code>. When <code>True</code> must not count as a number, add <code>not isinstance(x, bool)</code>.</p>
+<h3 id="debugging-examples_10">Debugging examples</h3>
+<p><strong>D1.</strong> A price-check function rejects every number. Fix it.</p>
+<pre><code class="language-python">def is_number(x):
+    return type(x) == &quot;float&quot; or type(x) == &quot;int&quot;
+
+print(is_number(9.99))     # False
+</code></pre>
+<p><strong>Answer:</strong> <code>type(x)</code> is a class object and never equals a string. Use <code>return isinstance(x, (int, float)) and not isinstance(x, bool)</code>.</p>
+<p><strong>D2.</strong> An API accepts <code>{"age": true}</code> from JSON as a valid age of <code>1</code>. Why did <code>isinstance(age, int)</code> let it through?</p>
+<p><strong>Answer:</strong> JSON <code>true</code> becomes Python <code>True</code>, and <code>bool</code> is a subclass of <code>int</code>. Reject bools explicitly: <code>isinstance(age, int) and not isinstance(age, bool)</code>.</p>
+<h3 id="practical-exercises_10">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>type(3 / 1)</code>, <code>type(3 // 1)</code>, <code>type(None)</code>, <code>type(type(1))</code>.</p>
+<p><strong>Answer:</strong> <code>&lt;class 'float'&gt;</code>, <code>&lt;class 'int'&gt;</code>, <code>&lt;class 'NoneType'&gt;</code>, <code>&lt;class 'type'&gt;</code>.</p>
+<p><strong>E2.</strong> Predict: <code>isinstance(True, int)</code>, <code>isinstance(3, float)</code>, <code>isinstance(3.0, (int, float))</code>.</p>
+<p><strong>Answer:</strong> <code>True</code>, <code>False</code>, <code>True</code>.</p>
+<h3 id="interview-questions_10">Interview questions</h3>
+<p><strong>Q1. Difference between <code>type(x) is int</code> and <code>isinstance(x, int)</code>?</strong>
+<code>type()</code> checks the exact class only. <code>isinstance()</code> also accepts subclasses, so it's the usual choice for checks; it returns <code>True</code> for <code>True</code> because <code>bool</code> subclasses <code>int</code>.</p>
+<p><strong>Q2. What is the type of a class?</strong>
+<code>type</code>. Classes are objects created by <code>type</code>; <code>type(int)</code> is <code>&lt;class 'type'&gt;</code>.</p>
+<h3 id="tricky-questions_10">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>type(True) is int</code>, <code>isinstance(True, int)</code>.</p>
+<p><strong>Answer:</strong> <code>False</code>, <code>True</code>. The exact type is <code>bool</code>, but <code>bool</code> is a subclass of <code>int</code>.</p>
+<p><strong>T2.</strong> Predict: <code>isinstance(int, type)</code>, <code>isinstance(type, object)</code>.</p>
+<p><strong>Answer:</strong> <code>True</code>, <code>True</code>. <code>int</code> is an instance of <code>type</code>, and everything, including <code>type</code>, is an <code>object</code>.</p>
+<hr />
+<h2 id="12-id">12. id()</h2>
+<h3 id="beginner-explanation_11">Beginner explanation</h3>
+<p><code>id(obj)</code> returns a number that <strong>uniquely identifies an object</strong> while it exists. Two objects alive at the same time never share an id.</p>
+<p><strong>Why it exists:</strong> it lets you check whether two names point at the <strong>same object</strong> or just at equal values. That's exactly what <code>is</code> tests. It's mainly a learning and debugging tool.</p>
+<h3 id="internal-explanation_11">Internal explanation</h3>
+<ul>
+<li>In CPython, <code>id(obj)</code> is the object's <strong>memory address</strong>.</li>
+<li><code>a is b</code> compares those addresses, so it's the same as <code>id(a) == id(b)</code>, only faster.</li>
+<li>An object's id never changes during its lifetime.</li>
+<li>When an object is destroyed, its memory, and therefore its id, <strong>can be reused</strong> by a new object. Only compare ids of objects that are alive at the same time.</li>
+<li>The numbers themselves are meaningless and differ on every run.</li>
+<li>Because CPython caches small ints (-5 to 256) and interns some strings, equal immutable values <strong>may or may not</strong> share an id. That's an implementation detail.</li>
+</ul>
+<pre><code class="language-text">a = [1, 2]          a ──▶ list @ 0x7f..10   [1, 2]
+b = a               b ──▶ (same address)              id(a) == id(b)  → True
+c = [1, 2]          c ──▶ list @ 0x7f..90   [1, 2]    id(a) == id(c)  → False
+</code></pre>
+<h3 id="code-examples_11">Code examples</h3>
+<pre><code class="language-python">a = [1, 2]
+b = a
+c = [1, 2]
+print(id(a) == id(b))    # True  → same object
+print(id(a) == id(c))    # False → equal value, different object
+</code></pre>
+<p><strong>Real-world:</strong> proving whether an operation changed your list in place or gave you a new one.</p>
+<pre><code class="language-python">scores = [70, 90, 80]
+before = id(scores)
+
+scores.sort()                       # sorts in place
+print(id(scores) == before)         # True → same list, modified
+
+ranked = sorted(scores)             # builds a new list
+print(id(ranked) == before)         # False → a different object
+</code></pre>
+<h3 id="common-mistakes_11">Common mistakes</h3>
+<pre><code class="language-python">a = 1000
+b = 1000
+print(a is b)      # True in a script, False when typed line by line in the REPL
+</code></pre>
+<p><strong>Why:</strong> whether equal immutable values share one object depends on how the code was compiled and on caching. Code that depends on it is buggy. Compare values with <code>==</code>.</p>
+<ul>
+<li><strong>Using <code>id()</code> as a permanent identifier.</strong> It's only valid while the object exists, within one run.</li>
+</ul>
+<h3 id="debugging-examples_11">Debugging examples</h3>
+<p><strong>D1.</strong> A developer logs <code>id()</code> values to "track a user record" across two program runs, and they never match. Why?</p>
+<p><strong>Answer:</strong> each run creates new objects at new addresses, and ids can be reused after objects die. Use a real identifier stored with the data, such as a database primary key.</p>
+<p><strong>D2.</strong> <code>id(n)</code> changes after <code>n += 1</code>. Did something go wrong?</p>
+<p><strong>Answer:</strong> no. <code>int</code> is immutable, so <code>n += 1</code> binds <code>n</code> to a different object (<code>6</code> instead of <code>5</code>). The id belongs to the object, not to the name.</p>
+<h3 id="practical-exercises_11">Practical exercises</h3>
+<p><strong>E1.</strong> After <code>x = [1]</code> and <code>y = x</code>, then <code>y = [1]</code>, are <code>id(x)</code> and <code>id(y)</code> equal?</p>
+<p><strong>Answer:</strong> no. <code>y = [1]</code> creates a new list and moves <code>y</code> to it; <code>x</code> still points at the original.</p>
+<p><strong>E2.</strong> Use <code>id()</code> to show that <code>text += "!"</code> creates a new string but <code>items += ["x"]</code> does not create a new list.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">text = &quot;hi&quot;
+before = id(text)
+text += &quot;!&quot;
+print(id(text) == before)    # False → new str object
+
+items = [&quot;a&quot;]
+before = id(items)
+items += [&quot;x&quot;]
+print(id(items) == before)   # True → same list, changed in place
+</code></pre>
+<h3 id="interview-questions_11">Interview questions</h3>
+<p><strong>Q1. What does <code>id()</code> return in CPython?</strong>
+The object's memory address: an integer unique among objects that exist at the same time.</p>
+<p><strong>Q2. How are <code>is</code> and <code>id()</code> related?</strong>
+<code>a is b</code> is equivalent to <code>id(a) == id(b)</code>.</p>
+<h3 id="tricky-questions_11">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>print(id([]) == id([]))</code>.</p>
+<p><strong>Answer:</strong> usually <code>True</code> in CPython. The first empty list is created, its id taken, and then it's destroyed immediately; the second list is often built at the same freed address. The two lists were never alive at the same time, so their ids can match. This is why ids must only be compared for live objects.</p>
+<p><strong>T2.</strong> Can two different objects ever have the same id?</p>
+<p><strong>Answer:</strong> not at the same time. One after the other, yes: the second can reuse the first one's memory.</p>
+<hr />
+<h2 id="13-type-conversion">13. Type conversion</h2>
+<h3 id="beginner-explanation_12">Beginner explanation</h3>
+<p><strong>Type conversion</strong> (casting) creates a <strong>new object of a different type</strong> from an existing value: the text <code>"42"</code> → the number <code>42</code>. The original object is never changed.</p>
+<p><strong>Why it exists:</strong> data arrives in the wrong type constantly. <code>input()</code>, files, URLs, environment variables and CSV cells are all text, but you need numbers for maths and strings for display. Python is strongly typed, so you convert <strong>explicitly</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Converts to</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int(x)</code></td>
+<td>whole number</td>
+<td><code>int("42")</code> → <code>42</code>; <code>int(3.9)</code> → <code>3</code> (truncates); <code>int("FF", 16)</code> → <code>255</code></td>
+</tr>
+<tr>
+<td><code>float(x)</code></td>
+<td>decimal number</td>
+<td><code>float("3.5")</code> → <code>3.5</code>; <code>float(5)</code> → <code>5.0</code></td>
+</tr>
+<tr>
+<td><code>str(x)</code></td>
+<td>text</td>
+<td><code>str(42)</code> → <code>"42"</code>; <code>str(None)</code> → <code>"None"</code></td>
+</tr>
+<tr>
+<td><code>bool(x)</code></td>
+<td>truthiness</td>
+<td><code>bool(0)</code> → <code>False</code>; <code>bool("0")</code> → <code>True</code></td>
+</tr>
+<tr>
+<td><code>list(x)</code>, <code>tuple(x)</code>, <code>set(x)</code></td>
+<td>collections</td>
+<td><code>list("abc")</code> → <code>['a', 'b', 'c']</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-explanation_12">Internal explanation</h3>
+<ul>
+<li><code>int</code>, <code>float</code>, <code>str</code> and the others are <strong>classes</strong>. Calling one, such as <code>int("42")</code>, builds a brand-new object of that class.</li>
+<li>Each class knows how to read certain inputs: <code>int()</code> parses digit text or asks a number for its integer part; <code>str()</code> asks the object for its text form (its <code>__str__</code> method, Phase 18).</li>
+<li><strong>Implicit</strong> conversion happens only between numbers, always toward the "wider" type: <code>int</code> → <code>float</code> → <code>complex</code> (<code>3 + 2.0</code> → <code>5.0</code>). Python never implicitly converts between text and numbers.</li>
+<li>Text that doesn't represent the target type raises <code>ValueError</code> (<code>int("abc")</code>, <code>int("")</code>); the wrong kind of object raises <code>TypeError</code> (<code>int(None)</code>).</li>
+</ul>
+<pre><code class="language-text">age_text = &quot;25&quot;        age_text ──▶ str &quot;25&quot;
+age = int(age_text)    age      ──▶ int 25       ← a NEW object; &quot;25&quot; still exists unchanged
+</code></pre>
+<h3 id="code-examples_12">Code examples</h3>
+<pre><code class="language-python">age_text = &quot;25&quot;
+age = int(age_text)
+print(age + 1)                # 26
+print(str(age) + &quot; years&quot;)    # 25 years
+print(3 + 2.0)                # 5.0 → implicit int → float
+</code></pre>
+<p><strong>Real-world:</strong> reading configuration from environment variables, which are always strings.</p>
+<pre><code class="language-python">import os
+
+port = int(os.environ.get(&quot;PORT&quot;, &quot;8000&quot;))                   # &quot;8000&quot; → 8000
+debug = os.environ.get(&quot;DEBUG&quot;, &quot;false&quot;).lower() == &quot;true&quot;   # text → bool, done safely
+timeout = float(os.environ.get(&quot;TIMEOUT&quot;, &quot;2.5&quot;))
+print(port, debug, timeout)                                  # 8000 False 2.5
+</code></pre>
+<h3 id="common-mistakes_12">Common mistakes</h3>
+<pre><code class="language-python">int(&quot;3.5&quot;)       # ValueError: invalid literal for int() with base 10: '3.5'
+int(&quot;&quot;)          # ValueError: invalid literal for int() with base 10: ''
+float(&quot;abc&quot;)     # ValueError: could not convert string to float: 'abc'
+int(None)        # TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+</code></pre>
+<p><strong>Why:</strong> conversion only works when the value really represents the target type. Validate input and handle errors with <code>try/except</code> (Phase 12).</p>
+<pre><code class="language-python">bool(&quot;False&quot;)    # True!
+</code></pre>
+<p><strong>Why:</strong> <code>bool()</code> checks emptiness, not meaning.</p>
+<ul>
+<li><strong>Forgetting to keep the result:</strong> <code>int(age_text)</code> on its own line converts and throws the result away. Assign it.</li>
+</ul>
+<h3 id="debugging-examples_12">Debugging examples</h3>
+<p><strong>D1.</strong> The total prints <code>102030</code> instead of <code>60</code>. Fix it.</p>
+<pre><code class="language-python">a = input(&quot;Score 1: &quot;)    # 10
+b = input(&quot;Score 2: &quot;)    # 20
+c = input(&quot;Score 3: &quot;)    # 30
+total = a + b + c
+print(total)
+</code></pre>
+<p><strong>Answer:</strong> the inputs are strings, so <code>+</code> joins them. Convert first: <code>a = int(input("Score 1: "))</code> and so on → <code>60</code>.</p>
+<p><strong>D2.</strong> A CSV import crashes on some rows with <code>ValueError: invalid literal for int() with base 10: ''</code>. What's in those rows, and what should the code do?</p>
+<p><strong>Answer:</strong> the cell is <strong>empty</strong> (<code>""</code>), and <code>int("")</code> can't produce a number. Decide what an empty cell means: treat it as missing (<code>None</code>), use a default, or report the row. Check with <code>if cell.strip() == "":</code> before converting.</p>
+<h3 id="practical-exercises_12">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>int(" 7 ")</code>, <code>int(-2.7)</code>, <code>float("1e3")</code>, <code>str(1/2)</code>, <code>int(True)</code>, <code>bool("0")</code>.</p>
+<p><strong>Answer:</strong> <code>7</code>, <code>-2</code>, <code>1000.0</code>, <code>"0.5"</code>, <code>1</code>, <code>True</code>.</p>
+<p><strong>E2.</strong> Convert the CSV row <code>"Asha,29,55.5"</code> into a name (str), an age (int) and a weight (float).</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">row = &quot;Asha,29,55.5&quot;
+name, age_text, weight_text = row.split(&quot;,&quot;)
+age = int(age_text)
+weight = float(weight_text)
+print(name, age, weight)       # Asha 29 55.5
+</code></pre>
+<h3 id="interview-questions_12">Interview questions</h3>
+<p><strong>Q1. Does <code>int("42")</code> change the string?</strong>
+No. It creates a new <code>int</code> object. Strings are immutable, and conversion always produces a new object.</p>
+<p><strong>Q2. When does Python convert types implicitly?</strong>
+Only between numeric types, widening <code>int</code> → <code>float</code> → <code>complex</code> in arithmetic. Never between strings and numbers.</p>
+<h3 id="tricky-questions_12">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>int("0x1F", 16)</code>, <code>int("1_000")</code>, <code>float("  -0.5\n")</code>.</p>
+<p><strong>Answer:</strong> <code>31</code> (a <code>0x</code> prefix is allowed with base 16), <code>1000</code> (underscores are allowed in numeric text too), <code>-0.5</code> (surrounding whitespace is ignored).</p>
+<p><strong>T2.</strong> Predict: <code>str(None) == "None"</code> and <code>bool(str(None))</code>.</p>
+<p><strong>Answer:</strong> <code>True</code> and <code>True</code>. <code>str(None)</code> is the 4-letter text <code>"None"</code>, which is a non-empty, truthy string, not the <code>None</code> object.</p>
+<hr />
+<h2 id="14-mutable-vs-immutable-objects">14. Mutable vs immutable objects</h2>
+<h3 id="beginner-explanation_13">Beginner explanation</h3>
+<ul>
+<li>An <strong>immutable</strong> object's value can <strong>never change</strong> after it's created. Any "change" makes a <strong>new</strong> object.</li>
+<li>A <strong>mutable</strong> object's value <strong>can change in place</strong>. It stays the same object (same id) while its contents change.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Immutable</th>
+<th>Mutable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code>, <code>float</code>, <code>complex</code>, <code>bool</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bytes</code>, <code>None</code></td>
+<td><code>list</code>, <code>dict</code>, <code>set</code>, <code>bytearray</code>, most objects of your own classes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why it exists:</strong></p>
+<ul>
+<li><strong>Immutable</strong> objects are safe to share: nobody can change them behind your back. They can be <strong>hashed</strong>, so they can be dictionary keys and set members.</li>
+<li><strong>Mutable</strong> objects are efficient for data that grows and changes (a cart, a cache) without copying everything each time.</li>
+</ul>
+<h3 id="internal-explanation_13">Internal explanation</h3>
+<p><strong>Immutable: "changing" means re-binding to a new object.</strong></p>
+<pre><code class="language-python">a = 10
+b = a
+a = a + 5
+</code></pre>
+<pre><code class="language-text">before:   a ──▶ int 10 ◀── b
+after:    a ──▶ int 15          int 10 ◀── b      ← 10 never changed; a moved
+</code></pre>
+<p><strong>Mutable: changing means the shared object itself changes.</strong></p>
+<pre><code class="language-python">a = [10]
+b = a
+a.append(15)
+</code></pre>
+<pre><code class="language-text">before:   a ──▶ list [10] ◀── b
+after:    a ──▶ list [10, 15] ◀── b               ← one object, both names see it
+</code></pre>
+<ul>
+<li><code>+=</code> uses an in-place method (<code>__iadd__</code>) <strong>when the type has one</strong>. Lists do, so <code>x += [1]</code> mutates the list. Ints, strings and tuples don't, so <code>+=</code> builds a new object.</li>
+<li><strong>Hashing:</strong> a dict finds keys by their hash. If a key could change, its hash would change and the dict would lose it. That's why only hashable (generally immutable) objects can be keys: <code>{[1]: "x"}</code> fails.</li>
+<li>A tuple is immutable, but it holds <strong>references</strong>. If one of them points at a list, that list can still change.</li>
+</ul>
+<pre><code class="language-text">point = (1, [2])
+
+point ──▶ tuple (  ref 0  ,  ref 1  )
+                     │          │
+                     ▼          ▼
+                   int 1     list [2]    ← the tuple can't change WHICH objects it holds,
+                                           but this list is still mutable
+</code></pre>
+<h3 id="code-examples_13">Code examples</h3>
+<pre><code class="language-python">name = &quot;asha&quot;
+name_id = id(name)
+name = name.title()              # new string object
+print(id(name) == name_id)       # False
+
+cart = [&quot;pen&quot;]
+cart_id = id(cart)
+cart.append(&quot;bag&quot;)               # same list, changed in place
+print(id(cart) == cart_id)       # True
+</code></pre>
+<p><strong>Real-world:</strong> a shared "default" list leaking between users.</p>
+<pre><code class="language-python">default_tags = [&quot;new&quot;]
+user_a_tags = default_tags          # shares the SAME list
+user_b_tags = default_tags.copy()   # gets its own copy
+
+user_a_tags.append(&quot;vip&quot;)
+print(default_tags)    # ['new', 'vip'] ← the shared default was changed!
+print(user_b_tags)     # ['new']        ← safe, because it was copied
+</code></pre>
+<pre><code class="language-python">locations = {(19.07, 72.87): &quot;Mumbai&quot;}   # tuple (immutable) works as a dict key
+</code></pre>
+<h3 id="common-mistakes_13">Common mistakes</h3>
+<pre><code class="language-python">locations = {[19.07, 72.87]: &quot;Mumbai&quot;}   # TypeError: unhashable type: 'list'
+</code></pre>
+<p><strong>Why:</strong> list keys could change. Use a tuple.</p>
+<pre><code class="language-python">point = (1, [2])
+point[1].append(3)
+print(point)       # (1, [2, 3])  ← the &quot;immutable&quot; tuple's contents changed
+</code></pre>
+<p><strong>Why:</strong> the tuple holds a reference to a mutable list.</p>
+<ul>
+<li><strong>Assuming <code>b = a</code> gives an independent copy of a list or dict.</strong> It doesn't; use <code>.copy()</code>.</li>
+</ul>
+<h3 id="debugging-examples_13">Debugging examples</h3>
+<p><strong>D1.</strong> Every new order contains items from earlier orders. Fix it.</p>
+<pre><code class="language-python">empty_order = []
+order_1 = empty_order
+order_1.append(&quot;pen&quot;)
+order_2 = empty_order
+print(order_2)            # ['pen'] ← should be empty
+</code></pre>
+<p><strong>Answer:</strong> both orders are names for the one list <code>empty_order</code>. Create a new list for each: <code>order_1 = []</code>, <code>order_2 = []</code>.</p>
+<p><strong>D2.</strong> A grid built with <code>*</code> changes a whole column when you set one cell. Why?</p>
+<pre><code class="language-python">grid = [[0] * 3] * 3
+grid[0][0] = 1
+print(grid)        # [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
+</code></pre>
+<p><strong>Answer:</strong> <code>[row] * 3</code> repeats the <strong>reference</strong> to one inner list three times, so all three rows are the same object. Build separate rows: <code>grid = [[0] * 3 for _ in range(3)]</code> (comprehensions, Phase 8).</p>
+<h3 id="practical-exercises_13">Practical exercises</h3>
+<p><strong>E1.</strong> Sort into mutable and immutable: <code>42</code>, <code>"hi"</code>, <code>[1, 2]</code>, <code>(1, 2)</code>, <code>{"a": 1}</code>, <code>{1, 2}</code>, <code>None</code>, <code>3.5</code>.</p>
+<p><strong>Answer:</strong> immutable: <code>42</code>, <code>"hi"</code>, <code>(1, 2)</code>, <code>None</code>, <code>3.5</code>. Mutable: <code>[1, 2]</code>, <code>{"a": 1}</code>, <code>{1, 2}</code>.</p>
+<p><strong>E2.</strong> Predict the output.</p>
+<pre><code class="language-python">a = &quot;hi&quot;
+b = a
+a += &quot;!&quot;
+x = [1]
+y = x
+x += [2]
+print(b, y)
+</code></pre>
+<p><strong>Answer:</strong> <code>hi [1, 2]</code>. <code>a += "!"</code> made a new string, so <code>b</code> keeps <code>"hi"</code>. <code>x += [2]</code> changed the shared list in place.</p>
+<h3 id="interview-questions_13">Interview questions</h3>
+<p><strong>Q1. Why can't a list be a dictionary key?</strong>
+Dict keys must be hashable, and a list's contents (and so its hash) could change after insertion, which would break lookups. Use a tuple.</p>
+<p><strong>Q2. Is a tuple always fully immutable?</strong>
+The tuple itself is: you can't add, remove or replace its items. But if an item is a mutable object, like a list, that object can still change.</p>
+<h3 id="tricky-questions_13">Tricky questions</h3>
+<p><strong>T1.</strong> Predict what happens.</p>
+<pre><code class="language-python">t = (1, [2])
+t[1] += [3]
+</code></pre>
+<p><strong>Answer:</strong> it raises <code>TypeError: 'tuple' object does not support item assignment</code>, <strong>and</strong> <code>t</code> is now <code>(1, [2, 3])</code>. <code>+=</code> first extends the list in place (that succeeds), then tries to store the result back into the tuple (that fails). Both steps happen.</p>
+<p><strong>T2.</strong> Predict: <code>x = (1, 2); y = x; x += (3,); print(y)</code>.</p>
+<p><strong>Answer:</strong> <code>(1, 2)</code>. Tuples have no in-place <code>+=</code>, so a new tuple is built and only <code>x</code> is re-bound.</p>
+<hr />
+<h2 id="15-equality-vs-identity-vs-is">15. Equality vs identity (== vs is)</h2>
+<h3 id="beginner-explanation_14">Beginner explanation</h3>
+<p>There are two different questions you can ask about two objects:</p>
+<ul>
+<li><strong>Equality, <code>==</code>:</strong> "Do they have the <strong>same value</strong>?" Two separate ₹500 notes are equal.</li>
+<li><strong>Identity, <code>is</code>:</strong> "Are they the <strong>same object</strong>?" Is this <em>the exact same</em> note?</li>
+</ul>
+<p><strong>Why it exists:</strong> sometimes you care about content (do these two carts contain the same items?), and sometimes about the object itself (is this the one and only <code>None</code>?). Python gives each question its own operator.</p>
+<p><strong>Rule:</strong> use <code>==</code> for values. Use <code>is</code> only for singletons such as <code>None</code>.</p>
+<h3 id="internal-explanation_14">Internal explanation</h3>
+<ul>
+<li><code>a == b</code> asks the objects to compare themselves (their <code>__eq__</code> method, Phase 18). Each type decides what "equal" means, and different types can be equal: <code>5 == 5.0</code> and <code>1 == True</code> are both <code>True</code>.</li>
+<li><code>a is b</code> compares identities: in CPython, whether both names hold the <strong>same memory address</strong>. It can't be customised and is very fast.</li>
+<li>Python warns when you use <code>is</code> with a literal: <code>SyntaxWarning: "is" with 'int' literal. Did you mean "=="?</code></li>
+</ul>
+<pre><code class="language-text">a = [1, 2, 3]       a ──▶ ┌──────────────┐
+c = a               c ──▶ │ list [1,2,3] │      a is c  → True    a == c → True
+                          └──────────────┘
+b = [1, 2, 3]       b ──▶ ┌──────────────┐
+                          │ list [1,2,3] │      a is b  → False   a == b → True
+                          └──────────────┘
+</code></pre>
+<h3 id="code-examples_14">Code examples</h3>
+<pre><code class="language-python">a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+print(a == b)    # True  → same value
+print(a is b)    # False → two different list objects
+print(a is c)    # True  → c is another name for a
+</code></pre>
+<p><strong>Real-world:</strong> compare data by value, check optional fields by identity.</p>
+<pre><code class="language-python">stored_hash = &quot;5f4dcc3b&quot;
+submitted_hash = &quot;5f4dcc3b&quot;          # e.g. computed from what the user typed
+print(submitted_hash == stored_hash)  # True → compare VALUES
+
+nickname = None
+if nickname is None:                  # identity check for the None singleton
+    nickname = &quot;Guest&quot;
+print(nickname)                       # Guest
+</code></pre>
+<h3 id="common-mistakes_14">Common mistakes</h3>
+<pre><code class="language-python">answer = input(&quot;Continue? &quot;)      # user types yes
+if answer is &quot;yes&quot;:               # ❌ SyntaxWarning, and may be False
+    print(&quot;Continuing&quot;)
+</code></pre>
+<p><strong>Why:</strong> the typed text is a new string object, so it's usually not the <em>same object</em> as the literal <code>"yes"</code>. Use <code>==</code>.</p>
+<pre><code class="language-python">if value == None:     # works, but not idiomatic
+</code></pre>
+<p><strong>Fix:</strong> <code>if value is None:</code>.</p>
+<h3 id="debugging-examples_14">Debugging examples</h3>
+<p><strong>D1.</strong> This check passes in quick tests but fails in production. Fix it.</p>
+<pre><code class="language-python">MAX = 1000
+count = int(&quot;1000&quot;)          # value read from a file
+if count is MAX:
+    print(&quot;Limit reached&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>int("1000")</code> creates a new object at runtime, which isn't the same object as <code>MAX</code> (CPython only caches -5 to 256). Use <code>if count == MAX:</code>.</p>
+<p><strong>D2.</strong> A "has the cart changed?" check always says it changed, even when the items are the same. Why?</p>
+<pre><code class="language-python">saved_cart = [&quot;pen&quot;, &quot;bag&quot;]
+current_cart = [&quot;pen&quot;, &quot;bag&quot;]       # rebuilt from the database
+if current_cart is not saved_cart:
+    print(&quot;Cart changed&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>is not</code> asks whether they're different <strong>objects</strong>, and they always are. The question is about contents, so use <code>if current_cart != saved_cart:</code>.</p>
+<h3 id="practical-exercises_14">Practical exercises</h3>
+<p><strong>E1.</strong> Predict: <code>[1] == [1]</code>, <code>[1] is [1]</code>, <code>5 == 5.0</code>, <code>1 == True</code>, <code>"1" == 1</code>, <code>None is None</code>.</p>
+<p><strong>Answer:</strong> <code>True</code>, <code>False</code>, <code>True</code>, <code>True</code>, <code>False</code>, <code>True</code>.</p>
+<p><strong>E2.</strong> Which operator for each? (a) is the response <code>None</code>? (b) are two carts identical in content? (c) did <code>sort()</code> modify my original list or give me a new one?</p>
+<p><strong>Answer:</strong> (a) <code>is</code>, (b) <code>==</code>, (c) <code>is</code> (or compare <code>id()</code>), because you're asking about the object itself.</p>
+<h3 id="interview-questions_14">Interview questions</h3>
+<p><strong>Q1. What's the difference between <code>==</code> and <code>is</code>?</strong>
+<code>==</code> compares values, using the type's <code>__eq__</code>. <code>is</code> compares identity: whether both names refer to the same object.</p>
+<p><strong>Q2. When should you use <code>is</code>?</strong>
+For singletons, mainly <code>None</code> (<code>x is None</code>). Never for comparing numbers or strings.</p>
+<h3 id="tricky-questions_14">Tricky questions</h3>
+<p><strong>T1.</strong> Predict: <code>print({1, 1.0, True})</code>.</p>
+<p><strong>Answer:</strong> <code>{1}</code>. <code>1 == 1.0 == True</code> and all three have the same hash, so a set treats them as one element and keeps the first one added.</p>
+<p><strong>T2.</strong> Predict the output.</p>
+<pre><code class="language-python">a = 256
+b = 256
+c = int(&quot;257&quot;)
+d = int(&quot;257&quot;)
+print(a is b, c is d, c == d)
+</code></pre>
+<p><strong>Answer:</strong> <code>True False True</code> in CPython. 256 comes from the small-int cache; the two 257s are created separately at runtime. Only <code>==</code> gives an answer you can rely on.</p>
+</main>
+</div>
+<script>
+(function () {
+  var toc = document.getElementById("toc");
+  document.getElementById("menuBtn").addEventListener("click", function () { toc.classList.toggle("open"); });
+  toc.addEventListener("click", function (e) { if (e.target.closest("a")) toc.classList.remove("open"); });
+
+  document.querySelectorAll("main table").forEach(function (t) {
+    var w = document.createElement("div"); w.className = "table-wrap";
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+
+  document.querySelectorAll("main pre").forEach(function (pre) {
+    var code = pre.querySelector("code");
+    var m = code && code.className.match(/language-(\w+)/);
+    var raw = code.textContent;
+    if (m && (m[1] === "python" || m[1] === "bash")) {
+      // dim trailing "# comments" that are not inside quotes
+      code.innerHTML = code.innerHTML.split("\n").map(function (line) {
+        var q = null;
+        for (var i = 0; i < line.length; i++) {
+          var c = line[i];
+          if (q) { if (c === q) q = null; }
+          else if (c === '"' || c === "'") q = c;
+          else if (c === "#" && (i === 0 || /\s/.test(line[i - 1]))) {
+            return line.slice(0, i) + '<span class="cmt">' + line.slice(i) + "</span>";
+          }
+        }
+        return line;
+      }).join("\n");
+    }
+    if (m) { var l = document.createElement("span"); l.className = "lang"; l.textContent = m[1]; pre.appendChild(l); }
+    var b = document.createElement("button"); b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function ok() { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      if (navigator.clipboard) navigator.clipboard.writeText(raw).then(ok, function () {});
+    });
+    pre.appendChild(b);
+  });
+
+  var links = Array.prototype.slice.call(toc.querySelectorAll("a"));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); });
+  window.addEventListener("scroll", function () {
+    var idx = 0;
+    heads.forEach(function (h, i) { if (h && h.getBoundingClientRect().top < 120) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle("active", i === idx); });
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

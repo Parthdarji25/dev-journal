@@ -3,7 +3,8 @@
   "description": "",
   "order": [
     "python-basic-to-advanced-complete-mastery-roadmap.html",
-    "phase-01-python-environment-and-first-programs.html"
+    "phase-01-python-environment-and-first-programs.html",
+    "phase-02-variables-and-data-types.html"
   ],
   "html": {
     "python-basic-to-advanced-complete-mastery-roadmap.html": {
@@ -38,6 +39,23 @@
         "indentation",
         "print",
         "input"
+      ],
+      "updated": "2026-10-15"
+    },
+    "phase-02-variables-and-data-types.html": {
+      "title": "Phase 02 — Variables & Data Types.",
+      "description": "Variables & Data Types: objects, variables as references, assignment, dynamic typing, int, float, complex, bool, str, None, type(), id(), type conversion, mutable vs immutable objects, and == vs is.",
+      "tags": [
+        "python",
+        "phase-02",
+        "python-foundations",
+        "variables",
+        "objects",
+        "references",
+        "memory-model",
+        "data-types",
+        "mutability",
+        "identity"
       ],
       "updated": "2026-10-15"
     }
