@@ -74,7 +74,6 @@ main { min-width:0; padding:32px 0 80px; }
 .copy { background:var(--accent); color:var(--accent-ink); border:0; border-radius:8px; padding:6px 12px; font:600 12.5px Inter, sans-serif; cursor:pointer; text-transform:none; letter-spacing:0; }
 .copy.ok { background:#e9f5f1; color:#0f6b5c; }
 .prompt pre { margin:0; padding:14px 16px; color:var(--code-ink); font:13.5px/1.6 "JetBrains Mono", ui-monospace, monospace; white-space:pre-wrap; word-break:break-word; max-height:340px; overflow:auto; }
-.opt { display:flex; gap:8px; align-items:center; font-size:14px; margin-top:12px; }
 .final pre { max-height:none; }
 .standard { columns:2; column-gap:28px; }
 .standard li { break-inside:avoid; margin-bottom:4px; }
@@ -159,14 +158,6 @@ main { min-width:0; padding:32px 0 80px; }
 <div class="panel">
   <h2>Track legend</h2>
   <div class="legend"><span class="tag t-python">Python</span><span class="tag t-dsa">DSA</span><span class="tag t-backend">Backend</span><span class="tag t-devops">DevOps</span><span class="tag t-ai">AI</span><span class="tag t-capstone">Mastery</span></div>
-  <label class="opt"><input type="checkbox" id="rulesOpt" checked> Add session rules to every copied prompt</label>
-  <details style="margin-top:8px"><summary style="cursor:pointer;font-size:14px;font-weight:600">See the session rules</summary><pre style="white-space:pre-wrap;font:13px/1.55 'JetBrains Mono',monospace;color:var(--muted);margin:8px 0 0">Before we start this phase, follow these rules for the whole session:
-- Teach one concept at a time and check my understanding before moving on.
-- Never give exercise solutions until I have attempted them.
-- When I submit code, review correctness, edge cases, readability, complexity, and tests.
-- Use modern, current Python (3.12+) and current library versions.
-- At the end of the phase, give me a short quiz and a mini-project to push to GitHub.
-- If I seem stuck, give hints before answers.</pre></details>
 </div>
 </div>
 
@@ -186,29 +177,29 @@ main { min-width:0; padding:32px 0 80px; }
     <pre>Teach me Python from absolute beginner level.
 Start by explaining what Python is, why it was created, where it is used, how Python code executes, what the Python interpreter does, and what happens when I run a .py file.
 Then teach me:
-- Python installation
-- Python versions
-- CPython
-- REPL
-- .py files
-- terminal execution
-- indentation
-- comments
-- statements
-- expressions
-- print()
-- input()
+Python installation
+Python versions
+CPython
+REPL
+.py files
+terminal execution
+indentation
+comments
+statements
+expressions
+print()
+input()
 For every concept:
-1. Explain it from first principles.
-2. Explain why it exists.
-3. Explain how it works.
-4. Give simple examples.
-5. Give real-world examples.
-6. Show correct code.
-7. Show incorrect code and explain why it fails.
-8. Give me exercises.
-9. Give me debugging problems.
-10. Ask me questions before moving forward.
+Explain it from first principles.
+Explain why it exists.
+Explain how it works.
+Give simple examples.
+Give real-world examples.
+Show correct code.
+Show incorrect code and explain why it fails.
+Give me exercises.
+Give me debugging problems.
+Ask me questions before moving forward.
 Do not give exercise solutions until I attempt them.
 Teach me like a beginner, but maintain professional coding standards from the beginning.</pre>
   </div>
@@ -226,25 +217,25 @@ Teach me like a beginner, but maintain professional coding standards from the be
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python variables and data types deeply.
 Explain:
-- What a variable actually is in Python
-- What an object is
-- What a reference is
-- How assignment works
-- Dynamic typing
-- Python&#x27;s object model
-- Primitive-looking types
-- None
-- Mutable vs immutable objects
-- == vs is
+What a variable actually is in Python
+What an object is
+What a reference is
+How assignment works
+Dynamic typing
+Python&#x27;s object model
+Primitive-looking types
+None
+Mutable vs immutable objects
+== vs is
 For every concept provide:
-- Beginner explanation
-- Internal explanation
-- Code examples
-- Common mistakes
-- Debugging examples
-- Practical exercises
-- Interview questions
-- Tricky questions designed to expose misunderstandings
+Beginner explanation
+Internal explanation
+Code examples
+Common mistakes
+Debugging examples
+Practical exercises
+Interview questions
+Tricky questions designed to expose misunderstandings
 Include memory/reference examples such as:
 a = 10
 b = a
@@ -266,14 +257,17 @@ Do not move to the next concept until I demonstrate understanding.</pre>
     <pre>Teach me Python operators from beginner to advanced.
 Cover every operator category with examples.
 Explain:
-- How operators work
-- Operator precedence
-- Evaluation order
-- Short-circuit behavior
-- Truthiness
-- and, or, not
-- is, in
-- Bitwise operations
+How operators work
+Operator precedence
+Evaluation order
+Short-circuit behavior
+Truthiness
+and
+or
+not
+is
+in
+Bitwise operations
 Give me increasingly difficult coding problems.
 Include tricky expressions where I must predict the output before running the code.
 Give debugging exercises and interview questions.</pre>
@@ -292,20 +286,24 @@ Give debugging exercises and interview questions.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python strings from beginner to advanced developer level.
 Cover:
-- String internals
-- Immutability
-- Indexing and slicing
-- String methods
-- f-strings and formatting
-- Unicode, encoding, decoding
-- Text normalization
-- Efficient string processing
+String internals
+Immutability
+indexing
+slicing
+string methods
+f-strings
+formatting
+Unicode
+encoding
+decoding
+text normalization
+efficient string processing
 Give me at least 20 progressively difficult string problems.
 Include:
-- interview problems
-- debugging problems
-- real-world text-processing tasks
-- performance considerations
+interview problems
+debugging problems
+real-world text-processing tasks
+performance considerations
 Do not provide solutions before I attempt each problem.</pre>
   </div>
 </article>
@@ -323,19 +321,20 @@ Do not provide solutions before I attempt each problem.</pre>
     <pre>Teach me Python lists from beginner to advanced.
 Explain both usage and internal behavior.
 Cover:
-- list operations
-- slicing
-- copying and shallow copies
-- nested lists
-- comprehensions
-- sorting
-- time complexity
-- memory behavior
+list operations
+slicing
+copying
+shallow copies
+nested lists
+comprehensions
+sorting
+time complexity
+memory behavior
 Give me:
-- 20 coding exercises
-- 10 debugging exercises
-- 10 interview questions
-- 5 real-world problems
+20 coding exercises
+10 debugging exercises
+10 interview questions
+5 real-world problems
 Make the difficulty progressively harder.</pre>
   </div>
 </article>
@@ -352,15 +351,19 @@ Make the difficulty progressively harder.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me tuples, sets, and dictionaries deeply.
 Explain:
-- What each data structure is
-- How it works internally
-- Why it exists
-- When to use it
-- When not to use it
-- Performance characteristics
-- Memory considerations
+What each data structure is
+How it works internally
+Why it exists
+When to use it
+When not to use it
+Performance characteristics
+Memory considerations
 Explain hashing and hash tables clearly.
-Then give me scenarios where I must decide between list, tuple, set, and dictionary.
+Then give me scenarios where I must decide between:
+list
+tuple
+set
+dictionary
 Give me difficult coding problems and interview questions.</pre>
   </div>
 </article>
@@ -379,12 +382,15 @@ Give me difficult coding problems and interview questions.</pre>
 Explain how Python evaluates conditions and loops.
 Cover every control-flow construct with examples.
 Then give me progressively harder problems involving:
-- conditions
-- loops and nested loops
-- pattern generation
-- searching, counting, filtering
-- validation
-- simulations
+conditions
+loops
+nested loops
+pattern generation
+searching
+counting
+filtering
+validation
+simulations
 Include debugging problems where the loop contains subtle bugs.</pre>
   </div>
 </article>
@@ -402,14 +408,17 @@ Include debugging problems where the loop contains subtle bugs.</pre>
     <pre>Teach me Python comprehensions deeply.
 Start from normal loops and transform them into comprehensions.
 Explain:
-- syntax
-- execution
-- conditions
-- nested comprehensions
-- readability
-- performance
-- common mistakes
-Give me exercises where I must convert loop → comprehension and comprehension → loop.
+syntax
+execution
+conditions
+nested comprehensions
+readability
+performance
+common mistakes
+Give me exercises where I must convert between:
+loop → comprehension
+and
+comprehension → loop.
 Include difficult interview questions.</pre>
   </div>
 </article>
@@ -426,13 +435,18 @@ Include difficult interview questions.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python functions from beginner to advanced level.
 Explain:
-- How functions work
-- Parameters vs arguments
-- positional, keyword, and default arguments
-- *args and **kwargs
-- scope and LEGB
-- return behavior
-- annotations and docstrings
+How functions work
+Parameters vs arguments
+positional arguments
+keyword arguments
+default arguments
+*args
+**kwargs
+scope
+LEGB
+return behavior
+annotations
+docstrings
 Then teach me how to design clean reusable functions.
 Give me progressively harder coding exercises and debugging problems.</pre>
   </div>
@@ -451,11 +465,11 @@ Give me progressively harder coding exercises and debugging problems.</pre>
     <pre>Teach me Python scope and name resolution deeply.
 Explain the LEGB rule from first principles.
 Use progressively difficult examples involving:
-- nested functions
-- closures
-- global variables
-- nonlocal variables
-- shadowing
+nested functions
+closures
+global variables
+nonlocal variables
+shadowing
 Give me output-prediction questions where I must determine which variable Python uses.
 Include debugging problems and interview questions.</pre>
   </div>
@@ -473,8 +487,21 @@ Include debugging problems and interview questions.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me recursion from beginner to advanced.
 Explain recursion visually using stack frames.
-Teach base cases, recursive cases, the call stack, recursion depth, tree recursion, and backtracking.
-Give me problems such as factorial, Fibonacci, tree traversal, permutations, combinations, maze solving, and backtracking.
+Teach:
+base cases
+recursive cases
+call stack
+recursion depth
+tree recursion
+backtracking
+Give me problems such as:
+factorial
+Fibonacci
+tree traversal
+permutations
+combinations
+maze solving
+backtracking
 Then compare recursive and iterative solutions.</pre>
   </div>
 </article>
@@ -490,8 +517,20 @@ Then compare recursive and iterative solutions.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python exception handling professionally.
-Explain the difference between syntax errors, runtime errors, exceptions, and logical errors.
-Teach try, except, else, finally, raise, custom exceptions, the exception hierarchy, and exception chaining.
+Explain the difference between:
+syntax errors
+runtime errors
+exceptions
+logical errors
+Teach:
+try
+except
+else
+finally
+raise
+custom exceptions
+exception hierarchy
+exception chaining
 Show bad exception handling and refactor it into production-quality code.
 Give me debugging exercises.</pre>
   </div>
@@ -508,8 +547,21 @@ Give me debugging exercises.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python file handling deeply.
-Cover opening files, reading, writing, appending, encoding, binary files, pathlib, context managers, and large-file processing.
-Give me real-world tasks such as log processing, CSV processing, configuration files, text analysis, and large file processing.
+Cover:
+opening files
+reading
+writing
+appending
+encoding
+binary files
+context managers
+large-file processing
+Give me real-world tasks such as:
+log processing
+CSV processing
+configuration files
+text analysis
+large file processing
 Include error-handling and performance considerations.</pre>
   </div>
 </article>
@@ -525,7 +577,14 @@ Include error-handling and performance considerations.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python data serialization.
-Deeply explain JSON, CSV, serialization, deserialization, nested structures, validation, and transformation.
+Deeply explain:
+JSON
+CSV
+serialization
+deserialization
+nested structures
+validation
+transformation
 Give me real-world API and data-processing exercises.
 Include malformed-data debugging problems.</pre>
   </div>
@@ -542,8 +601,15 @@ Include malformed-data debugging problems.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python modules and imports deeply.
-Explain exactly what happens when Python executes: import module
-Cover module loading, import paths, namespaces, __name__, __main__, and circular imports.
+Explain exactly what happens when Python executes:
+import module
+Cover:
+module loading
+import paths
+namespaces
+__name__
+__main__
+circular imports
 Give me exercises where I build multi-file applications.</pre>
   </div>
 </article>
@@ -559,8 +625,15 @@ Give me exercises where I build multi-file applications.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me professional Python project setup.
-Show me how to create a Python project from scratch using a modern project structure.
-Explain virtual environments, pip, modern tools like uv, dependencies, version pinning, pyproject.toml, package structure, and development dependencies.
+Show me how to create a Python project from scratch using modern project structure.
+Explain:
+virtual environments
+pip
+dependencies
+version pinning
+pyproject.toml
+package structure
+development dependencies
 Then make me create a reusable Python package.</pre>
   </div>
 </article>
@@ -576,10 +649,26 @@ Then make me create a reusable Python package.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python OOP from beginner to advanced.
-Explain classes, objects, instance attributes, methods, constructors, class methods, static methods, inheritance, polymorphism, abstraction, and composition.
+Explain:
+classes
+objects
+instance attributes
+methods
+constructors
+class methods
+static methods
+inheritance
+polymorphism
+abstraction
+composition
 Do not teach OOP as syntax only.
 Explain when OOP should and should not be used.
-Give me real-world designs such as a banking system, ecommerce system, notification system, payment system, and library system.
+Give me real-world designs such as:
+banking system
+ecommerce system
+notification system
+payment system
+library system
 Give me progressively harder OOP design problems.</pre>
   </div>
 </article>
@@ -596,7 +685,12 @@ Give me progressively harder OOP design problems.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python dunder methods deeply.
 Explain how Python&#x27;s object model uses special methods.
-Show me how expressions such as a + b, len(a), a == b, and a[0] invoke special methods.
+Show me how expressions such as:
+a + b
+len(a)
+a == b
+a[0]
+can invoke special methods.
 Make me implement custom objects supporting these operations.
 Give me debugging and interview problems.</pre>
   </div>
@@ -615,7 +709,12 @@ Give me debugging and interview problems.</pre>
     <pre>Teach me dataclasses and enums.
 Compare dataclasses with normal classes and dictionaries.
 Explain when each approach should be used.
-Build practical models such as User, Product, Order, Payment, and Configuration.
+Build practical models such as:
+User
+Product
+Order
+Payment
+Configuration
 Give me design exercises.</pre>
   </div>
 </article>
@@ -631,7 +730,10 @@ Give me design exercises.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python iterators from first principles.
-Explain the difference between an iterable, an iterator, and a sequence.
+Explain the difference between:
+iterable
+iterator
+sequence
 Explain how for loops actually work internally.
 Then make me build custom iterators.
 Give me debugging problems involving iteration.</pre>
@@ -652,7 +754,11 @@ Give me debugging problems involving iteration.</pre>
 Explain exactly what happens when yield executes.
 Compare generators with lists.
 Show how generators help process huge datasets without loading everything into memory.
-Make me build file processors, data pipelines, pagination systems, and streaming processors.
+Make me build:
+file processors
+data pipelines
+pagination systems
+streaming processors
 Include performance comparisons.</pre>
   </div>
 </article>
@@ -668,9 +774,18 @@ Include performance comparisons.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python decorators from zero to advanced.
-First teach functions as objects, higher-order functions, and closures.
+First teach:
+functions as objects
+higher-order functions
+closures
 Then derive decorators step by step.
-Make me implement logging, timing, authentication, caching, retry, and rate-limit decorators.
+Make me implement:
+logging decorator
+timing decorator
+authentication decorator
+caching decorator
+retry decorator
+rate-limit decorator
 Explain the internal execution flow.</pre>
   </div>
 </article>
@@ -690,7 +805,12 @@ Explain what Python does internally when it executes:
 with resource:
     ...
 Make me implement custom context managers.
-Build practical examples involving files, database connections, locks, timers, and transactions.</pre>
+Build practical examples involving:
+files
+database connections
+locks
+timers
+transactions</pre>
   </div>
 </article>
 <article class="phase" id="phase-24">
@@ -706,9 +826,16 @@ Build practical examples involving files, database connections, locks, timers, a
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python type hints from beginner to advanced.
 Explain why Python typing exists even though Python is dynamically typed.
-Cover modern typing patterns: generics, protocols, callable types, type aliases, optional values, unions, Literal, and TypedDict.
-Show how typing improves large codebases and how FastAPI and Pydantic rely on type hints.
-Give me exercises converting poorly typed code into professionally typed code, and make me run a type checker on it.</pre>
+Cover modern typing patterns.
+Teach me:
+generics
+protocols
+callable types
+type aliases
+optional values
+unions
+Show how typing improves large codebases.
+Give me exercises converting poorly typed code into professionally typed code.</pre>
   </div>
 </article>
 <article class="phase" id="phase-25">
@@ -724,7 +851,12 @@ Give me exercises converting poorly typed code into professionally typed code, a
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me functional programming concepts in Python.
 Explain closures deeply.
-Then teach lambda, map, filter, reduce, and higher-order functions.
+Then teach:
+lambda
+map
+filter
+reduce
+higher-order functions
 Compare functional approaches with normal Python loops and explain readability and maintainability trade-offs.</pre>
   </div>
 </article>
@@ -740,7 +872,15 @@ Compare functional approaches with normal Python loops and explain readability a
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me the Python memory model deeply.
-Explain objects, references, identity, mutability, reference counting, garbage collection, cyclic references, and object lifetime.
+Explain:
+objects
+references
+identity
+mutability
+reference counting
+garbage collection
+cyclic references
+object lifetime
 Use diagrams and code examples.
 Give me tricky examples involving aliases, mutation, copying, and deletion.</pre>
   </div>
@@ -757,9 +897,14 @@ Give me tricky examples involving aliases, mutation, copying, and deletion.</pre
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python copying deeply.
-Explain why b = a is not a copy.
-Then explain shallow copy, deep copy, nested structures, and reference sharing.
-Include the mutable default argument bug.
+Explain why:
+b = a
+is not a copy.
+Then explain:
+shallow copy
+deep copy
+nested structures
+reference sharing
 Give me debugging problems involving unexpected mutation.</pre>
   </div>
 </article>
@@ -776,11 +921,22 @@ Give me debugging problems involving unexpected mutation.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python async programming from beginner to advanced.
 Start with the problem asynchronous programming solves.
-Explain blocking, non-blocking, concurrency, the event loop, coroutines, tasks, futures, and async/await.
+Explain:
+blocking
+non-blocking
+concurrency
+event loop
+coroutine
+task
+future
+async/await
 Explain what the event loop is doing internally.
-Teach gather, TaskGroup, timeouts, and cancellation.
-Make me build concurrent API calls, an async web scraper, an async task processor, and an async streaming application.
-Include common async bugs, especially blocking the event loop.</pre>
+Make me build:
+concurrent API calls
+async web scraper
+async task processor
+async streaming application
+Include common async bugs.</pre>
   </div>
 </article>
 <article class="phase" id="phase-29">
@@ -795,8 +951,15 @@ Include common async bugs, especially blocking the event loop.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python threading deeply.
-Explain what threads are, why threads exist, race conditions, locks, deadlocks, synchronization, and thread pools.
-Explain the practical relationship between Python threads and the GIL, including the free-threaded builds in recent Python versions.
+Explain:
+what threads are
+why threads exist
+race conditions
+locks
+deadlocks
+synchronization
+thread pools
+Explain the practical relationship between Python threads and the GIL.
 Give me broken concurrent programs and make me debug them.</pre>
   </div>
 </article>
@@ -812,9 +975,12 @@ Give me broken concurrent programs and make me debug them.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python multiprocessing.
-Compare threading, multiprocessing, and asyncio.
+Compare:
+threading
+multiprocessing
+asyncio
 Explain when each should be used.
-Make me implement CPU-intensive workloads using multiprocessing and concurrent.futures.
+Make me implement CPU-intensive workloads using multiprocessing.
 Discuss process overhead and serialization.</pre>
   </div>
 </article>
@@ -829,7 +995,12 @@ Discuss process overhead and serialization.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">4</span></summary><ul class="chips"><li>I/O-bound vs CPU-bound</li><li>Concurrency</li><li>Parallelism</li><li>Choosing asyncio vs threads vs processes</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Teach me the difference between concurrency, parallelism, asynchronous programming, threading, and multiprocessing.
+    <pre>Teach me the difference between:
+concurrency
+parallelism
+asynchronous programming
+threading
+multiprocessing
 Give me real-world scenarios and ask me which approach I would choose.
 Do not immediately tell me the answer.
 Make me justify my choice.
@@ -851,12 +1022,12 @@ Then evaluate my reasoning.</pre>
 Give me broken Python programs.
 Do not tell me the bug.
 Make me:
-1. reproduce it
-2. inspect it
-3. identify the root cause
-4. explain the root cause
-5. fix it
-6. write a regression test
+reproduce it
+inspect it
+identify the root cause
+explain the root cause
+fix it
+write a regression test
 Start with easy bugs and gradually reach production-level bugs.</pre>
   </div>
 </article>
@@ -873,7 +1044,12 @@ Start with easy bugs and gradually reach production-level bugs.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python logging professionally.
 Explain why print() is not sufficient for production systems.
-Teach log levels, handlers, formatters, structured logs, and exception logging.
+Teach:
+log levels
+handlers
+formatters
+structured logs
+exception logging
 Make me design logging for a real backend application.</pre>
   </div>
 </article>
@@ -889,7 +1065,13 @@ Make me design logging for a real backend application.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me pytest from beginner to advanced.
-Build a project and teach me unit testing, integration testing, fixtures, parametrization, mocking, dependency isolation, and coverage.
+Build a project and teach me:
+unit testing
+integration testing
+fixtures
+parametrization
+mocking
+dependency isolation
 Make me test real Python code rather than toy examples.
 Give me intentionally buggy implementations and make me create tests that expose the bugs.</pre>
   </div>
@@ -906,7 +1088,12 @@ Give me intentionally buggy implementations and make me create tests that expose
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me mocking professionally.
-Use real-world examples involving API calls, databases, the filesystem, email, and external services.
+Use real-world examples involving:
+API calls
+databases
+filesystem
+email
+external services
 Explain when mocking is useful and when it creates bad tests.</pre>
   </div>
 </article>
@@ -922,12 +1109,13 @@ Explain when mocking is useful and when it creates bad tests.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me professional Python clean-code principles.
-Give me bad Python code and make me refactor it.
+Give me bad Python code.
+Make me refactor it.
 For every refactoring:
-- identify the problem
-- explain why it is problematic
-- improve it
-- explain the trade-offs
+identify the problem
+explain why it is problematic
+improve it
+explain the trade-offs
 Train me to recognize code smells automatically.</pre>
   </div>
 </article>
@@ -944,12 +1132,12 @@ Train me to recognize code smells automatically.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me design patterns specifically in Python.
 For every pattern:
-1. Explain the problem.
-2. Show the naive implementation.
-3. Show the pattern.
-4. Explain the trade-off.
-5. Show when NOT to use it.
-6. Give me a real-world exercise.
+Explain the problem.
+Show the naive implementation.
+Show the pattern.
+Explain the trade-off.
+Show when NOT to use it.
+Give me a real-world exercise.
 Do not teach patterns as memorized definitions.</pre>
   </div>
 </article></section><section class="part" id="part-4"><div class="part-head"><p class="eyebrow">Part IV</p><h2>Advanced Python</h2><p>Algorithms, performance, internals, metaprogramming and packaging</p></div>
@@ -967,15 +1155,14 @@ Do not teach patterns as memorized definitions.</pre>
     <pre>Train me in Python data structures and algorithms.
 Start from basic problems and progressively reach difficult interview-level problems.
 For every problem:
-1. Let me attempt it.
-2. Ask me to explain my approach.
-3. Analyze complexity.
-4. Let me code.
-5. Test edge cases.
-6. Optimize the solution.
-7. Compare alternative solutions.
-Do not give me the solution immediately.
-Group problems by pattern (two pointers, sliding window, BFS/DFS, binary search, dynamic programming) so I learn patterns, not just answers.</pre>
+Let me attempt it.
+Ask me to explain my approach.
+Analyze complexity.
+Let me code.
+Test edge cases.
+Optimize the solution.
+Compare alternative solutions.
+Do not give me the solution immediately.</pre>
   </div>
 </article>
 <article class="phase" id="phase-39">
@@ -990,7 +1177,9 @@ Group problems by pattern (two pointers, sliding window, BFS/DFS, binary search,
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Big-O using Python examples.
-Give me code and ask me to calculate time complexity and space complexity.
+Give me code and ask me to calculate:
+time complexity
+space complexity
 Then make me optimize inefficient Python code.
 Include increasingly difficult performance problems.</pre>
   </div>
@@ -1009,12 +1198,12 @@ Include increasingly difficult performance problems.</pre>
     <pre>Teach me Python performance profiling.
 Give me slow Python programs.
 Make me:
-1. benchmark them
-2. profile them
-3. find the bottleneck
-4. optimize them
-5. benchmark again
-6. explain why the optimization worked
+benchmark them
+profile them
+find the bottleneck
+optimize them
+benchmark again
+explain why the optimization worked
 Teach me not to optimize without measurement.</pre>
   </div>
 </article>
@@ -1031,9 +1220,12 @@ Teach me not to optimize without measurement.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me caching in Python from basic to advanced.
 Start with memoization.
-Then teach lru_cache, cache invalidation, TTL, and the limits of in-process caches.
-Give me scenarios where I must decide whether caching is appropriate.
-(Distributed caching with Redis is covered later in the backend track.)</pre>
+Then teach:
+lru_cache
+cache invalidation
+TTL
+distributed caching concepts
+Give me scenarios where I must decide whether caching is appropriate.</pre>
   </div>
 </article>
 <article class="phase" id="phase-42">
@@ -1048,7 +1240,12 @@ Give me scenarios where I must decide whether caching is appropriate.
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python internals at an advanced developer level.
-Explain what happens from Python source code → parsing → compilation → bytecode → execution.
+Explain what happens from:
+Python source code
+→ parsing
+→ compilation
+→ bytecode
+→ execution
 Use the dis module where useful.
 Explain stack frames, namespaces, objects, and function calls.
 Give me internal-behavior puzzles.</pre>
@@ -1067,9 +1264,13 @@ Give me internal-behavior puzzles.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python metaprogramming progressively.
 Start with dynamic attribute access.
-Then teach descriptors, class creation, metaclasses, __new__, and __init_subclass__.
+Then teach:
+descriptors
+class creation
+metaclasses
+__new__
+__init_subclass__
 Clearly explain when these techniques are useful and when they create unnecessary complexity.
-Show how frameworks like Pydantic and SQLAlchemy use these ideas.
 Give me advanced exercises.</pre>
   </div>
 </article>
@@ -1086,7 +1287,11 @@ Give me advanced exercises.</pre>
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me Python descriptors from first principles.
 Explain how property works internally.
-Then make me implement validation descriptors, typed attributes, lazy attributes, and computed attributes.
+Then make me implement:
+validation descriptors
+typed attributes
+lazy attributes
+computed attributes
 Explain the relationship between descriptors and Python&#x27;s object model.</pre>
   </div>
 </article>
@@ -1119,8 +1324,13 @@ Then make me prepare the package for distribution.</pre>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me how professional Python teams enforce code quality.
-Explain formatters, linters, type checkers, pre-commit hooks, and automated checks.
-Make me configure a Python project with Ruff, a type checker, and pre-commit.</pre>
+Explain:
+formatters
+linters
+type checkers
+pre-commit hooks
+automated checks
+Make me configure a Python project with automated quality checks.</pre>
   </div>
 </article>
 <article class="phase" id="phase-47">
@@ -1191,9 +1401,17 @@ Ask me interview questions such as &quot;What happens when you type google.com?&
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
     <pre>Teach me how professional Python applications communicate with external APIs.
-Build an API client with httpx.
-Implement authentication, timeouts, retries with backoff, rate limiting, pagination, error handling, logging, and response validation.
-Then make me turn it into reusable production-quality code with tests.</pre>
+Build an API client.
+Implement:
+authentication
+timeouts
+retries
+rate limiting
+pagination
+error handling
+logging
+response validation
+Then make me turn it into reusable production-quality code.</pre>
   </div>
 </article></section><section class="part" id="part-6"><div class="part-head"><p class="eyebrow">Part VI</p><h2>FastAPI Core</h2><p>Building, structuring and testing APIs</p></div>
 <article class="phase" id="phase-51">
@@ -1412,16 +1630,20 @@ Give me design problems where I must model roles and permissions for real system
   <details class="concepts" open><summary>Concepts to master <span class="cnt">16</span></summary><ul class="chips"><li>OWASP API Security Top 10</li><li>Input validation</li><li>SQL injection</li><li>Broken authentication / authorization</li><li>Mass assignment</li><li>Rate limiting</li><li>Brute-force protection</li><li>Secrets management</li><li>Secure configuration</li><li>Security headers</li><li>CORS misconfiguration</li><li>Unsafe deserialization</li><li>SSRF</li><li>File security</li><li>Dependency vulnerability scanning</li><li>Not logging sensitive data</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Teach me backend security for FastAPI applications based on the OWASP API Security Top 10.
-For each risk:
-1. show a vulnerable FastAPI example
-2. explain the attack
-3. make me fix it
-4. make me write a regression test
+    <pre>Teach me Python application security.
+Show me vulnerable Python examples.
+Make me:
+identify the vulnerability
+explain the attack
+fix it
+write a test preventing regression
+Focus on defensive engineering.
+
+Backend additions:
+Apply this to FastAPI using the OWASP API Security Top 10.
 Cover SQL injection, mass assignment, SSRF, unsafe deserialization, and file-upload risks.
 Make me implement rate limiting and brute-force protection on login.
-Teach secrets management and how to keep secrets out of code, Git history, and logs.
-Focus on defensive engineering.</pre>
+Teach secrets management and how to keep secrets out of code, Git history, and logs.</pre>
   </div>
 </article></section><section class="part" id="part-9"><div class="part-head"><p class="eyebrow">Part IX</p><h2>Backend Services &amp; Async Systems</h2><p>Caching, background work, real-time and file storage</p></div>
 <article class="phase" id="phase-63">
@@ -1508,20 +1730,20 @@ Show me insecure upload code and make me fix the vulnerabilities.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">7</span></summary><ul class="chips"><li>Concurrency design</li><li>Bottleneck analysis</li><li>Failure handling</li><li>Cancellation</li><li>Timeouts</li><li>Backpressure</li><li>Performance measurement</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Give me increasingly complex asynchronous Python systems built with FastAPI.
+    <pre>Give me increasingly complex asynchronous Python systems.
 Examples:
-- concurrent API aggregation
-- job processing
-- streaming
-- async database application
-- WebSocket application
-For each system make me:
-- identify bottlenecks
-- design concurrency
-- handle failures
-- handle cancellation
-- handle timeouts
-- measure performance</pre>
+concurrent API aggregation
+job processing
+streaming
+async database application
+WebSocket application
+For each system:
+identify bottlenecks
+design concurrency
+handle failures
+handle cancellation
+handle timeouts
+measure performance</pre>
   </div>
 </article>
 <article class="phase" id="phase-68">
@@ -1535,17 +1757,17 @@ For each system make me:
   <details class="concepts" open><summary>Concepts to master <span class="cnt">9</span></summary><ul class="chips"><li>External API timeouts</li><li>Database unavailable</li><li>Malformed input</li><li>Duplicate requests</li><li>Partial failure</li><li>Rate limiting</li><li>Corrupted data</li><li>Unexpected exceptions</li><li>Graceful degradation</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Give me production-style FastAPI failure scenarios.
+    <pre>Give me production-style Python failure scenarios.
 Examples:
-- external API timeout
-- database unavailable
-- malformed input
-- duplicate requests
-- partial failure
-- rate limiting
-- corrupted data
-- unexpected exceptions
-Make me design robust error-handling strategies, implement them, and write tests that simulate each failure.</pre>
+external API timeout
+database unavailable
+malformed input
+duplicate requests
+partial failure
+rate limiting
+corrupted data
+unexpected exceptions
+Make me design robust error-handling strategies.</pre>
   </div>
 </article></section><section class="part" id="part-10"><div class="part-head"><p class="eyebrow">Part X</p><h2>DevOps, Deployment &amp; Operations</h2><p>Shipping, running and watching your backend in production</p></div>
 <article class="phase" id="phase-69">
@@ -1693,21 +1915,39 @@ Review my design like a senior AI backend engineer.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">16</span></summary><ul class="chips"><li>FastAPI layered architecture</li><li>PostgreSQL + SQLAlchemy async + Alembic</li><li>JWT + refresh tokens + Google login</li><li>RBAC permissions</li><li>Pagination, filtering, idempotency</li><li>Redis caching and rate limiting</li><li>Celery background jobs</li><li>WebSocket notifications</li><li>S3 file uploads</li><li>An AI feature (optional but valuable)</li><li>Full test suite</li><li>Docker Compose</li><li>GitHub Actions CI/CD</li><li>Logging, metrics, tracing</li><li>Live deployment with HTTPS</li><li>README and API docs</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Act as my senior backend mentor.
-Help me build a production-quality FastAPI backend as my capstone project (e-commerce, booking system, or SaaS).
-Requirements: layered architecture, PostgreSQL with async SQLAlchemy and Alembic, JWT auth with refresh tokens and Google login, RBAC, pagination and idempotent endpoints, Redis caching and rate limiting, Celery background jobs, WebSocket notifications, S3 uploads, a full test suite, Docker Compose, GitHub Actions CI/CD, observability, and a live HTTPS deployment with a strong README.
-Do NOT write the application for me.
+    <pre>Act as my senior Python mentor.
+Help me build a complete production-quality Python application.
+Do NOT write the entire application for me.
 Break it into milestones.
 For every milestone:
-- explain the architecture
-- ask me to design it first
-- let me implement it
-- review my code
-- identify bugs, security issues, and design problems
-- suggest improvements
-- make me test it
-- make me deploy it
-Treat this like a real job with code reviews and deadlines.</pre>
+explain the architecture
+ask me to design it
+let me implement it
+review my code
+identify bugs
+identify design problems
+suggest improvements
+test it
+optimize it
+Treat this like a real professional software project.
+
+Backend additions:
+Build it with FastAPI as an e-commerce, booking, or SaaS backend.
+Requirements:
+layered architecture
+PostgreSQL with async SQLAlchemy and Alembic
+JWT auth with refresh tokens and Google login
+RBAC
+pagination and idempotent endpoints
+Redis caching and rate limiting
+Celery background jobs
+WebSocket notifications
+S3 uploads
+full test suite
+Docker Compose
+GitHub Actions CI/CD
+observability
+live HTTPS deployment with a strong README</pre>
   </div>
 </article>
 <article class="phase" id="phase-77">
@@ -1724,16 +1964,26 @@ Treat this like a real job with code reviews and deadlines.</pre>
     <pre>Act as an extremely difficult Python coding interviewer.
 Give me one problem at a time.
 Start at intermediate difficulty and gradually reach expert level.
-Problems must cover data structures, algorithms, generators, decorators, async, concurrency, OOP, Python internals, optimization, and architecture.
+Problems must cover:
+data structures
+algorithms
+generators
+decorators
+async
+concurrency
+OOP
+Python internals
+optimization
+architecture
 Do not reveal solutions.
 After I submit my solution:
-- test it
-- review correctness
-- review readability
-- review complexity
-- identify edge cases
-- suggest improvements
-- provide an expert-level alternative</pre>
+test it
+review correctness
+review readability
+review complexity
+identify edge cases
+suggest improvements
+provide an expert-level alternative</pre>
   </div>
 </article>
 <article class="phase" id="phase-78">
@@ -1747,18 +1997,18 @@ After I submit my solution:
   <details class="concepts" open><summary>Concepts to master <span class="cnt">10</span></summary><ul class="chips"><li>Incorrect state</li><li>Mutable defaults</li><li>References</li><li>Async problems</li><li>Race conditions</li><li>Exceptions</li><li>Database failures</li><li>Performance</li><li>Memory</li><li>Incorrect abstractions</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Create realistic broken Python and FastAPI applications for me.
+    <pre>Create realistic broken Python applications for me.
 Include bugs involving:
-- incorrect state
-- mutable defaults
-- references
-- async problems
-- race conditions
-- exceptions
-- database failures (N+1, missing commits, deadlocks)
-- performance
-- memory
-- incorrect abstractions
+incorrect state
+mutable defaults
+references
+async problems
+race conditions
+exceptions
+database failures
+performance
+memory
+incorrect abstractions
 Do not tell me where the bug is.
 Make me diagnose the root cause.
 Evaluate my debugging methodology rather than only whether I found the bug.</pre>
@@ -1775,16 +2025,16 @@ Evaluate my debugging methodology rather than only whether I found the bug.</pre
   <details class="concepts" open><summary>Concepts to master <span class="cnt">8</span></summary><ul class="chips"><li>Bugs</li><li>Code smells</li><li>Performance issues</li><li>Security problems</li><li>Bad architecture</li><li>Poor naming</li><li>Unnecessary complexity</li><li>Missing tests</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Give me real-world Python / FastAPI code (presented as a pull request) that contains:
-- bugs
-- code smells
-- performance issues
-- security problems
-- bad architecture
-- poor naming
-- unnecessary complexity
-- missing tests
-Ask me to perform a complete code review and write review comments.
+    <pre>Give me real-world Python code that contains:
+bugs
+code smells
+performance issues
+security problems
+bad architecture
+poor naming
+unnecessary complexity
+missing tests
+Ask me to perform a complete code review.
 Then compare my review with an expert review.</pre>
   </div>
 </article>
@@ -1799,19 +2049,28 @@ Then compare my review with an expert review.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">10</span></summary><ul class="chips"><li>Requirements</li><li>Constraints</li><li>Architecture</li><li>Components</li><li>API design</li><li>Data model</li><li>Scalability</li><li>Reliability</li><li>Observability</li><li>Trade-offs</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Give me Python backend system-design problems.
-Examples: URL shortener, notification system, job queue, file processing system, API gateway, rate limiter, background worker system, ecommerce backend, payment system, chat application, event processing system.
-For every problem make me:
-- clarify requirements
-- identify constraints
-- design architecture
-- identify components
-- design APIs
-- design the data model
-- discuss scalability
-- discuss reliability
-- discuss observability
-- discuss trade-offs
+    <pre>Give me Python system-design problems.
+Examples:
+URL shortener
+notification system
+job queue
+file processing system
+API gateway
+rate limiter
+background worker system
+ecommerce backend
+event processing system
+For every problem:
+clarify requirements
+identify constraints
+design architecture
+identify components
+design APIs
+design data model
+discuss scalability
+discuss reliability
+discuss observability
+discuss trade-offs
 Evaluate my design like a senior/staff Python engineer.</pre>
   </div>
 </article>
@@ -1826,21 +2085,53 @@ Evaluate my design like a senior/staff Python engineer.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">10</span></summary><ul class="chips"><li>Fundamentals</li><li>Intermediate Python</li><li>Advanced Python</li><li>HTTP &amp; networking</li><li>FastAPI &amp; async</li><li>SQL &amp; databases</li><li>Auth &amp; security</li><li>Live coding</li><li>Debugging</li><li>System design</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Act as my technical interviewer for a Python / FastAPI backend developer role.
-Conduct a complete interview:
-Round 1 — Python fundamentals: syntax, types, collections, functions, loops
-Round 2 — Intermediate Python: OOP, exceptions, modules, decorators, generators
-Round 3 — Advanced Python: memory, iterators, descriptors, async, concurrency, internals
-Round 4 — Networking, HTTP, FastAPI, and Pydantic
-Round 5 — SQL and databases (including live query writing)
-Round 6 — Authentication, authorization, and security
-Round 7 — DSA coding problems
-Round 8 — Live coding: build a FastAPI endpoint with tests
-Round 9 — Debugging a broken production FastAPI service
-Round 10 — Backend system design
+    <pre>Act as my Python technical interviewer.
+Conduct a complete interview.
+Cover:
+Round 1 — Fundamentals
+syntax
+types
+collections
+functions
+loops
+Round 2 — Intermediate Python
+OOP
+exceptions
+modules
+decorators
+generators
+Round 3 — Advanced Python
+memory
+iterators
+descriptors
+metaclasses
+async
+concurrency
+internals
+Round 4 — Coding
+Give me difficult Python coding problems.
+Round 5 — Debugging
+Give me broken production-style code.
+Round 6 — System Design
+Give me a Python architecture problem.
 Do not help me unless I ask.
-At the end, evaluate: Python fundamentals, coding ability, debugging, backend knowledge, architecture, performance, code quality, and communication.
-Then identify exactly what I need to improve.</pre>
+At the end, evaluate:
+Python fundamentals
+coding ability
+debugging
+architecture
+performance
+code quality
+communication
+Then identify exactly what I need to improve.
+
+Backend additions:
+Also add these rounds for a Python / FastAPI backend role:
+Round 7 — Networking, HTTP, FastAPI, and Pydantic
+Round 8 — SQL and databases (including live query writing)
+Round 9 — Authentication, authorization, and security
+Round 10 — Live coding: build a FastAPI endpoint with tests
+Include backend knowledge in the final evaluation.</pre>
   </div>
 </article>
 <article class="phase" id="phase-82">
@@ -1854,64 +2145,204 @@ Then identify exactly what I need to improve.</pre>
   <details class="concepts" open><summary>Concepts to master <span class="cnt">8</span></summary><ul class="chips"><li>MCQs</li><li>Output prediction</li><li>Coding</li><li>Debugging</li><li>Code review</li><li>Architecture</li><li>Performance</li><li>Backend scenarios</li></ul></details>
   <div class="prompt">
     <div class="prompt-bar"><span>Mastery prompt</span><button class="copy" type="button">Copy prompt</button></div>
-    <pre>Give me a complete Python backend mastery assessment.
+    <pre>Give me a complete Python mastery assessment.
 Do not teach me during the assessment.
-Test me across: Python fundamentals, variables and objects, data types, collections, functions, scope, OOP, exceptions, files, modules, iterators, generators, decorators, context managers, type hints, async, threading, multiprocessing, testing, debugging, performance, Python internals, packaging, HTTP, FastAPI, Pydantic, SQL, SQLAlchemy, authentication, authorization, security, caching, background jobs, Docker, deployment, CI/CD, observability, scalability, AI integration, algorithms, and system design.
+Test me across:
+Python fundamentals
+Variables and objects
+Data types
+Collections
+Functions
+Scope
+OOP
+Exceptions
+Files
+Modules
+Iterators
+Generators
+Decorators
+Context managers
+Type hints
+Async
+Threading
+Multiprocessing
+Testing
+Debugging
+Performance
+Python internals
+Packaging
+Architecture
+Security
+Algorithms
+System design
 Include:
-- MCQs
-- output prediction
-- coding problems
-- debugging problems
-- code review
-- architecture questions
-- performance problems
-- production incident scenarios
+MCQs
+output prediction
+coding problems
+debugging problems
+code review
+architecture questions
+performance problems
+advanced Python questions
 Do not reveal answers until I finish.
 At the end, provide:
-- score
-- strengths
-- weaknesses
-- concepts I have not mastered
-- recommended revision topics
-- advanced challenges
-- personalized next steps</pre>
+score
+strengths
+weaknesses
+concepts I have not mastered
+recommended revision topics
+advanced challenges
+personalized next steps
+
+Backend additions:
+Also test me across:
+Linux and Git
+HTTP and networking
+FastAPI
+Pydantic
+SQL and PostgreSQL
+SQLAlchemy and Alembic
+Authentication and authorization
+Redis caching
+Background jobs
+WebSockets
+Docker
+Deployment
+CI/CD
+Observability
+Scalability
+AI integration
+Include production incident scenarios.</pre>
   </div>
 </article></section>
 
 <section class="part" id="final">
   <div class="part-head"><p class="eyebrow">Finish</p><h2>Final master prompt</h2><p>Use this after completing the roadmap, or any time you want a personal mentor to reassess you.</p></div>
   <div class="phase final">
-    <div class="prompt" style="margin:0"><div class="prompt-bar"><span>Become an exceptional Python backend developer</span><button class="copy" type="button" data-raw="1">Copy prompt</button></div><pre>I want you to act as my personal Python backend mentor, senior FastAPI engineer, interviewer, debugger, code reviewer, and technical coach.
-My goal is to become an exceptionally strong Python backend developer using FastAPI.
-Do NOT assume that I already know advanced Python or backend engineering.
-Start by assessing my current knowledge.
+    <div class="prompt" style="margin:0"><div class="prompt-bar"><span>Become an exceptional Python backend developer</span><button class="copy" type="button">Copy prompt</button></div><pre>I want you to act as my personal Python mentor, senior Python engineer, interviewer, debugger, code reviewer, and technical coach.
+My goal is to become an exceptionally strong Python developer.
+Do NOT assume that I already know advanced Python.
+Start by assessing my current Python knowledge.
 Then create a personalized mastery path covering:
-Python fundamentals, data types, collections, control flow, functions, scope, recursion, exceptions, files, modules, packages, OOP, dunder methods, dataclasses, iterators, generators, decorators, context managers, type hints, closures, memory management, async programming, threading, multiprocessing, testing, debugging, logging, clean code, design patterns, algorithms, Big-O, profiling, caching, Python internals, descriptors, metaprogramming, packaging,
-Linux, Git and GitHub, HTTP and networking, FastAPI, Pydantic, dependency injection, API design, SQL, PostgreSQL, SQLAlchemy, Alembic, authentication, authorization, security, Redis, background jobs, WebSockets, file storage, Docker, deployment, CI/CD, observability, scalability, distributed systems, AI/LLM integration, and system design.
-
+Python fundamentals
+data types
+collections
+control flow
+functions
+scope
+recursion
+exceptions
+files
+modules
+packages
+OOP
+dunder methods
+dataclasses
+iterators
+generators
+decorators
+context managers
+type hints
+closures
+memory management
+garbage collection
+async programming
+threading
+multiprocessing
+concurrency
+testing
+debugging
+logging
+clean code
+design patterns
+algorithms
+Big-O
+profiling
+optimization
+caching
+Python internals
+descriptors
+metaprogramming
+packaging
+API development
+database programming
+external APIs
+security
+architecture
+system design
 For every concept:
-1. Explain it from first principles.
-2. Explain why it exists.
-3. Explain when to use it and when NOT to use it.
-4. Explain how it works internally.
-5. Give simple, realistic, and production-quality examples.
-6. Give coding exercises, debugging exercises, and interview questions.
-7. Give common mistakes, performance considerations, and design trade-offs.
-8. Test me before moving forward.
-
+Explain it from first principles.
+Explain why it exists.
+Explain when to use it.
+Explain when NOT to use it.
+Explain how it works internally.
+Give simple examples.
+Give realistic examples.
+Give production-quality examples.
+Give coding exercises.
+Give debugging exercises.
+Give interview questions.
+Give common mistakes.
+Give performance considerations.
+Give design trade-offs.
+Test me before moving forward.
 When giving coding exercises:
-- Do not immediately give the solution.
-- Let me attempt it.
-- Review my solution, find bugs and edge cases, review complexity and readability.
-- Suggest improvements, then show an expert solution.
-
-Continuously increase difficulty: BEGINNER → FUNDAMENTALS → INTERMEDIATE → ADVANCED → PROFESSIONAL → EXPERT.
+Do not immediately give the solution.
+Let me attempt it.
+Review my solution.
+Find bugs.
+Find edge cases.
+Review complexity.
+Review readability.
+Suggest improvements.
+Then show an expert solution.
+Continuously increase difficulty.
 Do not let me progress simply because I can reproduce syntax.
-At the end of every major section, give me a practical project that I must push to GitHub with tests.
-At the end, give me a complete engineering assessment involving theory, coding, debugging, code review, optimization, architecture, system design, and production scenarios.
-
+I should be able to explain the concept, implement it, debug it, optimize it, and use it in a real application.
+Use this progression:
+BEGINNER
+→ FUNDAMENTALS
+→ INTERMEDIATE
+→ ADVANCED
+→ PROFESSIONAL
+→ EXPERT
+At the end of every major section, give me a practical project.
+At the end of the entire roadmap, give me a complete Python engineering assessment involving:
+theory
+coding
+debugging
+code review
+optimization
+architecture
+system design
+production scenarios
 Your goal is not to make me memorize Python.
-Your goal is to make me capable of independently designing, implementing, testing, deploying, debugging, reviewing, optimizing, and explaining professional Python backend software.</pre></div>
+Your goal is to make me capable of independently designing, implementing, debugging, reviewing, optimizing, and explaining professional Python software.
+
+Backend additions:
+Also cover the FastAPI backend track:
+Linux
+Git and GitHub
+HTTP and networking
+FastAPI
+Pydantic
+dependency injection
+API design
+SQL and PostgreSQL
+SQLAlchemy and Alembic
+authentication and authorization
+Redis
+background jobs
+WebSockets
+file storage
+Docker
+deployment
+CI/CD
+observability
+scalability
+distributed systems
+AI/LLM integration
+Every practical project must be pushed to GitHub with tests.</pre></div>
   </div>
   <div class="panel" style="margin-top:18px">
     <h2>Final mastery standard</h2>
@@ -1941,7 +2372,6 @@ Your goal is to make me capable of independently designing, implementing, testin
 
 <script>
 (function(){
-  var RULES = "Before we start this phase, follow these rules for the whole session:\n- Teach one concept at a time and check my understanding before moving on.\n- Never give exercise solutions until I have attempted them.\n- When I submit code, review correctness, edge cases, readability, complexity, and tests.\n- Use modern, current Python (3.12+) and current library versions.\n- At the end of the phase, give me a short quiz and a mini-project to push to GitHub.\n- If I seem stuck, give hints before answers.";
 
   function copyText(text, btn){
     function ok(){ btn.textContent = "Copied"; btn.classList.add("ok"); setTimeout(function(){ btn.textContent = "Copy prompt"; btn.classList.remove("ok"); }, 1600); }
@@ -1958,8 +2388,7 @@ Your goal is to make me capable of independently designing, implementing, testin
   document.querySelectorAll(".copy").forEach(function(btn){
     btn.addEventListener("click", function(){
       var pre = btn.closest(".prompt").querySelector("pre").textContent;
-      var add = document.getElementById("rulesOpt").checked && !btn.hasAttribute("data-raw");
-      copyText(add ? RULES + "\n\n" + pre : pre, btn);
+      copyText(pre, btn);
     });
   });
 
