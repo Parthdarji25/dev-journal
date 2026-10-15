@@ -2,7 +2,8 @@
   "title": "Python Mastery: From Fundamentals to Advanced",
   "description": "",
   "order": [
-    "python-basic-to-advanced-complete-mastery-roadmap.html"
+    "python-basic-to-advanced-complete-mastery-roadmap.html",
+    "phase-01-python-environment-and-first-programs.html"
   ],
   "html": {
     "python-basic-to-advanced-complete-mastery-roadmap.html": {
@@ -19,6 +20,24 @@
         "Clean Code",
         "System Design",
         "ChatGPT Prompts"
+      ],
+      "updated": "2026-10-15"
+    },
+    "phase-01-python-environment-and-first-programs.html": {
+      "title": "Phase 01 — Python Environment & First Programs.",
+      "description": "Python Environment & First Programs: what Python is, how CPython runs code, installation, versions, the REPL, running scripts, indentation, comments, statements vs expressions, print() and input().",
+      "tags": [
+        "python",
+        "phase-01",
+        "python-foundations",
+        "interpreter",
+        "cpython",
+        "bytecode",
+        "repl",
+        "path",
+        "indentation",
+        "print",
+        "input"
       ],
       "updated": "2026-10-15"
     }

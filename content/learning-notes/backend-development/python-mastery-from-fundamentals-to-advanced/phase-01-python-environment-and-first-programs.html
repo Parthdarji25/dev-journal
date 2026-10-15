@@ -1,0 +1,1900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 01 — Python Environment &amp; First Programs</title>
+<style>
+:root {
+  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#efede6; --ink:#1c1e1f; --muted:#5f6461;
+  --line:#dedad0; --accent:#0f6b5c; --accent-soft:#dcefe9;
+  --code-bg:#13201c; --code-ink:#dbeae5; --inline-bg:#ebe8df; --inline-ink:#7a2e55;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#101312; --surface:#171b1a; --surface-2:#1f2423; --ink:#e7ebe9; --muted:#9ba39f;
+    --line:#2b3230; --accent:#4cc3a8; --accent-soft:#17362f;
+    --code-bg:#0a0f0d; --code-ink:#d3e6e0; --inline-bg:#232a28; --inline-ink:#f0a3c7;
+  }
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:72px; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.topbar { position:sticky; top:0; z-index:10; background:var(--bg); border-bottom:1px solid var(--line); }
+.topbar-in { max-width:1240px; margin:0 auto; padding:10px 16px; display:flex; gap:10px; align-items:center; }
+.brand { font-weight:700; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.btn { border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px;
+  padding:6px 12px; font:inherit; font-size:13px; cursor:pointer; }
+.menu-btn { display:none; }
+.layout { max-width:1240px; margin:0 auto; padding:0 16px; display:grid; grid-template-columns:260px minmax(0,1fr); gap:40px; }
+nav.toc { position:sticky; top:64px; align-self:start; max-height:calc(100vh - 72px); overflow:auto; padding:28px 0 40px; font-size:14px; }
+nav.toc p { margin:0 0 8px; font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+nav.toc ol { list-style:none; margin:0; padding:0; }
+nav.toc a { display:block; padding:4px 8px; border-radius:6px; color:var(--muted); text-decoration:none; }
+nav.toc a:hover, nav.toc a.active { background:var(--surface-2); color:var(--ink); }
+main { padding:32px 0 80px; min-width:0; }
+header.hero h1 { font-size:clamp(28px,4.5vw,42px); line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; }
+h2 { font-size:25px; margin:48px 0 14px; padding-top:8px; border-top:1px solid var(--line); line-height:1.3; }
+h3 { font-size:19px; margin:28px 0 10px; }
+h4 { font-size:13px; margin:22px 0 8px; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); }
+a { color:var(--accent); }
+blockquote { margin:16px 0; padding:14px 18px; background:var(--accent-soft); border-left:4px solid var(--accent); border-radius:0 10px 10px 0; }
+blockquote p { margin:0; }
+hr { display:none; }
+.summary { color:var(--muted); font-size:17px; margin:0 0 12px; }
+.tags { display:flex; flex-wrap:wrap; gap:6px; }
+.tag { font-size:12.5px; padding:2px 9px; border-radius:99px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+code { font:0.9em/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; background:var(--inline-bg); color:var(--inline-ink);
+  padding:2px 5px 3px; border-radius:5px; line-height:1.8; }
+pre { position:relative; background:var(--code-bg); color:var(--code-ink); border-radius:12px; padding:40px 18px 16px; overflow-x:auto; margin:16px 0; }
+pre code { display:block; background:none; color:inherit; padding:0; font-size:13.5px; line-height:1.6; }
+pre code.language-text { line-height:1.25; }
+pre .lang { position:absolute; top:8px; right:76px; font:600 11px system-ui, sans-serif; text-transform:uppercase; letter-spacing:.06em; color:#7f9a92; }
+pre .copy { position:absolute; top:6px; right:8px; background:#24352f; color:#cfe5de; border:0; border-radius:6px; padding:3px 10px; font:600 12px system-ui, sans-serif; cursor:pointer; }
+pre .cmt { color:#7f9a92; font-style:italic; }
+.table-wrap { overflow-x:auto; margin:16px 0; border:1px solid var(--line); border-radius:10px; }
+table { border-collapse:collapse; width:100%; font-size:14.5px; background:var(--surface); }
+th, td { padding:9px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--surface-2); font-weight:600; }
+tr:last-child td { border-bottom:0; }
+ul, ol { padding-left:22px; }
+li { margin:4px 0; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; gap:0; }
+  .menu-btn { display:inline-block; }
+  nav.toc { display:none; position:fixed; inset:57px 0 0 0; max-height:none; background:var(--bg); z-index:9; padding:20px 16px; }
+  nav.toc.open { display:block; }
+}
+@media print {
+  .topbar, nav.toc, pre .copy { display:none !important; }
+  .layout { display:block; } pre { white-space:pre-wrap; }
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <button class="btn menu-btn" id="menuBtn" type="button">Contents</button>
+  <div class="brand">Phase 01 — Python Environment &amp; First Programs</div>
+</div></div>
+<div class="layout">
+<nav class="toc" id="toc"><p>Contents</p><ol>
+<li><a href="#key-ideas">Key ideas</a></li>
+<li><a href="#1-what-python-is">1. What Python is</a></li>
+<li><a href="#2-how-python-code-executes">2. How Python code executes</a></li>
+<li><a href="#3-what-happens-when-you-run-a-py-file">3. What happens when you run a .py file</a></li>
+<li><a href="#4-installing-python-and-path">4. Installing Python and PATH</a></li>
+<li><a href="#5-python-versions">5. Python versions</a></li>
+<li><a href="#6-cpython-and-other-implementations">6. CPython and other implementations</a></li>
+<li><a href="#7-the-repl">7. The REPL</a></li>
+<li><a href="#8-py-files">8. .py files</a></li>
+<li><a href="#9-running-code-from-the-terminal">9. Running code from the terminal</a></li>
+<li><a href="#10-indentation">10. Indentation</a></li>
+<li><a href="#11-comments-and-docstrings">11. Comments and docstrings</a></li>
+<li><a href="#12-statements-vs-expressions">12. Statements vs expressions</a></li>
+<li><a href="#13-print">13. print()</a></li>
+<li><a href="#14-input">14. input()</a></li>
+<li><a href="#15-common-mistakes-and-how-to-avoid-them">15. Common mistakes and how to avoid them</a></li>
+</ol></nav>
+<main>
+<header class="hero"><h1>Phase 01 — Python Environment &amp; First Programs</h1><p class="summary">What Python is, how CPython runs code, installation, versions, the REPL, running scripts, indentation, comments, statements vs expressions, print() and input().</p><div class="tags"><span class="tag">#python</span><span class="tag">#phase-01</span><span class="tag">#python-foundations</span><span class="tag">#interpreter</span><span class="tag">#cpython</span><span class="tag">#bytecode</span><span class="tag">#repl</span><span class="tag">#path</span><span class="tag">#indentation</span><span class="tag">#print</span><span class="tag">#input</span></div></header>
+<p><strong>Phase 01 — Python Environment &amp; First Programs</strong> (Part I: Python Foundations). Python is a readable, general-purpose language: when you run a <code>.py</code> file, CPython compiles the whole file to bytecode, then executes it on the Python Virtual Machine.</p>
+<h2 id="key-ideas">Key ideas</h2>
+<ul>
+<li>The whole file is compiled before any line runs, so a SyntaxError anywhere stops everything, while a runtime error stops only at the failing line.</li>
+<li>Bytecode is not machine code. The Python Virtual Machine, a C program inside CPython, executes it.</li>
+<li>Python is the language; CPython is its reference implementation in C.</li>
+<li><code>PATH</code> decides which <code>python</code> runs. Check <code>sys.executable</code> and install with <code>python -m pip</code>.</li>
+<li>Use Python 3.14 (or 3.15). Micro upgrades are safe; minor upgrades need testing. Never use Python 2.</li>
+<li>The REPL auto-displays expression values; scripts only show what you <code>print()</code>.</li>
+<li>Indentation defines blocks: a line ending in <code>:</code> plus 4 spaces, never mixed with tabs.</li>
+<li>Expressions produce values; statements perform actions. <code>=</code> assigns, <code>==</code> compares.</li>
+<li><code>print()</code> displays text and returns <code>None</code>. <code>input()</code> always returns a <code>str</code>, so convert and validate it.</li>
+<li>Start every script with the <code>main()</code> + <code>if __name__ == "__main__":</code> pattern.</li>
+</ul>
+<h2 id="1-what-python-is">1. What Python is</h2>
+<h3 id="first-principles">First principles</h3>
+<p>A CPU only understands <strong>machine code</strong>: long sequences of numbers meaning things like "add these two values" or "jump to this memory address." Humans are very bad at writing that directly. A <strong>programming language</strong> is a precise, human-readable way to write instructions, together with a program that translates them into something the machine can run.</p>
+<blockquote>
+<p><strong>Analogy:</strong> you write a recipe in English, and a translator turns it into a very simple instruction set for a kitchen robot. Python is the English recipe; the interpreter is the translator and the robot together.</p>
+</blockquote>
+<p><strong>Python</strong> is a <strong>high-level, general-purpose</strong> programming language designed for <strong>readability</strong>.</p>
+<h3 id="why-it-exists">Why it exists</h3>
+<ul>
+<li>Guido van Rossum started Python as a hobby project in late 1989; the first public release came in 1991. The name comes from <em>Monty Python</em>, not the snake.</li>
+<li>Programmers then had two main options: <strong>C</strong>, which was fast and powerful but slow to write and easy to get wrong, and <strong>shell scripts</strong>, which were quick to write but messy for anything non-trivial.</li>
+<li>Python aimed for the middle: as easy as a script, structured enough for real programs, and above all readable.</li>
+<li><strong>Core belief:</strong> code is read far more often than it is written.</li>
+</ul>
+<h3 id="how-it-works">How it works</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High-level</td>
+<td>You describe <em>what</em> you want ("sort this list"), not how the hardware does it.</td>
+</tr>
+<tr>
+<td>General-purpose</td>
+<td>Not built for one job: web, data, AI, automation, DevOps, testing and science.</td>
+</tr>
+<tr>
+<td>Dynamically typed</td>
+<td>Types are worked out while the program runs. You don't declare them.</td>
+</tr>
+<tr>
+<td>Garbage collected</td>
+<td>Python frees memory you no longer use.</td>
+</tr>
+<tr>
+<td>Interpreted (mostly)</td>
+<td>You run the source directly; behind the scenes it's compiled to bytecode first (section 2).</td>
+</tr>
+<tr>
+<td>Batteries included</td>
+<td>A large standard library ships with Python (<code>json</code>, <code>math</code>, <code>pathlib</code>, …).</td>
+</tr>
+</tbody>
+</table>
+<p>When raw speed matters, Python calls fast code written in C underneath, which is why it's both productive and practical.</p>
+<h3 id="simple-example">Simple example</h3>
+<pre><code class="language-python">names = [&quot;Asha&quot;, &quot;Ravi&quot;, &quot;Meera&quot;]
+for name in names:               # reads almost like English
+    print(f&quot;Hello, {name}!&quot;)     # Hello, Asha!  Hello, Ravi!  Hello, Meera!
+</code></pre>
+<h3 id="real-world-example">Real-world example</h3>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Real-world examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web backends</td>
+<td>Instagram (Django); FastAPI powers many modern APIs</td>
+</tr>
+<tr>
+<td>Data and AI</td>
+<td>pandas (data analysis), PyTorch and scikit-learn (machine learning), LLM applications</td>
+</tr>
+<tr>
+<td>Automation</td>
+<td>Renaming thousands of files, scraping websites, filling spreadsheets</td>
+</tr>
+<tr>
+<td>DevOps and cloud</td>
+<td>Deployment scripts, infrastructure tooling</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>Automated test suites, even for code written in other languages</td>
+</tr>
+<tr>
+<td>Science</td>
+<td>Physics simulations, astronomy, bioinformatics</td>
+</tr>
+</tbody>
+</table>
+<p>A small automation script, the kind of job Python is famous for:</p>
+<pre><code class="language-python">from pathlib import Path
+
+total = 0.0
+for receipt in Path(&quot;receipts&quot;).glob(&quot;*.txt&quot;):   # every .txt file in the receipts folder
+    total += float(receipt.read_text())           # each file holds one amount, e.g. &quot;249.50&quot;
+print(f&quot;Total spent: ₹{total:.2f}&quot;)
+</code></pre>
+<h3 id="correct-code">✅ Correct code</h3>
+<pre><code class="language-python">import this   # prints &quot;The Zen of Python&quot;: Python's guiding principles
+
+monthly_salary = 50_000             # readable names make code explain itself
+months_per_year = 12
+annual_salary = monthly_salary * months_per_year
+print(annual_salary)                # 600000
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">message = &quot;Hello&quot;
+print(mesage)
+</code></pre>
+<pre><code class="language-text">NameError: name 'mesage' is not defined. Did you mean: 'message'?
+</code></pre>
+<pre><code class="language-python">Print(&quot;Hello&quot;)
+</code></pre>
+<pre><code class="language-text">NameError: name 'Print' is not defined. Did you mean: 'print'?
+</code></pre>
+<p><strong>Why:</strong> readable doesn't mean forgiving. Python never guesses what you meant. Names must match <strong>exactly</strong>, and Python is <strong>case-sensitive</strong>: <code>print</code>, <code>Print</code> and <code>PRINT</code> are three different names.</p>
+<h3 id="exercises">Exercises</h3>
+<p><strong>E1. Name one task in your life or work that you could automate with Python. Describe it in plain words, with no code.</strong></p>
+<p><strong>Answer (example):</strong> every month I download bank-statement CSV files and copy totals into a spreadsheet by hand. A Python script could read every CSV in a folder, add up spending by category and write a summary report. Other good answers: renaming photos by date, sending reminder emails, tracking price drops, organising a Downloads folder.</p>
+<p><strong>E2. Which of these lines run without an error?</strong></p>
+<pre><code class="language-python">print(&quot;a&quot;)
+Print(&quot;a&quot;)
+PRINT(&quot;a&quot;)
+</code></pre>
+<p><strong>Answer:</strong> only <code>print("a")</code>. The other two raise <code>NameError</code>, because Python is case-sensitive and only the lowercase built-in <code>print</code> exists.</p>
+<p><strong>E3. Match each task to the area of Python use:</strong> (a) training a model to detect spam, (b) an API that serves a mobile app, (c) a nightly script that backs up a database, (d) checking a website still works after every code change.</p>
+<p><strong>Answer:</strong> (a) data and AI, (b) web backends, (c) automation / DevOps, (d) testing.</p>
+<h3 id="debugging-problems">Debugging problems</h3>
+<p><strong>D1. This script crashes. Why, and what is the fix?</strong></p>
+<pre><code class="language-python">greeting = &quot;Good morning&quot;
+print(Greeting)
+</code></pre>
+<p><strong>Answer:</strong> <code>NameError: name 'Greeting' is not defined. Did you mean: 'greeting'?</code> The variable was created as lowercase <code>greeting</code>, but it's used as <code>Greeting</code>. Python is case-sensitive. Fix: <code>print(greeting)</code>.</p>
+<hr />
+<h2 id="2-how-python-code-executes">2. How Python code executes</h2>
+<h3 id="first-principles_1">First principles</h3>
+<p>Your CPU understands only <strong>machine code</strong>: numbers that mean tiny actions like "add these two values" or "jump to this memory address." It cannot read <code>price * 0.18</code>. Something has to <strong>translate</strong> your text into actions. There are two classic ways to do that:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>How it works</th>
+<th>Analogy</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compile ahead of time</strong></td>
+<td>Translate the whole program into machine code first, then run that</td>
+<td>A translator converts a whole book before anyone reads it</td>
+<td>C, Rust, Go</td>
+</tr>
+<tr>
+<td><strong>Interpret</strong></td>
+<td>A program reads your code and carries it out as it goes</td>
+<td>A live interpreter translating a speech sentence by sentence</td>
+<td>Early BASIC, shell scripts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>CPython uses a mix of both:</strong></p>
+<ol>
+<li>It first <strong>translates your whole file</strong> into a simpler language called <strong>bytecode</strong>. That's the "compile" part.</li>
+<li>Then a program inside CPython, the <strong>Python Virtual Machine (PVM)</strong>, reads that bytecode and <strong>carries it out</strong>, one instruction at a time. That's the "interpret" part.</li>
+</ol>
+<blockquote>
+<p><strong>Analogy:</strong> a chef gets a recipe in your handwriting. First they rewrite the <em>whole</em> recipe as a clean, numbered checklist of simple steps (compile), and they refuse to start if any line is unreadable (SyntaxError). Then they cook by following the checklist one step at a time (execute). Something can still go wrong while cooking, like running out of an ingredient (runtime error), but only at that step.</p>
+</blockquote>
+<p>Key words:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source code</strong></td>
+<td>The text you write in a <code>.py</code> file</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>One meaningful piece of that text: a name, a number, a symbol, a keyword</td>
+</tr>
+<tr>
+<td><strong>AST</strong> (Abstract Syntax Tree)</td>
+<td>A tree that describes the <em>structure</em> of your code: "assign the result of multiplying <code>price</code> by <code>0.18</code> to <code>tax</code>"</td>
+</tr>
+<tr>
+<td><strong>Bytecode</strong></td>
+<td>A list of simple instructions for the Python Virtual Machine. Not CPU machine code</td>
+</tr>
+<tr>
+<td><strong>PVM</strong> (Python Virtual Machine)</td>
+<td>The loop inside CPython that executes bytecode instructions one by one</td>
+</tr>
+<tr>
+<td><strong>Interpreter</strong></td>
+<td>The whole <code>python</code> program (CPython), which contains <em>all</em> of the stages below</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-it-exists_1">Why it exists</h3>
+<p>Why not just translate straight to machine code, or re-read the text line by line?</p>
+<ul>
+<li><strong>Portability:</strong> bytecode is the same on every computer. Only the PVM needs to be built for each type of CPU, and CPython's C code already is. Your <code>.py</code> files run anywhere Python is installed, with no separate build per machine.</li>
+<li><strong>Speed:</strong> re-reading and re-understanding text every time a line runs (for example, inside a loop that repeats a million times) would be very slow. Bytecode is understood once and then executed quickly.</li>
+<li><strong>Simplicity:</strong> producing optimized machine code for every CPU is extremely hard. One virtual machine written in C is far simpler to build and maintain.</li>
+<li><strong>Early error detection:</strong> because the <em>whole</em> file is checked before anything runs, grammar mistakes are reported immediately instead of halfway through a job.</li>
+<li><strong>Caching:</strong> bytecode can be saved to disk (<code>.pyc</code> files), so large apps don't redo the translation on every start.</li>
+</ul>
+<h3 id="how-it-works_1">How it works</h3>
+<pre><code class="language-text">           your file (text)
+                 │
+   ┌─────────────▼─────────────┐
+   │ 1. TOKENIZE               │  text  →  tokens          ← unclosed strings caught here
+   ├───────────────────────────┤
+   │ 2. PARSE                  │  tokens →  AST (a tree)   ← grammar errors caught here
+   ├───────────────────────────┤
+   │ 3. COMPILE                │  AST    →  bytecode
+   └─────────────┬─────────────┘
+                 │   ↑ steps 1–3 happen for the WHOLE file before anything runs
+   ┌─────────────▼─────────────┐
+   │ 4. EXECUTE (the PVM)      │  runs bytecode one instruction at a time
+   └───────────────────────────┘                            ← runtime errors happen here
+</code></pre>
+<p>We'll follow one small file through every stage:</p>
+<pre><code class="language-python"># bill.py
+price = 100
+tax = price * 0.18
+print(price + tax)
+</code></pre>
+<h4 id="stage-1-tokenize-split-the-text-into-pieces">Stage 1: Tokenize — split the text into pieces</h4>
+<p>Python reads the text character by character and groups it into <strong>tokens</strong>, the way you'd split a sentence into words and punctuation. Line 2 becomes:</p>
+<pre><code class="language-text">NAME 'tax'   OP '='   NAME 'price'   OP '*'   NUMBER '0.18'   NEWLINE
+</code></pre>
+<ul>
+<li>Spaces between tokens and <strong>comments are thrown away</strong> here. That's why comments never affect your program.</li>
+<li>Indentation is turned into special INDENT/DEDENT tokens, which is how Python knows where blocks start and end.</li>
+<li>Errors caught here: text that can't even be split into valid pieces, such as <code>print("hi)</code> → <code>SyntaxError: unterminated string literal</code>.</li>
+</ul>
+<h4 id="stage-2-parse-check-the-grammar-and-build-a-tree">Stage 2: Parse — check the grammar and build a tree</h4>
+<p>The <strong>parser</strong> checks the tokens against Python's grammar rules ("an assignment is a target, then <code>=</code>, then an expression"). If they fit, it builds an <strong>AST</strong>. Line 2 becomes this tree:</p>
+<pre><code class="language-text">Assign
+├── target: Name 'tax'                 (store into tax)
+└── value:  BinOp  (multiply)
+            ├── left:  Name 'price'    (read price)
+            └── right: Constant 0.18
+</code></pre>
+<ul>
+<li>The tree captures <strong>meaning and order</strong>: "multiply first, then assign."</li>
+<li>Errors caught here: valid tokens in an invalid order, such as a missing <code>:</code> after <code>if</code>, an unclosed <code>(</code>, or <code>if x = 5:</code>. All of these are <code>SyntaxError</code> (or its subclass <code>IndentationError</code>).</li>
+</ul>
+<h4 id="stage-3-compile-turn-the-tree-into-bytecode">Stage 3: Compile — turn the tree into bytecode</h4>
+<p>The <strong>compiler</strong> walks the tree and writes a list of simple instructions. Line 2 becomes:</p>
+<pre><code class="language-text">LOAD_NAME    price     # look up the value of &quot;price&quot;
+LOAD_CONST   0.18      # get the constant 0.18
+BINARY_OP    *         # multiply the two values
+STORE_NAME   tax       # save the result under the name &quot;tax&quot;
+</code></pre>
+<ul>
+<li>The compiler also does small optimizations. For example, <code>x = 2 + 3</code> is compiled as if you had written <code>x = 5</code>.</li>
+<li>For <strong>imported</strong> modules, the bytecode is cached as a <code>.pyc</code> file in a <code>__pycache__/</code> folder, so the next import can skip stages 1–3. (The main script you run directly isn't cached.)</li>
+</ul>
+<h4 id="stage-4-execute-the-python-virtual-machine-runs-the-bytecode">Stage 4: Execute — the Python Virtual Machine runs the bytecode</h4>
+<p>The PVM is a loop written in C: <strong>fetch the next instruction → do it → move on</strong>, until the end. It works with a <strong>stack</strong>, a pile of values where you can only add to the top or take from the top, like a stack of plates.</p>
+<p>Here is the PVM running line 2, assuming line 1 already stored <code>price = 100</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>What the PVM does</th>
+<th>Stack afterwards</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LOAD_NAME price</code></td>
+<td>Looks up <code>price</code>, pushes its value</td>
+<td><code>[100]</code></td>
+</tr>
+<tr>
+<td><code>LOAD_CONST 0.18</code></td>
+<td>Pushes the constant</td>
+<td><code>[100, 0.18]</code></td>
+</tr>
+<tr>
+<td><code>BINARY_OP *</code></td>
+<td>Pops two values, multiplies them, pushes the result</td>
+<td><code>[18.0]</code></td>
+</tr>
+<tr>
+<td><code>STORE_NAME tax</code></td>
+<td>Pops the top value and saves it as <code>tax</code></td>
+<td><code>[]</code></td>
+</tr>
+</tbody>
+</table>
+<p>Line 3 works the same way: it loads <code>print</code>, <code>price</code> and <code>tax</code>, adds <code>price + tax</code> to get <code>118.0</code>, then calls <code>print</code> with it. Output:</p>
+<pre><code class="language-text">118.0
+</code></pre>
+<ul>
+<li><strong>Runtime errors happen during this stage</strong>, at the exact instruction that fails: <code>LOAD_NAME</code> can't find a name → <code>NameError</code>; <code>BINARY_OP</code> divides by zero → <code>ZeroDivisionError</code>.</li>
+<li>When an error isn't handled, the PVM stops and prints a <strong>traceback</strong>. Read its <strong>last line</strong> first (the error type and message), then read upward to find the file and line number.</li>
+</ul>
+<h4 id="where-each-kind-of-error-comes-from">Where each kind of error comes from</h4>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Example code</th>
+<th>Error</th>
+<th>Does earlier code run?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Tokenize</td>
+<td><code>print("hi)</code></td>
+<td><code>SyntaxError: unterminated string literal</code></td>
+<td>No, nothing runs</td>
+</tr>
+<tr>
+<td>2. Parse</td>
+<td><code>if total &gt; 5</code></td>
+<td><code>SyntaxError: expected ':'</code></td>
+<td>No, nothing runs</td>
+</tr>
+<tr>
+<td>2. Parse</td>
+<td>badly indented line</td>
+<td><code>IndentationError: unexpected indent</code></td>
+<td>No, nothing runs</td>
+</tr>
+<tr>
+<td>4. Execute</td>
+<td><code>print(totl)</code></td>
+<td><code>NameError: name 'totl' is not defined</code></td>
+<td>Yes, until this line</td>
+</tr>
+<tr>
+<td>4. Execute</td>
+<td><code>print(10 / 0)</code></td>
+<td><code>ZeroDivisionError: division by zero</code></td>
+<td>Yes, until this line</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The one rule to remember:</strong> stages 1–3 process the <strong>whole file</strong> before stage 4 starts. So a <code>SyntaxError</code> anywhere stops <em>everything</em>, while a runtime error stops only at the line where it happens.</p>
+<h3 id="simple-example_1">Simple example</h3>
+<p>You can watch every stage yourself on <code>bill.py</code>:</p>
+<pre><code class="language-bash">python -m tokenize bill.py   # stage 1: shows every token
+python -m ast bill.py        # stage 2: shows the AST
+python -m dis bill.py        # stage 3: shows the bytecode
+python bill.py               # all 4 stages: prints 118.0
+</code></pre>
+<p>Or inside Python:</p>
+<pre><code class="language-python">import dis                   # &quot;dis&quot; = disassembler: shows the bytecode Python generated
+dis.dis(&quot;tax = price * 0.18&quot;)
+</code></pre>
+<pre><code class="language-text">LOAD_NAME    price
+LOAD_CONST   0.18
+BINARY_OP    5 (*)
+STORE_NAME   tax
+...                          # exact instructions vary between Python versions
+</code></pre>
+<h3 id="real-world-example_1">Real-world example</h3>
+<ul>
+<li>A web service has a typo in one rarely used module. Because every imported module goes through stages 1–3 when it's loaded, the server <strong>fails to start at all</strong>, even though the broken code would almost never run. That's why teams check syntax and run linters in CI before deploying.</li>
+<li>A Django or FastAPI app imports hundreds of modules at startup. Cached <code>.pyc</code> files mean those modules don't go through stages 1–3 again on every restart.</li>
+</ul>
+<h3 id="correct-code_1">✅ Correct code</h3>
+<pre><code class="language-bash">python -m py_compile app.py   # runs stages 1–3 only: reports any SyntaxError without running the program
+</code></pre>
+<p>A file with valid grammar passes stages 1–3, then runs top to bottom:</p>
+<pre><code class="language-python">print(&quot;Line 1 runs&quot;)
+print(&quot;Line 2 runs&quot;)
+print(&quot;Line 3 runs&quot;)
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_1">❌ Incorrect code and why it fails</h3>
+<p><strong>A runtime error</strong> (valid grammar, fails in stage 4):</p>
+<pre><code class="language-python">print(&quot;Line 1 runs&quot;)
+print(&quot;Line 2 runs&quot;)
+print(10 / 0)          # crashes HERE
+print(&quot;Line 4 runs&quot;)   # never reached
+</code></pre>
+<pre><code class="language-text">Line 1 runs
+Line 2 runs
+Traceback (most recent call last):
+  File &quot;file_a.py&quot;, line 3, in &lt;module&gt;
+    print(10 / 0)
+ZeroDivisionError: division by zero
+</code></pre>
+<p><strong>A syntax error</strong> (invalid grammar, fails in stage 2):</p>
+<pre><code class="language-python">print(&quot;Line 1 runs&quot;)
+print(&quot;Line 2 runs&quot;)
+print(&quot;Line 3&quot;         # missing closing parenthesis
+print(&quot;Line 4 runs&quot;)
+</code></pre>
+<pre><code class="language-text">  File &quot;file_b.py&quot;, line 3
+    print(&quot;Line 3&quot;
+         ^
+SyntaxError: '(' was never closed
+</code></pre>
+<p><strong>Why:</strong> in the second file <strong>nothing prints, not even line 1</strong>. The parser rejects the whole file in stage 2, so stage 4 never starts. In the first file, stages 1–3 succeed, so lines 1 and 2 actually run before stage 4 hits the division by zero.</p>
+<h3 id="exercises_1">Exercises</h3>
+<p><strong>E1. Predict the output of each file.</strong></p>
+<pre><code class="language-python"># ex1a.py
+print(&quot;A&quot;)
+print(&quot;B&quot;)
+print(int(&quot;hello&quot;))
+print(&quot;C&quot;)
+</code></pre>
+<pre><code class="language-python"># ex1b.py
+print(&quot;A&quot;)
+print(&quot;B&quot;))
+print(&quot;C&quot;)
+</code></pre>
+<p><strong>Answer:</strong></p>
+<ul>
+<li><code>ex1a.py</code> prints <code>A</code> and <code>B</code>, then crashes with <code>ValueError: invalid literal for int() with base 10: 'hello'</code>. It's a runtime error (stage 4), so the earlier lines run and <code>C</code> never prints.</li>
+<li><code>ex1b.py</code> prints <strong>nothing</strong>. It fails with <code>SyntaxError: unmatched ')'</code> during parsing (stage 2), before any line executes.</li>
+</ul>
+<p><strong>E2. Explain the difference between bytecode and machine code in 2–3 sentences.</strong></p>
+<p><strong>Answer:</strong> machine code is the instruction set the CPU runs directly, and it's specific to the hardware. Bytecode is a simpler, portable instruction set that Python generates from your source code. The CPU can't run it; the Python Virtual Machine reads each instruction and carries it out.</p>
+<p><strong>E3. Run <code>dis.dis("x = 2 + 3")</code>. What do you notice?</strong></p>
+<p><strong>Answer:</strong> the bytecode loads the constant <code>5</code> directly and stores it in <code>x</code>. There's no addition instruction: the compiler worked out <code>2 + 3</code> ahead of time (this is called <em>constant folding</em>). It shows that compilation really happens before execution.</p>
+<p><strong>E4. Fill in the stack after each instruction, given <code>x = 10</code> already ran. The code is <code>y = x - 1</code>.</strong></p>
+<pre><code class="language-text">LOAD_NAME    x
+LOAD_CONST   1
+BINARY_OP    -
+STORE_NAME   y
+</code></pre>
+<p><strong>Answer:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Stack afterwards</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LOAD_NAME x</code></td>
+<td><code>[10]</code></td>
+</tr>
+<tr>
+<td><code>LOAD_CONST 1</code></td>
+<td><code>[10, 1]</code></td>
+</tr>
+<tr>
+<td><code>BINARY_OP -</code></td>
+<td><code>[9]</code></td>
+</tr>
+<tr>
+<td><code>STORE_NAME y</code></td>
+<td><code>[]</code> (and <code>y</code> is now <code>9</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>E5. Which stage catches each problem?</strong> (a) <code>print("hi)</code>, (b) <code>if x &gt; 1</code> with no colon, (c) <code>print(10 / 0)</code>, (d) <code>print(totl)</code> when only <code>total</code> exists.</p>
+<p><strong>Answer:</strong> (a) stage 1, tokenizing: unterminated string. (b) stage 2, parsing: expected <code>':'</code>. (c) stage 4, executing: <code>ZeroDivisionError</code>. (d) stage 4, executing: <code>NameError</code>. (a) and (b) stop the whole file; (c) and (d) stop only at that line.</p>
+<h3 id="debugging-problems_1">Debugging problems</h3>
+<p><strong>D1. What does this file print? What happens after you fix the first problem?</strong></p>
+<pre><code class="language-python">print(&quot;Report starting&quot;)
+total = 100
+print(&quot;Total:&quot;, totl)
+print(&quot;Report finished&quot;
+</code></pre>
+<p><strong>Answer:</strong> it prints <strong>nothing</strong>: <code>SyntaxError: '(' was never closed</code> on line 4, even though line 3 has a different bug. Syntax errors are found in stages 1–3, before any runtime error can happen in stage 4. After adding the <code>)</code> on line 4, it prints <code>Report starting</code>, then crashes on line 3 with <code>NameError: name 'totl' is not defined. Did you mean: 'total'?</code>. Fix both: <code>print("Total:", total)</code> and <code>print("Report finished")</code>.</p>
+<hr />
+<h2 id="3-what-happens-when-you-run-a-py-file">3. What happens when you run a .py file</h2>
+<h3 id="first-principles_2">First principles</h3>
+<p>A <code>.py</code> file is just text sitting on your disk. It can't do anything by itself. "Running" it means starting a program, the Python <strong>interpreter</strong>, and handing it the path of that text file.</p>
+<h3 id="why-it-exists_2">Why it exists</h3>
+<p>Knowing the exact sequence of steps tells you <strong>where</strong> any problem comes from:</p>
+<ul>
+<li><code>'python' is not recognized</code> → the shell couldn't find the interpreter (step 1).</li>
+<li><code>SyntaxError</code> → compilation failed (step 4).</li>
+<li><code>ZeroDivisionError</code>, <code>NameError</code> and friends → execution failed (step 6).</li>
+<li>A non-zero exit code → the program reported failure to the operating system (step 7).</li>
+</ul>
+<h3 id="how-it-works_2">How it works</h3>
+<p><code>python hello.py</code>:</p>
+<ol>
+<li>The shell finds the <code>python</code> program by searching the folders in <code>PATH</code>.</li>
+<li>The interpreter starts up: it prepares the built-ins (<code>print</code>, <code>len</code>, …), the module search path and memory management.</li>
+<li>It reads <code>hello.py</code> as text (UTF-8).</li>
+<li>It compiles the <strong>entire</strong> file to bytecode. A syntax error stops everything here.</li>
+<li>It sets the special variable <code>__name__</code> to <code>"__main__"</code>, marking this file as the program being run directly.</li>
+<li>It executes the bytecode from top to bottom.</li>
+<li>It exits with an <strong>exit code</strong>: <code>0</code> means success; anything else (such as <code>1</code> after an unhandled exception) means failure.</li>
+</ol>
+<p><strong>What the interpreter does overall:</strong> starts up, reads, compiles, executes, manages memory, reports errors as tracebacks, and returns an exit code.</p>
+<h3 id="simple-example_2">Simple example</h3>
+<pre><code class="language-python"># hello.py
+print(&quot;Starting...&quot;)
+name = &quot;Asha&quot;
+print(&quot;Hello,&quot;, name)
+</code></pre>
+<pre><code class="language-text">$ python hello.py
+Starting...
+Hello, Asha
+</code></pre>
+<h3 id="real-world-example_2">Real-world example</h3>
+<p>A nightly backup script is started by a scheduler. Nobody watches it, so the scheduler uses the <strong>exit code</strong> to decide whether to send an alert:</p>
+<pre><code class="language-bash">python backup.py &amp;&amp; echo &quot;Backup OK&quot; || echo &quot;Backup FAILED&quot;   # &amp;&amp; runs only when the exit code is 0
+</code></pre>
+<p>CI pipelines (Phase 71) work the same way: a step fails if its command exits with a non-zero code.</p>
+<h3 id="correct-code_2">✅ Correct code</h3>
+<pre><code class="language-python">&quot;&quot;&quot;check_run.py: Shows how the file was started.&quot;&quot;&quot;
+import sys
+
+print(__name__)       # __main__ when run directly with: python check_run.py
+sys.exit(0)           # explicit success exit code (the default at the end of a script anyway)
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_2">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">greet()              # NameError: name 'greet' is not defined
+
+def greet():
+    print(&quot;Hi&quot;)
+</code></pre>
+<p><strong>Why:</strong> the whole file is <em>compiled</em> first, but it's <em>executed</em> top to bottom. <code>def</code> is a statement that creates the function only when that line runs. On line 1 the function doesn't exist yet. Fix: define the function before calling it, or put the call inside <code>main()</code> as shown in section 9.</p>
+<h3 id="exercises_2">Exercises</h3>
+<p><strong>E1. Put these steps in the right order:</strong> execute bytecode · compile to bytecode · shell finds <code>python</code> via PATH · exit with a code · interpreter starts up · read the file · set <code>__name__</code> to <code>"__main__"</code>.</p>
+<p><strong>Answer:</strong> shell finds <code>python</code> via PATH → interpreter starts up → read the file → compile to bytecode → set <code>__name__</code> to <code>"__main__"</code> → execute bytecode → exit with a code.</p>
+<p><strong>E2. At which step does each problem happen?</strong> (a) <code>'python' is not recognized</code>, (b) <code>SyntaxError: expected ':'</code>, (c) <code>ZeroDivisionError: division by zero</code>.</p>
+<p><strong>Answer:</strong> (a) step 1, finding the program; (b) step 4, compiling; (c) step 6, executing.</p>
+<p><strong>E3. A script ends with an unhandled <code>ValueError</code>. What exit code does it return, and who cares?</strong></p>
+<p><strong>Answer:</strong> <code>1</code>. Schedulers, shell scripts and CI pipelines read it to know the program failed.</p>
+<h3 id="debugging-problems_2">Debugging problems</h3>
+<p><strong>D1.</strong> A beginner writes this and says: <em>"Python is broken. My first print didn't even run, but the bug is on line 4!"</em></p>
+<pre><code class="language-python">print(&quot;Program started&quot;)
+total = 5 + 3
+print(&quot;Total is&quot;, total)
+if total &gt; 5
+    print(&quot;Big number&quot;)
+</code></pre>
+<p><strong>Answer:</strong></p>
+<ol>
+<li>Error: <code>SyntaxError: expected ':'</code> on line 4.</li>
+<li><code>"Program started"</code> doesn't print because Python compiles the <strong>whole file</strong> before executing anything. Invalid grammar anywhere stops the entire file at step 4, so step 6 never starts.</li>
+<li>Fix: <code>if total &gt; 5:</code>. The output is then <code>Program started</code>, <code>Total is 8</code>, <code>Big number</code>.</li>
+</ol>
+<hr />
+<h2 id="4-installing-python-and-path">4. Installing Python and PATH</h2>
+<h3 id="first-principles_3">First principles</h3>
+<p>Your computer can't run <code>.py</code> text on its own. It needs the interpreter program on disk. <strong>Installing Python</strong> puts three things on your machine:</p>
+<ol>
+<li>The <strong>interpreter</strong> (<code>python</code>)</li>
+<li>The <strong>standard library</strong> (<code>math</code>, <code>json</code>, <code>pathlib</code>, <code>datetime</code>, …), Python's "batteries included"</li>
+<li><strong>pip</strong>, the tool for installing third-party packages such as FastAPI</li>
+</ol>
+<p>When you then type <code>python</code>, your shell has to <strong>find</strong> that program. It doesn't search your whole disk. It checks a short list of folders stored in an environment variable called <strong><code>PATH</code></strong>, in order, and runs the first match.</p>
+<h3 id="why-it-exists_3">Why it exists</h3>
+<ul>
+<li>Without an installed interpreter, there's nothing to run your code.</li>
+<li><code>PATH</code> lets you type <code>python</code> instead of a full path like <code>C:\Users\you\AppData\Local\Programs\Python\Python314\python.exe</code> every time.</li>
+</ul>
+<h3 id="how-it-works_3">How it works</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>How to install</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td>python.org, using the Python install manager (<code>py install 3.14</code>). The <code>py</code> launcher runs installed versions. With a traditional installer, tick "Add python.exe to PATH".</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>The python.org installer, or <code>brew install python@3.14</code>. Don't modify the Python that macOS itself relies on.</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Usually preinstalled as <code>python3</code>. Install extras with your package manager. <strong>Never remove the system Python</strong>: the OS depends on it.</td>
+</tr>
+<tr>
+<td>Any OS</td>
+<td><code>uv python install 3.14</code>, a modern version manager (covered in Phase 16)</td>
+</tr>
+</tbody>
+</table>
+<p><code>PATH</code> rules:</p>
+<ul>
+<li>Python's folder isn't in <code>PATH</code> → <code>'python' is not recognized…</code></li>
+<li>Two Pythons are in <code>PATH</code> → <strong>the first match wins</strong>, which may not be the one you expect.</li>
+<li>A terminal reads <code>PATH</code> when it opens, so changes only apply to <strong>newly opened</strong> terminals.</li>
+</ul>
+<pre><code class="language-text">PATH = C:\Windows\System32 ; C:\Users\you\AppData\Local\Programs\Python\Python314 ; ...
+         └ checked 1st ┘        └ checked 2nd ┘
+</code></pre>
+<h3 id="simple-example_3">Simple example</h3>
+<pre><code class="language-bash">python --version      # Windows (or: py --version)
+python3 --version     # macOS / Linux
+</code></pre>
+<pre><code class="language-text">Python 3.14.0
+</code></pre>
+<h3 id="real-world-example_3">Real-world example</h3>
+<p>Your team's README says "requires Python 3.14". Before you start, you prove which interpreter you're actually using, and you install packages through that exact interpreter:</p>
+<pre><code class="language-python">import sys
+print(sys.executable)   # e.g. /usr/local/bin/python3.14: the exact interpreter running this code
+print(sys.version)      # its exact version
+</code></pre>
+<pre><code class="language-bash">which python3                     # macOS/Linux: which file the command resolves to
+where python                      # Windows: every match, in PATH order
+python -m pip install fastapi     # installs into the SAME Python you will run
+</code></pre>
+<h3 id="correct-code_3">✅ Correct code</h3>
+<pre><code class="language-bash">python -m pip install requests   # runs pip *through* this python: no mismatch possible
+python app.py
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_3">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-bash">pip install requests     # succeeds...
+python app.py
+</code></pre>
+<pre><code class="language-text">ModuleNotFoundError: No module named 'requests'
+</code></pre>
+<p><strong>Why:</strong> with two Pythons installed, bare <code>pip</code> can belong to a different installation from <code>python</code>. The package went into one interpreter and the script ran on the other. Each installation has its own separate set of packages.</p>
+<h3 id="exercises_3">Exercises</h3>
+<p><strong>E1. Verify your setup and write down the results.</strong></p>
+<pre><code class="language-bash">python --version          # or python3 / py
+</code></pre>
+<pre><code class="language-python">import sys, platform
+print(sys.executable)
+print(platform.python_implementation())
+print(platform.python_version())
+</code></pre>
+<p><strong>Answer:</strong> results vary by machine. Check that the version is 3.10 or newer (ideally 3.14 or 3.15), that the implementation is <code>CPython</code>, and that <code>sys.executable</code> points to the Python <strong>you</strong> installed, not an older copy you'd forgotten about.</p>
+<p><strong>E2. <code>where python</code> on Windows prints two paths. Which one runs when you type <code>python</code>?</strong></p>
+<p><strong>Answer:</strong> the first one listed. <code>PATH</code> is searched in order and the first match wins.</p>
+<h3 id="debugging-problems_3">Debugging problems</h3>
+<p><strong>D1.</strong> A student installs Python on Windows, opens a terminal, types <code>python --version</code> and gets <code>'python' is not recognized as an internal or external command</code>. Give two likely causes and fixes.</p>
+<p><strong>Answer:</strong></p>
+<ul>
+<li><strong>Python's folder isn't in <code>PATH</code></strong> (the "Add to PATH" box wasn't ticked). Re-run the installer, choose <em>Modify</em> and add it to PATH, add the folder manually in Environment Variables, or use the <code>py</code> launcher, which doesn't depend on PATH.</li>
+<li><strong>The terminal was opened before Python was installed</strong>, so it never saw the new <code>PATH</code>. Close it and open a new one.</li>
+<li>Also possible: typing <code>python</code> opens the Microsoft Store because of a Windows "app execution alias". Turn it off under <em>Settings → Apps → Advanced app settings → App execution aliases</em>, or use <code>py</code>.</li>
+</ul>
+<p><strong>D2.</strong> A developer runs <code>pip install requests</code> (success), then <code>python app.py</code> gives <code>ModuleNotFoundError: No module named 'requests'</code>. They have two Pythons installed. What happened, and how do you prove it?</p>
+<p><strong>Answer:</strong> <code>pip</code> and <code>python</code> belong to different installations: the package went into Python A, but the script ran on Python B. Proof: compare the path shown by <code>pip --version</code> with <code>print(sys.executable)</code> inside <code>app.py</code>; they won't match. Fix: <code>python -m pip install requests</code>, and later use one virtual environment per project (Phase 16).</p>
+<hr />
+<h2 id="5-python-versions">5. Python versions</h2>
+<h3 id="first-principles_4">First principles</h3>
+<p>A language keeps changing: new features arrive, old ones are removed, bugs get fixed. A <strong>version number</strong> communicates <em>how big</em> a change is, so you know whether upgrading is safe and which features you can use.</p>
+<pre><code class="language-text">3 . 15 . 0
+major . minor . micro
+</code></pre>
+<h3 id="why-it-exists_4">Why it exists</h3>
+<ul>
+<li>It tells you at a glance whether an upgrade can break your code.</li>
+<li>It tells you which syntax and features are available. Code written for 3.10 may not run on 3.9.</li>
+<li><strong>Python 2 → 3 is the reason to take this seriously.</strong> Python 3 (2008) fixed deep design problems, but that meant breaking backward compatibility: Python 2 code often doesn't run on Python 3. Python 2 reached end of life on <strong>January 1, 2020</strong>.</li>
+</ul>
+<h3 id="how-it-works_4">How it works</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+<th>Is upgrading safe?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>major</td>
+<td>Huge, breaking changes (only ever happened once, 2 → 3)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>minor</td>
+<td>New features, released every October; may remove deprecated features</td>
+<td>Test first</td>
+</tr>
+<tr>
+<td>micro</td>
+<td>Bug and security fixes only</td>
+<td>Yes, apply promptly</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Each minor version gets about 2 years of bug fixes, then security fixes only, and reaches end of life after about 5 years.</li>
+<li><strong>As of October 2026:</strong> Python 3.15 is the newest release (one notable change: UTF-8 is now the default encoding). Python 3.14 is the safest choice for this roadmap because every library supports it. Avoid anything below 3.10.</li>
+</ul>
+<h3 id="simple-example_4">Simple example</h3>
+<pre><code class="language-python">import sys
+print(sys.version_info)              # sys.version_info(major=3, minor=14, micro=0, ...)
+print(sys.version_info &gt;= (3, 10))   # True when running Python 3.10 or newer
+</code></pre>
+<h3 id="real-world-example_4">Real-world example</h3>
+<p>A project states the versions it supports in its <code>pyproject.toml</code> (Phase 16), and its CI runs the tests on several versions before the team upgrades:</p>
+<pre><code class="language-toml">[project]
+name = &quot;expense-tracker&quot;
+requires-python = &quot;&gt;=3.12&quot;   # pip refuses to install it on older Pythons
+</code></pre>
+<p>Professional habit: choose a version all your dependencies support, pin it, and upgrade <strong>deliberately</strong> once the tests pass, not on release day.</p>
+<h3 id="correct-code_4">✅ Correct code</h3>
+<pre><code class="language-python">import sys
+
+if sys.version_info &lt; (3, 10):                                 # compares numbers part by part
+    sys.exit(&quot;This program needs Python 3.10 or newer.&quot;)       # prints the message, exits with code 1
+print(&quot;Version OK&quot;)
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_4">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">print &quot;Hello&quot;
+</code></pre>
+<pre><code class="language-text">SyntaxError: Missing parentheses in call to 'print'. Did you mean print(...)?
+</code></pre>
+<p><strong>Why:</strong> this is Python 2 syntax. In Python 3, <code>print</code> is a function, and calling a function needs parentheses. If a tutorial writes this, it's outdated.</p>
+<pre><code class="language-python">print(&quot;3.9&quot; &lt; &quot;3.10&quot;)   # False!
+</code></pre>
+<p><strong>Why:</strong> strings are compared character by character, and <code>"9"</code> comes after <code>"1"</code>. Version strings must never be compared as text. Use <code>sys.version_info</code> with tuples like <code>(3, 10)</code>.</p>
+<h3 id="exercises_4">Exercises</h3>
+<p><strong>E1. For <code>3.13.7</code>, name the major, minor and micro parts. Is upgrading <code>3.13.7</code> → <code>3.13.8</code> safe? What about <code>3.13</code> → <code>3.14</code> for a large project?</strong></p>
+<p><strong>Answer:</strong> major <code>3</code>, minor <code>13</code>, micro <code>7</code>.</p>
+<ul>
+<li><code>3.13.7</code> → <code>3.13.8</code> is safe: micro releases contain only bug and security fixes.</li>
+<li><code>3.13</code> → <code>3.14</code> is not automatically safe: minor releases add features and can remove deprecated ones, and dependencies may lag. A professional team checks dependency support, runs the full test suite on 3.14 (usually in CI), fixes warnings, then switches.</li>
+</ul>
+<p><strong>E2. Which version would you choose?</strong> (a) a new learning project today, (b) a project whose main library only supports up to 3.13.</p>
+<p><strong>Answer:</strong> (a) 3.14 (3.15 also works for learning). (b) 3.13: the dependency decides, until it adds support for newer versions.</p>
+<h3 id="debugging-problems_4">Debugging problems</h3>
+<p><strong>D1.</strong> This code works on a teammate's laptop, but fails on yours with <code>SyntaxError: invalid syntax</code> on the <code>match</code> line. <code>python --version</code> shows <code>Python 3.9.18</code>. Why?</p>
+<pre><code class="language-python">command = &quot;start&quot;
+match command:
+    case &quot;start&quot;:
+        print(&quot;Starting&quot;)
+</code></pre>
+<p><strong>Answer:</strong> the <code>match</code> statement was added in Python 3.10. Python 3.9 doesn't know this syntax, so it fails during parsing. Fix: install Python 3.10+ (ideally 3.14). Rewriting it with <code>if</code>/<code>elif</code> would work too, but upgrading is the right fix, because 3.9 has reached end of life.</p>
+<hr />
+<h2 id="6-cpython-and-other-implementations">6. CPython and other implementations</h2>
+<h3 id="first-principles_5">First principles</h3>
+<p>"Python" means two separate things:</p>
+<ol>
+<li><strong>Python the language:</strong> the specification, the rules of what valid code is and what it should do.</li>
+<li><strong>A Python implementation:</strong> an actual program that runs Python code.</li>
+</ol>
+<p><strong>CPython</strong> is the official, <em>reference</em> implementation, written in C. When you download Python from python.org, you get CPython. When people say "Python," they almost always mean CPython.</p>
+<h3 id="why-it-exists_5">Why it exists</h3>
+<p>One language can have several implementations, each built for a different goal:</p>
+<table>
+<thead>
+<tr>
+<th>Implementation</th>
+<th>What it is</th>
+<th>Why it exists</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPython</strong></td>
+<td>The reference implementation, in C</td>
+<td>The standard: widest library support</td>
+</tr>
+<tr>
+<td><strong>PyPy</strong></td>
+<td>Python with a JIT compiler</td>
+<td>Much faster for long-running, pure-Python code</td>
+</tr>
+<tr>
+<td><strong>MicroPython</strong></td>
+<td>A tiny Python</td>
+<td>Runs on microcontrollers (ESP32, Raspberry Pi Pico)</td>
+</tr>
+<tr>
+<td><strong>GraalPy</strong></td>
+<td>Python on GraalVM</td>
+<td>Works alongside Java</td>
+</tr>
+<tr>
+<td><strong>Jython / IronPython</strong></td>
+<td>Python on the JVM / .NET</td>
+<td>Mostly historical today</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works_5">How it works</h3>
+<ul>
+<li>CPython follows exactly the pipeline in section 2: tokenizer, parser, compiler, bytecode and a virtual machine loop written in C.</li>
+<li>Many popular libraries (NumPy, database drivers) contain C code written against <strong>CPython's C API</strong>. That's a big reason CPython has the widest library support.</li>
+<li>Some behavior, such as reference counting and the GIL (Phases 26, 29 and 42), is a <strong>CPython detail</strong>, not a language guarantee. Interviewers like to check whether you know that.</li>
+</ul>
+<h3 id="simple-example_5">Simple example</h3>
+<pre><code class="language-python">import platform
+print(platform.python_implementation())   # 'CPython'
+print(platform.python_version())          # e.g. '3.14.0'
+</code></pre>
+<h3 id="real-world-example_5">Real-world example</h3>
+<ul>
+<li>A FastAPI backend deployed with the official <code>python:3.14</code> Docker image runs on <strong>CPython</strong>.</li>
+<li>A home weather station reads a temperature sensor on a $5 ESP32 board running <strong>MicroPython</strong>.</li>
+</ul>
+<h3 id="correct-code_5">✅ Correct code</h3>
+<pre><code class="language-python">import platform
+
+if platform.python_implementation() != &quot;CPython&quot;:
+    print(&quot;Warning: this tool is only tested on CPython&quot;)   # be explicit about what you support
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_5">❌ Incorrect code and why it fails</h3>
+<p>A desktop script copied onto an ESP32 board running MicroPython:</p>
+<pre><code class="language-python">import requests     # ImportError: no module named 'requests'
+</code></pre>
+<p><strong>Why:</strong> MicroPython is a separate, much smaller implementation. It ships only a small subset of the standard library and can't install normal PyPI packages with pip. Same language, different implementation, different available modules.</p>
+<h3 id="exercises_5">Exercises</h3>
+<p><strong>E1. Which implementation fits each case?</strong> (a) a normal FastAPI backend, (b) code on a $5 microcontroller, (c) a long-running, pure-Python number-crunching script where speed matters.</p>
+<p><strong>Answer:</strong> (a) <strong>CPython</strong>: the standard, and every library supports it. (b) <strong>MicroPython</strong>: small enough for devices with very little memory. (c) <strong>PyPy</strong> is a good candidate, because its JIT speeds up pure-Python loops a lot. Measure first, though: with C-heavy libraries like NumPy, CPython is often as fast or faster.</p>
+<p><strong>E2. True or false: "Code that works on CPython behaves identically on every implementation."</strong></p>
+<p><strong>Answer:</strong> false. All implementations follow the same language rules, but implementation details differ: speed, memory behavior, which C-based libraries work, and how much of the standard library is available.</p>
+<h3 id="debugging-problems_5">Debugging problems</h3>
+<p><strong>D1.</strong> You and a teammate run the same pure-Python benchmark. Theirs is five times faster. Your check script prints <code>CPython 3.14.0</code>; theirs prints <code>PyPy 7.3.x</code>. Explain the difference.</p>
+<p><strong>Answer:</strong> they're running a different implementation. PyPy's JIT compiler turns hot pure-Python loops into machine code while the program runs, which can be much faster than CPython's bytecode loop for this kind of code. It's not a bug. Always compare benchmarks on the same implementation and version.</p>
+<hr />
+<h2 id="7-the-repl">7. The REPL</h2>
+<h3 id="first-principles_6">First principles</h3>
+<p><strong>REPL</strong> stands for <strong>R</strong>ead → <strong>E</strong>val → <strong>P</strong>rint → <strong>L</strong>oop:</p>
+<ol>
+<li><strong>Read:</strong> it reads one line, or one block, of code that you type.</li>
+<li><strong>Eval:</strong> it compiles and executes that code.</li>
+<li><strong>Print:</strong> if the code produced a value, it shows it.</li>
+<li><strong>Loop:</strong> it goes back to step 1.</li>
+</ol>
+<h3 id="why-it-exists_6">Why it exists</h3>
+<p>Sometimes you want an answer <em>right now</em>: Does this method exist? What does this expression return? Creating a file just to check one line would be slow. The REPL gives instant feedback.</p>
+<h3 id="how-it-works_6">How it works</h3>
+<pre><code class="language-bash">python        # Windows (or: py)
+python3       # macOS / Linux
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&gt;&gt;&gt;</code></td>
+<td>Ready for a new statement</td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td>Continuing a block; press Enter on an empty line to finish it</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The REPL <strong>automatically displays the value of expressions</strong>. Scripts do <strong>not</strong>.</li>
+<li>It doesn't display <code>None</code>, so calls like <code>print("hi")</code> show only their output.</li>
+<li><code>_</code> holds the last value it displayed.</li>
+<li>Since Python 3.13 the REPL has colors and multi-line editing, and <code>exit</code> works without parentheses.</li>
+<li>Leave with <code>exit()</code>, or Ctrl+D (macOS/Linux) / Ctrl+Z then Enter (Windows).</li>
+</ul>
+<h3 id="simple-example_6">Simple example</h3>
+<pre><code class="language-python">&gt;&gt;&gt; 2 + 3              # expression: shown automatically
+5
+&gt;&gt;&gt; name = &quot;Asha&quot;      # assignment: produces no value, so nothing is shown
+&gt;&gt;&gt; name
+'Asha'
+&gt;&gt;&gt; if name:           # block: the prompt changes to &quot;...&quot;
+...     print(&quot;Hi&quot;)
+...
+Hi
+&gt;&gt;&gt; _                  # last displayed value
+'Asha'
+</code></pre>
+<h3 id="real-world-example_6">Real-world example</h3>
+<p>Before putting a date format into an API response, you check it in seconds:</p>
+<pre><code class="language-python">&gt;&gt;&gt; from datetime import date
+&gt;&gt;&gt; date(2026, 10, 15).strftime(&quot;%d %b %Y&quot;)
+'15 Oct 2026'
+&gt;&gt;&gt; dir(&quot;hello&quot;)[-5:]        # explore what methods an object has
+['swapcase', 'title', 'translate', 'upper', 'zfill']
+&gt;&gt;&gt; help(str.title)          # read the documentation (press q to quit)
+</code></pre>
+<p><code>python -i script.py</code> runs a script and then opens the REPL with all its variables, which is handy for inspecting state after a crash.</p>
+<h3 id="correct-code_6">✅ Correct code</h3>
+<pre><code class="language-python">&gt;&gt;&gt; &quot;backend developer&quot;.title()
+'Backend Developer'
+&gt;&gt;&gt; exit()
+</code></pre>
+<pre><code class="language-bash">$ python --version      # shell commands go in the terminal, AFTER leaving the REPL
+Python 3.14.0
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_6">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">&gt;&gt;&gt; python --version
+  File &quot;&lt;stdin&gt;&quot;, line 1
+    python --version
+           ^^^^^^^^^
+SyntaxError: invalid syntax
+</code></pre>
+<p><strong>Why:</strong> <code>python --version</code> is a <strong>shell</strong> command. Once you're inside Python (the <code>&gt;&gt;&gt;</code> prompt), everything you type is treated as Python code, and this isn't valid Python. Exit first, then run it in the terminal.</p>
+<h3 id="exercises_6">Exercises</h3>
+<p><strong>E1. In the REPL, type <code>10 * 4</code>. Then put <code>10 * 4</code> on its own line in a file and run the file. Why is the result different?</strong></p>
+<p><strong>Answer:</strong> the REPL shows <code>40</code>; the script shows <strong>nothing</strong>. The REPL auto-displays expression values, while a script computes <code>40</code> and throws it away unless you <code>print()</code> it.</p>
+<p><strong>E2. Predict exactly what the REPL shows for each line, in order:</strong> <code>x = 5</code>, <code>x</code>, <code>x * 2</code>, <code>_</code>, <code>print("hi")</code>.</p>
+<p><strong>Answer:</strong> nothing; <code>5</code>; <code>10</code>; <code>10</code>; <code>hi</code>. The last call returns <code>None</code>, which the REPL doesn't display.</p>
+<h3 id="debugging-problems_6">Debugging problems</h3>
+<p><strong>D1.</strong> A student copies a REPL session into <code>calc.py</code> and runs it:</p>
+<pre><code class="language-python">&gt;&gt;&gt; total = 5 + 3
+&gt;&gt;&gt; total
+</code></pre>
+<p>They get <code>SyntaxError: invalid syntax</code>. Why? And after removing the <code>&gt;&gt;&gt;</code> prompts, why does nothing print?</p>
+<p><strong>Answer:</strong> <code>&gt;&gt;&gt;</code> is the REPL's prompt, not Python code, so the file isn't valid Python. After removing the prompts, the file runs, but <code>total</code> on its own line is just an expression: scripts don't auto-display values. Use <code>print(total)</code>.</p>
+<hr />
+<h2 id="8-py-files">8. .py files</h2>
+<h3 id="first-principles_7">First principles</h3>
+<p>A <code>.py</code> file is a <strong>plain-text file</strong> containing Python code, saved in UTF-8. The <code>.py</code> extension tells editors and the operating system "this is Python," but the content is just text. When one file <strong>imports</strong> another, the file name (without <code>.py</code>) becomes the <strong>module name</strong>.</p>
+<h3 id="why-it-exists_7">Why it exists</h3>
+<p>Anything typed in the REPL disappears when you exit. A file is <strong>saved, reusable, shareable and version-controlled</strong> with Git, and other files can import it. All real programs live in files.</p>
+<h3 id="how-it-works_7">How it works</h3>
+<ul>
+<li>Because a file name becomes a module name, it must be a valid Python name: letters, digits and underscores, not starting with a digit.</li>
+<li>When you run a script, Python searches <strong>the script's own folder first</strong> for imports. A file of yours with the same name as a standard-library module will be imported <strong>instead of</strong> the real one. This is called <em>shadowing</em>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>✅ Good name</th>
+<th>❌ Bad name</th>
+<th>Problem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoice_report.py</code></td>
+<td><code>Invoice Report.py</code></td>
+<td>Spaces break imports and terminal commands</td>
+</tr>
+<tr>
+<td><code>user_utils.py</code></td>
+<td><code>user-utils.py</code></td>
+<td>Hyphens can't be used in <code>import</code></td>
+</tr>
+<tr>
+<td><code>dice_roller.py</code></td>
+<td><code>random.py</code>, <code>json.py</code>, <code>math.py</code>, <code>email.py</code></td>
+<td>Shadows a standard-library module</td>
+</tr>
+<tr>
+<td><code>main.py</code></td>
+<td><code>1st_program.py</code></td>
+<td>A module name can't start with a digit</td>
+</tr>
+</tbody>
+</table>
+<p>Rule: use <code>lowercase_with_underscores.py</code>, as PEP 8 recommends.</p>
+<h3 id="simple-example_7">Simple example</h3>
+<pre><code class="language-python"># greet.py
+print(&quot;Hello from a file!&quot;)
+</code></pre>
+<pre><code class="language-bash">python greet.py      # Hello from a file!
+</code></pre>
+<h3 id="real-world-example_7">Real-world example</h3>
+<p>A small project split into files, each with one job:</p>
+<pre><code class="language-text">expense_tracker/
+├── main.py        # starts the program
+├── storage.py     # reads and saves expenses
+└── report.py      # builds the monthly summary
+</code></pre>
+<pre><code class="language-python"># main.py
+import report      # finds report.py in the same folder; module name = file name
+
+report.print_summary()
+</code></pre>
+<h3 id="correct-code_7">✅ Correct code</h3>
+<pre><code class="language-python"># report.py  (valid module name)
+def print_summary() -&gt; None:
+    print(&quot;Monthly summary: ₹12,450 spent&quot;)
+</code></pre>
+<pre><code class="language-python"># main.py
+import report
+report.print_summary()   # Monthly summary: ₹12,450 spent
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_7">❌ Incorrect code and why it fails</h3>
+<p>The same helper saved as <code>user-utils.py</code>:</p>
+<pre><code class="language-python">import user-utils
+</code></pre>
+<pre><code class="language-text">SyntaxError: invalid syntax
+</code></pre>
+<p><strong>Why:</strong> Python reads <code>user-utils</code> as <code>user</code> minus <code>utils</code>, an expression, not a module name. Module names follow the same rules as variable names, so the file must be called <code>user_utils.py</code>.</p>
+<h3 id="exercises_7">Exercises</h3>
+<p><strong>E1. Which file names are fine, and what's wrong with the others?</strong> <code>Monthly Report.py</code>, <code>monthly_report.py</code>, <code>2nd_try.py</code>, <code>email.py</code>, <code>price-check.py</code>, <code>price_check.py</code>.</p>
+<p><strong>Answer:</strong></p>
+<ul>
+<li>Fine: <code>monthly_report.py</code>, <code>price_check.py</code>.</li>
+<li><code>Monthly Report.py</code>: has a space (and capitals, against PEP 8).</li>
+<li><code>2nd_try.py</code>: starts with a digit.</li>
+<li><code>email.py</code>: shadows the standard-library <code>email</code> module.</li>
+<li><code>price-check.py</code>: the hyphen can't be imported.</li>
+</ul>
+<p><strong>E2. Why should code live in <code>.py</code> files rather than only in the REPL?</strong></p>
+<p><strong>Answer:</strong> REPL code disappears when you exit. Files are saved, can be re-run, shared, imported by other files and tracked with Git.</p>
+<h3 id="debugging-problems_7">Debugging problems</h3>
+<p><strong>D1.</strong> A student creates a file named <code>random.py</code> containing:</p>
+<pre><code class="language-python">import random
+
+print(random.randint(1, 6))
+</code></pre>
+<p>They get:</p>
+<pre><code class="language-text">AttributeError: partially initialized module 'random' has no attribute 'randint'
+(most likely due to a circular import)
+</code></pre>
+<p>Newer Python versions add a hint like <em>"consider renaming 'random.py'…"</em>. Why does this happen?</p>
+<p><strong>Answer:</strong> when Python handles <code>import random</code>, it searches the script's own folder first. It finds the student's <code>random.py</code> and imports <em>that file</em> instead of the standard library's <code>random</code>. That file is only half-loaded at that moment and has no <code>randint</code>. Fix: rename it, for example to <code>dice_roller.py</code>, and delete any leftover <code>__pycache__</code> folder. Never name files after standard-library modules.</p>
+<hr />
+<h2 id="9-running-code-from-the-terminal">9. Running code from the terminal</h2>
+<h3 id="first-principles_8">First principles</h3>
+<p>A <strong>terminal</strong> (shell) is a text interface to your operating system: you type a command, it runs a program. At any moment the terminal is "inside" one folder, the <strong>current working directory</strong>. Relative file names like <code>hello.py</code> are looked up in that folder.</p>
+<h3 id="why-it-exists_8">Why it exists</h3>
+<p>Servers, schedulers, Docker containers and CI pipelines have no "Run" button. They start Python with a command. Running from the terminal is how Python runs in the real world, so a professional must be comfortable with it.</p>
+<h3 id="how-it-works_8">How it works</h3>
+<pre><code class="language-bash">cd path/to/my_project    # change directory
+ls                       # macOS/Linux: list files (Windows: dir)
+python hello.py          # run the file in the CURRENT folder
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>When to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python file.py</code></td>
+<td>Runs a script</td>
+<td>Most of the time</td>
+</tr>
+<tr>
+<td><code>python -i file.py</code></td>
+<td>Runs the script, then opens the REPL with its variables</td>
+<td>Inspecting state after a run</td>
+</tr>
+<tr>
+<td><code>python -c "print(2**10)"</code></td>
+<td>Runs code given as text (no auto-display of values)</td>
+<td>Shell one-liners</td>
+</tr>
+<tr>
+<td><code>python -m module</code></td>
+<td>Runs a module found by its name</td>
+<td><code>python -m pip</code>, <code>python -m venv</code></td>
+</tr>
+</tbody>
+</table>
+<p>Exit codes:</p>
+<pre><code class="language-bash">python hello.py
+echo $?              # macOS/Linux       → 0 means success
+echo $LASTEXITCODE   # Windows PowerShell
+</code></pre>
+<p><strong>Professional script structure</strong> (fully explained in Phase 15):</p>
+<pre><code class="language-python">&quot;&quot;&quot;greet.py: Greets the user.&quot;&quot;&quot;     # module docstring: what this file is for
+
+def main() -&gt; None:                    # all the program's logic lives in a function
+    print(&quot;Hello from main!&quot;)
+
+if __name__ == &quot;__main__&quot;:             # True only when this file is run directly
+    main()                             # importing this file will NOT run main()
+</code></pre>
+<h3 id="simple-example_8">Simple example</h3>
+<pre><code class="language-bash">cd projects
+python hello.py
+</code></pre>
+<pre><code class="language-text">Hello, world!
+</code></pre>
+<h3 id="real-world-example_8">Real-world example</h3>
+<p>A daily report runs at 07:00 on a Linux server, started by <code>cron</code> with no human present:</p>
+<pre><code class="language-bash"># crontab entry: minute hour day month weekday  command
+0 7 * * * cd /home/asha/reports &amp;&amp; /usr/bin/python3 daily_report.py
+</code></pre>
+<p>The command moves into the right folder first, then calls Python with a full path, because a scheduler can't rely on your terminal's <code>PATH</code> or current folder.</p>
+<h3 id="correct-code_8">✅ Correct code</h3>
+<pre><code class="language-bash">python -c &quot;print('ready')&quot;            # code in quotes: the shell passes it to Python untouched
+python projects/hello.py              # or give the path relative to where you are
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_8">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-bash">python -c print(&quot;hi&quot;)
+</code></pre>
+<pre><code class="language-text">bash: syntax error near unexpected token `('
+</code></pre>
+<p><strong>Why:</strong> the <strong>shell</strong> reads the command line before Python ever sees it, and <code>(</code> has a special meaning to the shell. Wrap the code in quotes: <code>python -c 'print("hi")'</code>.</p>
+<pre><code class="language-bash">python hello.py     # while in the wrong folder
+</code></pre>
+<pre><code class="language-text">python: can't open file '/Users/you/hello.py': [Errno 2] No such file or directory
+</code></pre>
+<p><strong>Why:</strong> Python looks for <code>hello.py</code> in the current folder only.</p>
+<h3 id="exercises_8">Exercises</h3>
+<p><strong>E1. Create <code>about_me.py</code> that prints your name, your city and your goal on three lines. Use the <code>main()</code> structure. Run it from the terminal, then check its exit code.</strong></p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">&quot;&quot;&quot;about_me.py: Prints a short introduction.&quot;&quot;&quot;
+
+def main() -&gt; None:
+    print(&quot;Name: Riya&quot;)
+    print(&quot;City: Mumbai&quot;)
+    print(&quot;Goal: Become a professional Python backend developer&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<pre><code class="language-bash">python about_me.py
+echo $?             # or $LASTEXITCODE on PowerShell → 0
+</code></pre>
+<p><strong>E2. Predict what each command prints.</strong></p>
+<pre><code class="language-bash">python -c &quot;print(3 * 'ab')&quot;
+python -c &quot;2 + 2&quot;
+</code></pre>
+<p><strong>Answer:</strong> the first prints <code>ababab</code> (multiplying a string by an integer repeats it). The second prints <strong>nothing</strong>: code run with <code>-c</code> behaves like a script, not like the REPL.</p>
+<h3 id="debugging-problems_8">Debugging problems</h3>
+<p><strong>D1.</strong> A student's terminal is in <code>C:\Users\riya</code>. Their file is at <code>C:\Users\riya\projects\hello.py</code>. They run <code>python hello.py</code> and get <code>[Errno 2] No such file or directory</code>. What's wrong, and what are two ways to fix it?</p>
+<p><strong>Answer:</strong> Python looks for <code>C:\Users\riya\hello.py</code>, which doesn't exist: the file is in the <code>projects</code> subfolder. Fixes: <code>cd projects</code> then <code>python hello.py</code>, or run <code>python projects\hello.py</code>.</p>
+<hr />
+<h2 id="10-indentation">10. Indentation</h2>
+<h3 id="first-principles_9">First principles</h3>
+<p>Code has structure: <em>these</em> lines belong to the <code>if</code>, and <em>those</em> lines run afterward. Every language needs a way to mark where a <strong>block</strong> starts and ends. Languages like C and JavaScript use curly braces <code>{ }</code> and treat indentation as decoration. <strong>Python uses the indentation itself: the indentation <em>is</em> the structure.</strong></p>
+<h3 id="why-it-exists_9">Why it exists</h3>
+<p>Readability. In brace-based languages, indentation can <strong>lie</strong>: code can look nested when it isn't. In Python, what you see is what runs, and every Python codebase looks consistent.</p>
+<h3 id="how-it-works_9">How it works</h3>
+<ol>
+<li>A line that <strong>opens a block</strong> ends with a colon (<code>:</code>): <code>if</code>, <code>else</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>class</code> and others.</li>
+<li>The lines inside the block are <strong>indented further</strong> than the line that opened it.</li>
+<li>The block ends when the indentation <strong>returns to the previous level</strong>.</li>
+</ol>
+<ul>
+<li>Use <strong>4 spaces per level</strong> (PEP 8). Set your editor so the Tab key inserts 4 spaces (VS Code does this for Python by default).</li>
+<li><strong>Never mix tabs and spaces.</strong> A tab can look like 4 or 8 spaces depending on the editor, so Python 3 raises a <code>TabError</code> instead of guessing.</li>
+</ul>
+<h3 id="simple-example_9">Simple example</h3>
+<pre><code class="language-python">temperature = 38
+
+if temperature &gt; 37:                   # colon: a block starts here
+    print(&quot;You have a fever.&quot;)         # inside the if (4 spaces)
+    print(&quot;Please rest.&quot;)              # still inside the if
+print(&quot;Check complete.&quot;)               # back at the outer level: always runs
+</code></pre>
+<h3 id="real-world-example_9">Real-world example</h3>
+<p>An online shop decides the delivery charge:</p>
+<pre><code class="language-python">cart_total = 1200
+
+if cart_total &gt;= 999:
+    shipping = 0
+    print(&quot;Free delivery applied&quot;)
+else:
+    shipping = 49
+print(f&quot;Shipping: ₹{shipping}&quot;)        # outside both blocks: runs for every order
+</code></pre>
+<h3 id="correct-code_9">✅ Correct code</h3>
+<pre><code class="language-python">age = 20
+if age &gt;= 18:
+    print(&quot;Adult&quot;)
+    print(&quot;Can vote&quot;)
+print(&quot;Done&quot;)
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_9">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">if temperature &gt; 37:
+print(&quot;Fever&quot;)
+</code></pre>
+<pre><code class="language-text">IndentationError: expected an indented block after 'if' statement on line 1
+</code></pre>
+<p>After a colon, Python expects at least one indented line.</p>
+<pre><code class="language-python">print(&quot;Start&quot;)
+    print(&quot;Oops&quot;)
+</code></pre>
+<pre><code class="language-text">IndentationError: unexpected indent
+</code></pre>
+<p>You can't indent unless a block has just been opened.</p>
+<pre><code class="language-python">if temperature &gt; 37:
+    print(&quot;Fever&quot;)
+  print(&quot;Rest&quot;)        # 2 spaces: matches no existing level
+</code></pre>
+<pre><code class="language-text">IndentationError: unindent does not match any outer indentation level
+</code></pre>
+<p><strong>The dangerous one, a silent logic bug:</strong></p>
+<pre><code class="language-python">if temperature &gt; 37:
+    print(&quot;You have a fever.&quot;)
+print(&quot;Please rest.&quot;)      # meant to be inside the if, but runs for EVERYONE
+</code></pre>
+<p>This runs with no error, but behaves wrongly. Python can't read your intentions, only your indentation.</p>
+<h3 id="exercises_9">Exercises</h3>
+<p><strong>E1. Predict the output with <code>score = 45</code>, then with <code>score = 80</code>.</strong></p>
+<pre><code class="language-python">if score &gt;= 50:
+    print(&quot;Passed&quot;)
+    print(&quot;Well done&quot;)
+print(&quot;Result recorded&quot;)
+</code></pre>
+<p><strong>Answer:</strong> with <code>45</code>: only <code>Result recorded</code>. With <code>80</code>: <code>Passed</code>, <code>Well done</code>, <code>Result recorded</code>.</p>
+<h3 id="debugging-problems_9">Debugging problems</h3>
+<p><strong>D1. Find every error.</strong></p>
+<pre><code class="language-python">age = 20
+if age &gt;= 18
+print(&quot;Adult&quot;)
+  print(&quot;Can vote&quot;)
+</code></pre>
+<p><strong>Answer:</strong> three errors: the missing colon on line 2, line 3 not indented, and line 4 indented with 2 spaces, which matches no level. Python reports <strong>only the first error</strong> it finds, because parsing stops there. Fixed:</p>
+<pre><code class="language-python">age = 20
+if age &gt;= 18:
+    print(&quot;Adult&quot;)
+    print(&quot;Can vote&quot;)
+</code></pre>
+<p><strong>D2.</strong> This runs with no errors, but a user with a balance of <code>500</code> still sees "Purchase approved." Why?</p>
+<pre><code class="language-python">balance = 500
+price = 800
+
+if balance &lt; price:
+    print(&quot;Insufficient funds.&quot;)
+print(&quot;Purchase approved.&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>print("Purchase approved.")</code> isn't indented, so it's <strong>outside</strong> the <code>if</code> and runs every time. It should run only when funds are sufficient:</p>
+<pre><code class="language-python">if balance &lt; price:
+    print(&quot;Insufficient funds.&quot;)
+else:
+    print(&quot;Purchase approved.&quot;)
+</code></pre>
+<hr />
+<h2 id="11-comments-and-docstrings">11. Comments and docstrings</h2>
+<h3 id="first-principles_10">First principles</h3>
+<p>Everything from a <code>#</code> to the end of that line is a <strong>comment</strong>: Python ignores it. Comments are for <strong>humans</strong>. A <strong>docstring</strong> is different: a real string placed as the first statement of a module, function or class, which Python keeps.</p>
+<h3 id="why-it-exists_10">Why it exists</h3>
+<p>Code shows <strong>what</strong> happens. Comments explain <strong>why</strong>: the reasoning, business rules, constraints and anything that isn't obvious. Docstrings document <strong>how to use</strong> a module, function or class, and tools like <code>help()</code> and editors display them.</p>
+<h3 id="how-it-works_10">How it works</h3>
+<ul>
+<li>Comments are thrown away by the tokenizer (step 1 in section 2). They never reach the bytecode.</li>
+<li>A <code>#</code> inside a string is just a character, not a comment.</li>
+<li>Docstrings are string literals stored in the object's <code>__doc__</code> attribute.</li>
+<li>PEP 8 style: inline comments have <strong>two spaces</strong> before <code>#</code> and <strong>one space</strong> after it.</li>
+</ul>
+<h3 id="simple-example_10">Simple example</h3>
+<pre><code class="language-python"># Full-line comment
+tax_rate = 0.18  # inline comment
+
+def area(width: float, height: float) -&gt; float:
+    &quot;&quot;&quot;Return the area of a rectangle.&quot;&quot;&quot;   # docstring: kept by Python
+    return width * height
+
+help(area)       # shows: Return the area of a rectangle.
+</code></pre>
+<h3 id="real-world-example_10">Real-world example</h3>
+<p>Comments that record a business rule a newcomer couldn't guess from the code:</p>
+<pre><code class="language-python"># GST on restaurant bills is 5% (no input-tax credit), not the standard 18%.
+GST_RATE_RESTAURANT = 0.05
+
+# The payment gateway times out after 30 s, so we give up at 25 s to show our own error.
+PAYMENT_TIMEOUT_SECONDS = 25
+</code></pre>
+<h3 id="correct-code_10">✅ Correct code</h3>
+<pre><code class="language-python">count = count + 1  # the API returns page numbers starting at 0; our users expect 1-based pages
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_10">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">count = count + 1  # add 1 to count
+</code></pre>
+<p>Useless: it repeats the code and adds nothing.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+This is not really a comment.
+It's an unused string expression.
+&quot;&quot;&quot;
+</code></pre>
+<p>Works, but it's a misuse. For multi-line comments, start each line with <code>#</code>.</p>
+<pre><code class="language-python"># Apply 10% discount
+discount = 0.15
+</code></pre>
+<p>A comment that no longer matches the code. <strong>A wrong comment is worse than no comment</strong>, because readers trust it. Also avoid leaving old code commented out "just in case": delete it, since Git keeps the history.</p>
+<h3 id="exercises_10">Exercises</h3>
+<p><strong>E1. Rewrite this with good comments. Remove the useless ones and add one that explains <em>why</em>.</strong></p>
+<pre><code class="language-python"># set x to 1440
+x = 1440  # x is 1440
+# print x
+print(x)
+</code></pre>
+<p><strong>Answer:</strong> a meaningful name removes the need for most comments:</p>
+<pre><code class="language-python">MINUTES_PER_DAY = 1440  # 24 hours × 60 minutes; used for daily rate-limit resets
+print(MINUTES_PER_DAY)
+</code></pre>
+<p><strong>E2. What does this print?</strong></p>
+<pre><code class="language-python">print(&quot;Ticket #42&quot;)  # print the ticket
+</code></pre>
+<p><strong>Answer:</strong> <code>Ticket #42</code>. The <code>#</code> inside the quotes is part of the string. Only the <code>#</code> outside the string starts a comment.</p>
+<h3 id="debugging-problems_10">Debugging problems</h3>
+<p><strong>D1.</strong> Customers say they're being given 15% off, but the business rule is 10%. A developer looked at this code and said "it's fine, it applies 10%":</p>
+<pre><code class="language-python"># Apply the 10% loyalty discount
+discount = 0.15
+final_price = price * (1 - discount)
+</code></pre>
+<p>What went wrong, and what's the fix?</p>
+<p><strong>Answer:</strong> the developer trusted the comment instead of the code. The code applies <code>0.15</code>. Fix the value to <code>0.10</code> (after confirming the rule) and make sure the comment and code agree. Better still, use a named constant like <code>LOYALTY_DISCOUNT = 0.10</code>, so the code documents itself.</p>
+<hr />
+<h2 id="12-statements-vs-expressions">12. Statements vs expressions</h2>
+<h3 id="first-principles_11">First principles</h3>
+<ul>
+<li>An <strong>expression</strong> is something that <strong>produces a value</strong>: <code>5</code>, <code>5 + 3</code>, <code>len("hello")</code>, <code>price &gt; 100</code>. Test: can it go on the right side of <code>=</code>?</li>
+<li>A <strong>statement</strong> is an instruction that <strong>does something</strong>: <code>x = 5</code>, <code>import math</code>, <code>if x &gt; 3: ...</code>, <code>def f(): ...</code>.</li>
+</ul>
+<h3 id="why-it-exists_11">Why it exists</h3>
+<p>Separating the two keeps code clear and catches mistakes. Because assignment is a statement, Python can refuse <code>if x = 5:</code>, a typo that silently causes bugs in languages like C, where assignment is an expression.</p>
+<h3 id="how-it-works_11">How it works</h3>
+<ul>
+<li>Statements often <strong>contain</strong> expressions: in <code>total = price * qty</code>, the whole line is a statement, and <code>price * qty</code> is an expression inside it.</li>
+<li>An expression on its own line is also a valid statement, an <strong>expression statement</strong>: <code>print("hi")</code> is a function-call expression used as a statement.</li>
+<li>Places that need a value (an <code>if</code> condition, the right side of <code>=</code>, function arguments) accept only expressions.</li>
+<li>Long expressions can be wrapped in parentheses, and Python joins the lines automatically. Backslash (<code>\</code>) continuation is fragile (a trailing space after it breaks the line), and several statements on one line with <code>;</code> is bad style.</li>
+</ul>
+<h3 id="simple-example_11">Simple example</h3>
+<pre><code class="language-python">x = 5 + 3        # statement (assignment) containing the expression 5 + 3
+x * 2            # expression statement: computes 16, then discards it
+print(x &gt; 6)     # True: x &gt; 6 is an expression passed to print
+</code></pre>
+<h3 id="real-world-example_11">Real-world example</h3>
+<p>Pricing an order, with a long expression wrapped in parentheses:</p>
+<pre><code class="language-python">price = 499.0
+quantity = 3
+discount = 100.0
+gst_rate = 0.18
+
+total = (                              # one assignment statement...
+    (price * quantity - discount)      # ...whose value is one big expression
+    * (1 + gst_rate)
+)
+print(f&quot;Total: ₹{total:.2f}&quot;)          # Total: ₹1648.46
+</code></pre>
+<h3 id="correct-code_11">✅ Correct code</h3>
+<pre><code class="language-python">stock = 0
+if stock == 0:                         # == compares and produces True/False
+    print(&quot;Out of stock&quot;)
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_11">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">if x = 5:
+    print(&quot;five&quot;)
+</code></pre>
+<pre><code class="language-text">SyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?
+</code></pre>
+<p><strong>Why:</strong> an <code>if</code> needs an <strong>expression</strong> to test, and <code>x = 5</code> is an assignment <strong>statement</strong>. Use <code>==</code> to compare. (<code>:=</code>, the "walrus" operator, is an advanced feature covered later.)</p>
+<pre><code class="language-python">result = (y = 10)
+</code></pre>
+<pre><code class="language-text">SyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?
+</code></pre>
+<p><strong>Why:</strong> assignment isn't an expression, so it produces no value to assign.</p>
+<h3 id="exercises_11">Exercises</h3>
+<p><strong>E1. Label each line as an expression or a statement.</strong></p>
+<pre><code class="language-python">1) 42
+2) x = 42
+3) x * 2
+4) print(x)
+5) import os
+6) x &gt; 10
+7) def hello(): pass
+</code></pre>
+<p><strong>Answer:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>Type</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1) <code>42</code></td>
+<td>Expression</td>
+<td></td>
+</tr>
+<tr>
+<td>2) <code>x = 42</code></td>
+<td>Statement</td>
+<td>assignment</td>
+</tr>
+<tr>
+<td>3) <code>x * 2</code></td>
+<td>Expression</td>
+<td></td>
+</tr>
+<tr>
+<td>4) <code>print(x)</code></td>
+<td>Expression used as a statement</td>
+<td>a call produces a value (<code>None</code>)</td>
+</tr>
+<tr>
+<td>5) <code>import os</code></td>
+<td>Statement</td>
+<td></td>
+</tr>
+<tr>
+<td>6) <code>x &gt; 10</code></td>
+<td>Expression</td>
+<td>produces <code>True</code> or <code>False</code></td>
+</tr>
+<tr>
+<td>7) <code>def hello(): pass</code></td>
+<td>Statement</td>
+<td>function definition</td>
+</tr>
+</tbody>
+</table>
+<p><strong>E2. In <code>final_price = (price - discount) * 1.18</code>, list every expression.</strong></p>
+<p><strong>Answer:</strong> <code>price</code>, <code>discount</code>, <code>price - discount</code>, <code>1.18</code> and <code>(price - discount) * 1.18</code>. The whole line is an assignment statement.</p>
+<h3 id="debugging-problems_11">Debugging problems</h3>
+<p><strong>D1.</strong> Why does this fail, and how do you fix it?</p>
+<pre><code class="language-python">stock = 0
+if stock = 0:
+    print(&quot;Out of stock&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>SyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?</code>. <code>=</code> assigns; it can't be used as a condition. Fix: <code>if stock == 0:</code>.</p>
+<hr />
+<h2 id="13-print">13. print()</h2>
+<h3 id="first-principles_12">First principles</h3>
+<p>Your program runs inside the computer. Without output, you'd have no idea what it computed. <code>print()</code> writes text to <strong>standard output</strong> (<em>stdout</em>), which is normally your terminal window.</p>
+<h3 id="why-it-exists_12">Why it exists</h3>
+<p>It's the simplest way to show results, messages and progress to a person, and to check values while you're learning.</p>
+<h3 id="how-it-works_12">How it works</h3>
+<pre><code class="language-python">print(*objects, sep=&quot; &quot;, end=&quot;\n&quot;, file=sys.stdout, flush=False)
+</code></pre>
+<ol>
+<li>It converts each object to text with <code>str()</code>.</li>
+<li>It joins them with <code>sep</code> (a space by default).</li>
+<li>It adds <code>end</code> at the very end (a newline by default).</li>
+<li>It writes the result to <code>file</code> (the terminal by default).</li>
+<li>It <strong>returns <code>None</code></strong>.</li>
+</ol>
+<p><strong>f-strings</strong> are the professional way to build output: an <code>f</code> before the quote, and any expression inside <code>{ }</code> is evaluated and inserted (<code>:.2f</code> = exactly 2 decimal places). Phase 4 covers them fully.</p>
+<h3 id="simple-example_12">Simple example</h3>
+<pre><code class="language-python">print(&quot;Hello&quot;)                       # Hello
+print(&quot;Total:&quot;, 250, &quot;INR&quot;)          # Total: 250 INR   (any types; spaces between)
+print()                              # blank line
+print(&quot;2026&quot;, &quot;10&quot;, &quot;15&quot;, sep=&quot;-&quot;)   # 2026-10-15
+print(&quot;Loading&quot;, end=&quot;...&quot;)          # no newline at the end...
+print(&quot;done&quot;)                        # Loading...done
+</code></pre>
+<h3 id="real-world-example_12">Real-world example</h3>
+<p>A script printing a neat order summary, with errors sent to <em>standard error</em> so they can be kept separate from normal output:</p>
+<pre><code class="language-python">import sys
+
+name = &quot;Asha&quot;
+items = 3
+total = 1499.5
+
+print(f&quot;{name} bought {items} items for ₹{total:.2f}&quot;)   # Asha bought 3 items for ₹1499.50
+
+if total &gt; 1000:
+    print(&quot;Warning: order needs manual review&quot;, file=sys.stderr)
+</code></pre>
+<p><code>print()</code> is fine for scripts and learning; production backends use <strong>logging</strong> instead (Phase 33).</p>
+<h3 id="correct-code_12">✅ Correct code</h3>
+<pre><code class="language-python">amount = 250
+print(&quot;Total:&quot;, amount)          # separate arguments
+print(f&quot;Total: {amount}&quot;)        # f-string
+print(&quot;Total: &quot; + str(amount))   # explicit conversion
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_12">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">print(&quot;Total: &quot; + 250)
+</code></pre>
+<pre><code class="language-text">TypeError: can only concatenate str (not &quot;int&quot;) to str
+</code></pre>
+<p><strong>Why:</strong> <code>+</code> between a string and a number is ambiguous (add or join?), and Python refuses to guess.</p>
+<pre><code class="language-python">result = print(&quot;Hi&quot;)
+print(result)
+</code></pre>
+<pre><code class="language-text">Hi
+None
+</code></pre>
+<p><strong>Why:</strong> <code>print()</code> <strong>displays</strong> a value but <strong>returns</strong> <code>None</code>. Displaying and returning are different things, and mixing them up is a common bug once you write functions (Phase 9).</p>
+<h3 id="exercises_12">Exercises</h3>
+<p><strong>E1. Predict the exact output.</strong></p>
+<pre><code class="language-python">print(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+print(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, sep=&quot;&quot;)
+print(&quot;x&quot;, end=&quot; &quot;)
+print(&quot;y&quot;)
+print(print(&quot;z&quot;))
+</code></pre>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-text">a b c
+abc
+x y
+z
+None
+</code></pre>
+<p>The inner <code>print("z")</code> runs first and displays <code>z</code>. It returns <code>None</code>, which the outer <code>print</code> then displays.</p>
+<p><strong>E2. Print today's date as <code>15/10/2026</code> using three separate arguments <code>"15"</code>, <code>"10"</code>, <code>"2026"</code>.</strong></p>
+<p><strong>Answer:</strong> <code>print("15", "10", "2026", sep="/")</code>.</p>
+<h3 id="debugging-problems_12">Debugging problems</h3>
+<p><strong>D1.</strong> The developer wants <code>Loading...done</code> on <strong>one</strong> line, but gets three lines. Fix it.</p>
+<pre><code class="language-python">print(&quot;Loading&quot;)
+print(&quot;...&quot;)
+print(&quot;done&quot;)
+</code></pre>
+<p><strong>Answer:</strong> each <code>print</code> ends with a newline by default. Change <code>end</code> on the first two calls:</p>
+<pre><code class="language-python">print(&quot;Loading&quot;, end=&quot;&quot;)
+print(&quot;...&quot;, end=&quot;&quot;)
+print(&quot;done&quot;)          # Loading...done
+</code></pre>
+<hr />
+<h2 id="14-input">14. input()</h2>
+<h3 id="first-principles_13">First principles</h3>
+<p>Programs often need data from the person running them. <code>input()</code> reads a line of text from <strong>standard input</strong> (<em>stdin</em>), normally your keyboard.</p>
+<h3 id="why-it-exists_13">Why it exists</h3>
+<p>It makes programs interactive: ask a question, get an answer, act on it, without changing the code for every new value.</p>
+<h3 id="how-it-works_13">How it works</h3>
+<ol>
+<li>It shows the <strong>prompt</strong> text you pass in, without adding a space or newline.</li>
+<li>It <strong>blocks</strong>: the program stops and waits.</li>
+<li>It reads what the user typed, up to Enter.</li>
+<li>It removes the trailing newline.</li>
+<li>It <strong>always returns a <code>str</code></strong>, even if the user typed <code>42</code>.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int("25")</code></td>
+<td><code>25</code></td>
+</tr>
+<tr>
+<td><code>int(" 42 ")</code></td>
+<td><code>42</code> (surrounding whitespace is ignored)</td>
+</tr>
+<tr>
+<td><code>int("12.5")</code></td>
+<td><code>ValueError</code></td>
+</tr>
+<tr>
+<td><code>int("twenty")</code></td>
+<td><code>ValueError: invalid literal for int() with base 10: 'twenty'</code></td>
+</tr>
+<tr>
+<td><code>float("12.5")</code></td>
+<td><code>12.5</code></td>
+</tr>
+<tr>
+<td><code>"10" + "5"</code></td>
+<td><code>"105"</code> (string joining, not addition)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Never trust user input.</strong> Users make typos, leave fields empty, use the wrong format or send malicious input. Always validate and convert it. You'll handle errors with <code>try/except</code> in Phase 12, and validate API input with Pydantic in Phase 52.</p>
+<h3 id="simple-example_13">Simple example</h3>
+<pre><code class="language-python">name = input(&quot;What is your name? &quot;)    # end the prompt with a space
+print(f&quot;Hello, {name}!&quot;)
+</code></pre>
+<pre><code class="language-text">What is your name? Asha
+Hello, Asha!
+</code></pre>
+<h3 id="real-world-example_13">Real-world example</h3>
+<pre><code class="language-python">&quot;&quot;&quot;bill_split.py: Split a restaurant bill evenly.&quot;&quot;&quot;
+
+def main() -&gt; None:
+    total = float(input(&quot;Bill total (₹): &quot;))
+    people = int(input(&quot;Number of people: &quot;))
+    share = total / people
+    print(f&quot;Each person pays ₹{share:.2f}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<pre><code class="language-text">Bill total (₹): 2450
+Number of people: 4
+Each person pays ₹612.50
+</code></pre>
+<h3 id="correct-code_13">✅ Correct code</h3>
+<pre><code class="language-python">age = int(input(&quot;Age: &quot;))               # &quot;25&quot; → 25
+print(f&quot;Next year you'll be {age + 1}&quot;)
+
+price = float(input(&quot;Price: &quot;))         # use float() for decimal numbers
+</code></pre>
+<h3 id="incorrect-code-and-why-it-fails_13">❌ Incorrect code and why it fails</h3>
+<pre><code class="language-python">age = input(&quot;Age: &quot;)       # the user types 25
+print(age + 1)
+</code></pre>
+<pre><code class="language-text">TypeError: can only concatenate str (not &quot;int&quot;) to str
+</code></pre>
+<p><strong>Why:</strong> <code>age</code> is the <strong>string</strong> <code>"25"</code>, not the number <code>25</code>. Convert it with <code>int()</code>.</p>
+<pre><code class="language-python">age = int(input(&quot;Age: &quot;))    # the user types &quot;twenty&quot;
+</code></pre>
+<pre><code class="language-text">ValueError: invalid literal for int() with base 10: 'twenty'
+</code></pre>
+<p><strong>Why:</strong> <code>int()</code> can only convert text that looks like a whole number.</p>
+<h3 id="exercises_13">Exercises</h3>
+<p><strong>E1. Write <code>temperature.py</code>: ask for a temperature in Celsius (decimals allowed) and print it in Fahrenheit with one decimal place. Formula: <code>F = C × 9/5 + 32</code>. Use the <code>main()</code> structure.</strong></p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">&quot;&quot;&quot;temperature.py: Convert Celsius to Fahrenheit.&quot;&quot;&quot;
+
+def main() -&gt; None:
+    celsius = float(input(&quot;Temperature in °C: &quot;))
+    fahrenheit = celsius * 9 / 5 + 32
+    print(f&quot;{celsius}°C = {fahrenheit:.1f}°F&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<pre><code class="language-text">Temperature in °C: 36.6
+36.6°C = 97.9°F
+</code></pre>
+<p><strong>E2. Write <code>receipt.py</code>: ask for an item name, its price and the quantity, then print:</strong></p>
+<pre><code class="language-text">Item:     Notebook
+Quantity: 3
+Total:    ₹135.00
+</code></pre>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-python">&quot;&quot;&quot;receipt.py: Print a simple receipt.&quot;&quot;&quot;
+
+def main() -&gt; None:
+    item = input(&quot;Item name: &quot;)
+    price = float(input(&quot;Price (₹): &quot;))
+    quantity = int(input(&quot;Quantity: &quot;))
+    total = price * quantity
+
+    print(f&quot;Item:     {item}&quot;)
+    print(f&quot;Quantity: {quantity}&quot;)
+    print(f&quot;Total:    ₹{total:.2f}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="debugging-problems_13">Debugging problems</h3>
+<p><strong>D1.</strong> The user enters <code>10</code> and <code>5</code>. The program prints <code>105</code> instead of <code>15</code>. Why? Fix it.</p>
+<pre><code class="language-python">a = input(&quot;First number: &quot;)
+b = input(&quot;Second number: &quot;)
+print(&quot;Sum:&quot;, a + b)
+</code></pre>
+<p><strong>Answer:</strong> <code>input()</code> returns strings, and <code>+</code> on two strings <strong>joins</strong> them: <code>"10" + "5"</code> is <code>"105"</code>. Convert first:</p>
+<pre><code class="language-python">a = int(input(&quot;First number: &quot;))
+b = int(input(&quot;Second number: &quot;))
+print(&quot;Sum:&quot;, a + b)       # Sum: 15
+</code></pre>
+<p><strong>D2.</strong> What goes wrong, and how do you fix it?</p>
+<pre><code class="language-python">quantity = int(input(&quot;Quantity: &quot;))     # the user types 2.5
+</code></pre>
+<p><strong>Answer:</strong> <code>int("2.5")</code> raises <code>ValueError: invalid literal for int() with base 10: '2.5'</code>, because <code>int()</code> only accepts whole-number text. If fractional quantities make sense, use <code>float()</code>. If not, keep <code>int()</code> and handle the error with <code>try/except</code> (Phase 12), telling the user to enter a whole number.</p>
+<p><strong>D3.</strong> The prompt and the user's typing run together, like <code>Enter your name:Asha</code>. What's the fix?</p>
+<pre><code class="language-python">name = input(&quot;Enter your name:&quot;)
+</code></pre>
+<p><strong>Answer:</strong> <code>input()</code> doesn't add a space after the prompt. End the prompt with one: <code>input("Enter your name: ")</code>.</p>
+<hr />
+<h2 id="15-common-mistakes-and-how-to-avoid-them">15. Common mistakes and how to avoid them</h2>
+<table>
+<thead>
+<tr>
+<th>Mistake</th>
+<th>What happens</th>
+<th>How to avoid it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thinking Python runs line by line</td>
+<td>Confusion when a syntax error stops everything</td>
+<td>Remember that the <strong>whole file compiles first</strong></td>
+</tr>
+<tr>
+<td>Reading the traceback from the top</td>
+<td>Wasted time</td>
+<td>Read the <strong>last line</strong> first, then move upward</td>
+</tr>
+<tr>
+<td>Python not in <code>PATH</code></td>
+<td><code>'python' is not recognized</code></td>
+<td>Add it to PATH, reopen the terminal, or use <code>py</code></td>
+</tr>
+<tr>
+<td>Two Pythons, bare <code>pip</code></td>
+<td><code>ModuleNotFoundError</code> after a "successful" install</td>
+<td>Use <code>python -m pip</code>, check <code>sys.executable</code>, use virtual environments</td>
+</tr>
+<tr>
+<td>Learning Python 2</td>
+<td><code>print "x"</code> → SyntaxError</td>
+<td>Use Python 3.10+ (3.14 recommended)</td>
+</tr>
+<tr>
+<td>Shell commands typed in the REPL</td>
+<td><code>python --version</code> → SyntaxError</td>
+<td><code>exit()</code> first, then run it in the terminal</td>
+</tr>
+<tr>
+<td>Expecting scripts to auto-display values</td>
+<td>Nothing is shown</td>
+<td>Use <code>print()</code></td>
+</tr>
+<tr>
+<td>Running from the wrong folder</td>
+<td><code>[Errno 2] No such file or directory</code></td>
+<td><code>cd</code> to the right folder, or pass the full path</td>
+</tr>
+<tr>
+<td>Naming a file <code>random.py</code> or <code>json.py</code></td>
+<td><code>AttributeError: partially initialized module…</code></td>
+<td>Never use standard-library names for your files</td>
+</tr>
+<tr>
+<td>Forgetting <code>:</code></td>
+<td><code>SyntaxError: expected ':'</code></td>
+<td>Every block-opening line ends with <code>:</code></td>
+</tr>
+<tr>
+<td>Wrong indentation level</td>
+<td>IndentationError, <strong>or a silent logic bug</strong></td>
+<td>4 spaces, never mix tabs and spaces, read the structure carefully</td>
+</tr>
+<tr>
+<td>Comments that repeat the code</td>
+<td>Noise</td>
+<td>Explain <strong>why</strong></td>
+</tr>
+<tr>
+<td><code>=</code> instead of <code>==</code> in <code>if</code></td>
+<td>SyntaxError</td>
+<td><code>=</code> assigns, <code>==</code> compares</td>
+</tr>
+<tr>
+<td>Joining a str and an int with <code>+</code></td>
+<td><code>TypeError</code></td>
+<td>Use f-strings or <code>str()</code></td>
+</tr>
+<tr>
+<td>Using <code>input()</code> as a number</td>
+<td>TypeError, or <code>"10" + "5"</code> = <code>"105"</code></td>
+<td>Convert with <code>int()</code> or <code>float()</code></td>
+</tr>
+<tr>
+<td>Expecting <code>print()</code> to return a value</td>
+<td>You get <code>None</code></td>
+<td>Displaying ≠ returning</td>
+</tr>
+</tbody>
+</table>
+</main>
+</div>
+<script>
+(function () {
+  var toc = document.getElementById("toc");
+  document.getElementById("menuBtn").addEventListener("click", function () { toc.classList.toggle("open"); });
+  toc.addEventListener("click", function (e) { if (e.target.closest("a")) toc.classList.remove("open"); });
+
+  document.querySelectorAll("main table").forEach(function (t) {
+    var w = document.createElement("div"); w.className = "table-wrap";
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+
+  document.querySelectorAll("main pre").forEach(function (pre) {
+    var code = pre.querySelector("code");
+    var m = code && code.className.match(/language-(\w+)/);
+    var raw = code.textContent;
+    if (m && (m[1] === "python" || m[1] === "bash")) {
+      // dim trailing "# comments" that are not inside quotes
+      code.innerHTML = code.innerHTML.split("\n").map(function (line) {
+        var q = null;
+        for (var i = 0; i < line.length; i++) {
+          var c = line[i];
+          if (q) { if (c === q) q = null; }
+          else if (c === '"' || c === "'") q = c;
+          else if (c === "#" && (i === 0 || /\s/.test(line[i - 1]))) {
+            return line.slice(0, i) + '<span class="cmt">' + line.slice(i) + "</span>";
+          }
+        }
+        return line;
+      }).join("\n");
+    }
+    if (m) { var l = document.createElement("span"); l.className = "lang"; l.textContent = m[1]; pre.appendChild(l); }
+    var b = document.createElement("button"); b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function ok() { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      if (navigator.clipboard) navigator.clipboard.writeText(raw).then(ok, function () {});
+    });
+    pre.appendChild(b);
+  });
+
+  var links = Array.prototype.slice.call(toc.querySelectorAll("a"));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); });
+  window.addEventListener("scroll", function () {
+    var idx = 0;
+    heads.forEach(function (h, i) { if (h && h.getBoundingClientRect().top < 120) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle("active", i === idx); });
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
