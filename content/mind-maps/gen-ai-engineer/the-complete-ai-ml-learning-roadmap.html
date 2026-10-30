@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI/ML Roadmap Mind Map</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#1d2433;--muted:#5b6475;--line:#d3d8e2;--shadow:0 4px 14px rgba(20,30,60,.08);--grid:#e2e6ee}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1219;--panel:#181d27;--text:#e7eaf0;--muted:#9aa3b5;--line:#343c4c;--shadow:0 4px 14px rgba(0,0,0,.45);--grid:#1c2232}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+header{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--panel);box-shadow:var(--shadow);z-index:10;flex-wrap:wrap}
+h1{font-size:17px;margin:0}
+.sub{font-size:12px;color:var(--muted);margin-top:2px}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:6px 11px;border-radius:8px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+#viewport{position:absolute;inset:0;cursor:grab;background-image:radial-gradient(var(--grid) 1.2px,transparent 1.2px);background-size:22px 22px;touch-action:none}
+#viewport.drag{cursor:grabbing}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+#links{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.node{position:absolute;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);transition:opacity .2s}
+.root{width:210px;padding:18px 16px;text-align:center;background:linear-gradient(135deg,#6d5dfc,#2bb3c0);color:#fff;border:none}
+.root b{font-size:19px;display:block}
+.root span{font-size:12px;opacity:.9}
+.stage{width:240px;padding:12px 14px;border-left:6px solid var(--c);cursor:pointer;user-select:none}
+.stage:hover{border-color:var(--c)}
+.stage .num{font-size:11px;font-weight:700;color:var(--c);letter-spacing:.06em;text-transform:uppercase}
+.stage .t{font-weight:650;font-size:15px;margin-top:2px}
+.stage .tog{float:right;width:20px;height:20px;line-height:18px;text-align:center;border-radius:50%;border:1px solid var(--line);color:var(--muted);font-size:13px}
+.leaf{width:330px;padding:10px 13px;font-size:13.5px;line-height:1.4}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-bottom:5px}
+.pill.study{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}
+.pill.project{background:var(--c);color:#fff}
+.leaf a.main{color:var(--text);font-weight:600;text-decoration:none;border-bottom:1.5px solid color-mix(in srgb,var(--c) 60%,transparent)}
+.leaf a.main:hover{color:var(--c)}
+.leaf .ext{font-size:11px;color:var(--muted)}
+.leaf .d{color:var(--muted);font-size:12.5px;margin-top:2px}
+.chips{margin-top:4px}
+.chip{display:inline-block;font-size:11.5px;padding:2px 9px;border:1px solid var(--line);border-radius:999px;margin:4px 4px 0 0;color:var(--text);text-decoration:none}
+.chip:hover{border-color:var(--c);color:var(--c)}
+.hidden{opacity:0;pointer-events:none}
+.legend{position:fixed;bottom:12px;left:16px;right:16px;width:max-content;max-width:calc(100% - 32px);font-size:12px;color:var(--muted);background:var(--panel);padding:6px 10px;border-radius:8px;box-shadow:var(--shadow)}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>AI / ML Roadmap</h1>
+  </div>
+  <div class="tools">
+    <button id="zin" title="Zoom in">＋</button>
+    <button id="zout" title="Zoom out">－</button>
+    <button id="fit">Fit</button>
+    <button id="exp">Expand all</button>
+    <button id="col">Collapse all</button>
+  </div>
+</header>
+<div id="viewport"><div id="world"><svg id="links"></svg></div></div>
+<div class="legend">Drag to pan · Scroll or pinch to zoom · Click a stage to collapse/expand · Click any link to open it</div>
+
+<script>
+const DATA=[
+ {t:"ML foundations.",c:"#6d5dfc",items:[
+  {k:"study",t:"Andrew Ng's Machine Learning Course (Coursera)",u:"https://www.coursera.org/specializations/machine-learning-introduction"},
+  {k:"study",t:"Mathematics for Machine Learning (Imperial College, Coursera)",u:"https://www.coursera.org/specializations/mathematics-machine-learning"},
+  {k:"project",t:"Predict house prices using sci-kit learn (Deploy with StreamLit)"}]},
+ {t:"Deep Learning Fundamentals.",c:"#e5534b",items:[
+  {k:"study",t:"Deep Learning Specialization - Andrew Ng (Coursera, Courses 1-3)",u:"https://www.coursera.org/specializations/deep-learning?utm_medium=sem&utm_source=gg&utm_campaign=b2c_india_deep-learning_deeplearning-ai_ftcof_specializations_cx_dr_bau_gg_sem_pr_in_all_m_hyb_24-06_x&campaignid=21316592775&adgroupid=165695367791&device=c&keyword=coursera%20deep%20learning&matchtype=p&network=g&devicemodel=&creativeid=801031304575&assetgroupid=&targetid=aud-303020828629:kwd-409577690557&extensionid=&placement=&gad_source=1&gad_campaignid=21316592775&gbraid=0AAAAADdKX6Z_hM5d4HgQ8VDlWVvPQHHDZ&gclid=Cj0KCQjwzsjVBhC3ARIsALnMv4lFhIde12IBucX9PGJBe9G-YH70cvtaLnh-hUHTGe8BUClSbUBZUZoaAiKUEALw_wcB"},
+  {k:"study",t:"fast.ai - Practical Deep Learning for Coders (Part 1)",u:"https://course.fast.ai/"},
+  {k:"project",t:"Build and deploy a digit classifier (MNIST) using Pytorch + FastAPI."}]},
+ {t:"Specialized Domain: NLP.",c:"#2f9e6e",items:[
+  {k:"study",t:"Hugging Face Course"},
+  {k:"study",t:"NLP with Transformers (O'Reilly)",u:"https://www.oreilly.com/library/view/natural-language-processing/9781098136789/"},
+  {k:"project",t:"Twitter Sentiment Analyzer using a fine tuned BERT model (deploy on Hugging Face Spaces)."}]},
+ {t:"Specialzed Domain: Computer Vision.",c:"#e08a1e",items:[
+  {k:"study",t:"fast.ai - lessons on Vision",u:"https://docs.fast.ai/tutorial.vision.html"},
+  {k:"study",t:"Pytorch Tutorials - Transfer Learning for Image Classification"},
+  {k:"project",t:"Custom image classifier (eg: detect plant diseases) using transfer learning (ResNet50)."}]},
+ {t:"MLOps & Deployment.",c:"#2b8ac6",items:[
+  {k:"study",t:"Made with ML- MLOps Course",u:"https://madewithml.com/courses/mlops/"},
+  {k:"project",t:"End to End ML Pipeline:<br>Data ->training -> Deployment ->monitoring using MLFlow + FastAPI + Docker"}]},
+ {t:"Few Capstone Projects to Consider:",c:"#c2409a",cap:true,items:[
+  {k:"project",t:"LLM-powered chatbot using OpenAI API + LangChain + Vector DB (FAISS)"},
+  {k:"project",t:"AI Analytics Dashboard with real time predictions."},
+  {k:"project",t:"Image captioning app combining vision + NLP."}]}
+];
+
+const vp=document.getElementById('viewport'),world=document.getElementById('world'),svg=document.getElementById('links');
+const X={root:0,stage:290,leaf:600},W={root:210,stage:240,leaf:330};
+function el(cls,html,c){const d=document.createElement('div');d.className='node '+cls;d.innerHTML=html;if(c)d.style.setProperty('--c',c);world.appendChild(d);return d}
+function leafHTML(it){
+  let h=`<span class="pill ${it.k}">${it.k==='study'?'Study':'Project'}</span><br>`;
+  h+=it.u?`<a class="main" href="${it.u}" target="_blank" rel="noopener">${it.t}</a> <span class="ext">↗</span>`:`<strong>${it.t}</strong>`;
+  if(it.s)h+=`<div class="d">${it.s}</div>`;
+  if(it.tools)h+=`<div class="chips">`+it.tools.map(([n,u])=>`<a class="chip" href="${u}" target="_blank" rel="noopener">${n} ↗</a>`).join('')+`</div>`;
+  return h;
+}
+const rootEl=el('root','<b>AI / ML Roadmap</b><span>5 stages · 3 capstones</span>');
+let n=0;
+const stages=DATA.map(s=>{
+  const st={...s,open:true};
+  const label=s.cap?'Final':'Stage '+(++n);
+  st.el=el('stage',`<span class="tog">−</span><div class="num">${label}</div><div class="t">${s.t}</div>`,s.c);
+  st.el._st=st;
+  st.leaves=s.items.map(it=>el('leaf',leafHTML(it),s.c));
+  return st;
+});
+
+let total=0;
+function curve(x1,y1,x2,y2,c,w,o){const m=(x2-x1)/2;return `<path d="M${x1},${y1} C${x1+m},${y1} ${x2-m},${y2} ${x2},${y2}" fill="none" stroke="${c}" stroke-width="${w}" stroke-opacity="${o}"/>`}
+function layout(){
+  let y=0,paths=[],stageMids=[];
+  stages.forEach(st=>{
+    const sh=st.el.offsetHeight;let bh=sh,ly=[];
+    if(st.open){let yy=0;st.leaves.forEach(l=>{ly.push(yy);yy+=l.offsetHeight+10});bh=Math.max(yy-10,sh)}
+    const sTop=y+bh/2-sh/2;
+    st.el.style.left=X.stage+'px';st.el.style.top=sTop+'px';
+    st.el.querySelector('.tog').textContent=st.open?'−':'+';
+    stageMids.push([y+bh/2,st.c]);
+    st.leaves.forEach((l,i)=>{
+      l.classList.toggle('hidden',!st.open);
+      if(st.open){
+        l.style.left=X.leaf+'px';l.style.top=(y+ly[i])+'px';
+        paths.push(curve(X.stage+W.stage,y+bh/2,X.leaf,y+ly[i]+l.offsetHeight/2,st.c,2,.75));
+      }else{l.style.left=X.stage+'px';l.style.top=sTop+'px'}
+    });
+    y+=bh+30;
+  });
+  total=y-30;
+  const rh=rootEl.offsetHeight,rMid=total/2;
+  rootEl.style.left=X.root+'px';rootEl.style.top=(rMid-rh/2)+'px';
+  stageMids.forEach(([m,c])=>paths.unshift(curve(W.root,rMid,X.stage,m,c,2.5,.55)));
+  svg.innerHTML=paths.join('');
+}
+
+let s=1,tx=0,ty=0;
+function apply(){world.style.transform=`translate(${tx}px,${ty}px) scale(${s})`}
+function zoomAt(cx,cy,f){const ns=Math.min(2.5,Math.max(.2,s*f));tx=cx-(cx-tx)*ns/s;ty=cy-(cy-ty)*ns/s;s=ns;apply()}
+function fit(){
+  const hh=document.querySelector('header').offsetHeight;
+  const w=X.leaf+W.leaf,h=total,aw=innerWidth-32,ah=innerHeight-hh-70;
+  s=Math.min(1.1,aw/w,ah/h);tx=(innerWidth-w*s)/2;ty=hh+16+(ah-h*s)/2;apply();
+}
+vp.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0015))},{passive:false});
+
+const pts=new Map();let moved=false,pinch=null,downStage=null;
+vp.addEventListener('pointerdown',e=>{
+  if(e.target.closest('a'))return;
+  vp.setPointerCapture(e.pointerId);
+  pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pts.size===1){moved=false;downStage=e.target.closest('.stage')}
+  if(pts.size===2){const [a,b]=[...pts.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);moved=true}
+  vp.classList.add('drag');
+});
+vp.addEventListener('pointermove',e=>{
+  const p=pts.get(e.pointerId);if(!p)return;
+  const dx=e.clientX-p.x,dy=e.clientY-p.y;
+  pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pts.size===1){if(Math.abs(dx)+Math.abs(dy)>2)moved=true;tx+=dx;ty+=dy;apply()}
+  else if(pts.size===2&&pinch){const [a,b]=[...pts.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinch);pinch=d}
+});
+function end(e){
+  if(!pts.has(e.pointerId))return;
+  pts.delete(e.pointerId);if(pts.size<2)pinch=null;
+  if(!pts.size){vp.classList.remove('drag');if(!moved&&downStage&&e.type==='pointerup'){downStage._st.open=!downStage._st.open;layout()}downStage=null}
+}
+vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
+
+const c=()=>[innerWidth/2,innerHeight/2];
+document.getElementById('zin').onclick=()=>zoomAt(...c(),1.2);
+document.getElementById('zout').onclick=()=>zoomAt(...c(),1/1.2);
+document.getElementById('fit').onclick=fit;
+document.getElementById('exp').onclick=()=>{stages.forEach(s=>s.open=true);layout();fit()};
+document.getElementById('col').onclick=()=>{stages.forEach(s=>s.open=false);layout();fit()};
+
+layout();fit();
+window.addEventListener('load',()=>{layout();fit()});
+</script>
+</body>
+</html>
