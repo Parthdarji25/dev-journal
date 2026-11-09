@@ -1,8 +1,8 @@
 ---
-title: 01. The Backend Engineering Roadmap
+title: The Backend Engineering Roadmap
 description: 'A beginner-friendly map of everything a backend engineer needs to learn, from HTTP basics to DevOps, and why learning the fundamentals beats learning one framework.'
 tags: [backend, roadmap, first-principles, fundamentals, overview]
-updated: '2026-10-13'
+updated: '2026-11-09'
 ---
 
 Backend engineering is much more than writing CRUD APIs. It is about building systems that are **reliable, scalable, fault-tolerant and easy to maintain**. This lesson is the map: it shows every major topic you will learn and how they fit together.
