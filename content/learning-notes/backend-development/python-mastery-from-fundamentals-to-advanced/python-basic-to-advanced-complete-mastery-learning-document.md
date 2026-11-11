@@ -1,5 +1,5 @@
 ---
-title: Python Basic To Advanced — Complete Mastery Learning Document
+title: Python Basic To Advanced — Complete Mastery Learning Roadmap
 updated: '2026-11-11'
 ---
 
