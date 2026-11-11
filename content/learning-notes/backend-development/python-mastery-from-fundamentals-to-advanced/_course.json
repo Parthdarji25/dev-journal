@@ -1,6 +1,8 @@
 {
   "title": "Python Mastery: From Fundamentals to Advanced",
   "description": "",
-  "order": [],
+  "order": [
+    "python-basic-to-advanced-complete-mastery-learning-document.md"
+  ],
   "html": {}
 }
