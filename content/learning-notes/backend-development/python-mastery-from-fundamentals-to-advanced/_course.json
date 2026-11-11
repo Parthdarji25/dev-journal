@@ -2,28 +2,10 @@
   "title": "Python Mastery: From Fundamentals to Advanced",
   "description": "",
   "order": [
-    "python-basic-to-advanced-complete-mastery-roadmap.html",
     "phase-01-python-environment-and-first-programs.html",
     "phase-02-variables-and-data-types.html"
   ],
   "html": {
-    "python-basic-to-advanced-complete-mastery-roadmap.html": {
-      "title": "Python Basic to Advanced: Complete Mastery Roadmap",
-      "description": "A phase roadmap that takes you from Python basics to professional-level development. Each phase has the concepts to learn and a ready-to-use Mastery Prompt, covering OOP, async, testing, internals, architecture and interview prep.",
-      "tags": [
-        "Python",
-        "Python Roadmap",
-        "Learn Python",
-        "Python Mastery",
-        "OOP",
-        "Async Python",
-        "Python Interview",
-        "Clean Code",
-        "System Design",
-        "ChatGPT Prompts"
-      ],
-      "updated": "2026-10-15"
-    },
     "phase-01-python-environment-and-first-programs.html": {
       "title": "Phase 01 — Python Environment & First Programs.",
       "description": "Python Environment & First Programs: what Python is, how CPython runs code, installation, versions, the REPL, running scripts, indentation, comments, statements vs expressions, print() and input().",
